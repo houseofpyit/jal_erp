@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="module_jal_production_cat" model="ir.module.category">
+        <field name="name">Production</field>
+    </record>
+
+    <record id="res_group_production_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="implied_ids" eval="False"/>
+        <field name="category_id" ref="jal_production_v15.module_jal_production_cat"/>
+    </record>
+
+    <record id="res_group_production_admin" model="res.groups">
+        <field name="name">Admin</field>
+        <field name="implied_ids" eval="[(4, ref('res_group_production_user'))]"/>
+        <field name="category_id" ref="jal_production_v15.module_jal_production_cat"/>
+    </record>
+
+    <record id="module_jal_quality_cat" model="ir.module.category">
+        <field name="name">Quality</field>
+    </record>
+
+    <record id="res_group_quality_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="implied_ids" eval="False"/>
+        <field name="category_id" ref="jal_production_v15.module_jal_quality_cat"/>
+    </record>
+
+    <record id="res_group_quality_admin" model="res.groups">
+        <field name="name">Admin</field>
+        <field name="implied_ids" eval="[(4, ref('res_group_quality_user'))]"/>
+        <field name="category_id" ref="jal_production_v15.module_jal_quality_cat"/>
+    </record>
+
+</odoo>

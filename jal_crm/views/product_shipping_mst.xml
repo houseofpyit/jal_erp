@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+ 
+    <record id="product_shipping_mst_form" model="ir.ui.view">
+        <field name="name">product.shipping.mst.form</field>
+        <field name="model">product.shipping.mst</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1" />
+                        </group>
+                    </group>                    
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="product_shipping_mst_tree" model="ir.ui.view">
+        <field name="name">product.shipping.mst.tree</field>
+        <field name="model">product.shipping.mst</field>
+        <field name="arch" type="xml" >
+            <tree sample="1">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_product_shipping_mst" model="ir.actions.act_window">
+        <field name="name">Product Shipping</field>
+        <field name="res_model">product.shipping.mst</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+    </record>
+</odoo>

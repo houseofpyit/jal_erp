@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hop_sale_bill_form_view_inherit" model="ir.ui.view">
+        <field name="name">transaction.hop.salebill.form.view.inherit</field>
+        <field name="model">hop.salebill</field>
+        <field name="inherit_id" ref="transaction.salebill_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='agent_id']" position="after">
+                <field name="business_type" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

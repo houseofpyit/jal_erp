@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- For sale order Print -->
+    <record id="paper_format_sale_order_from" model="report.paperformat">
+        <field name="name">Sale Order</field>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="action_fromate_sale_domestic" model="ir.actions.report">
+        <field name="name">Sale Order Domestic</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">jal_crm.report_sale_domestic</field>
+        <field name="report_file">jal_crm.report_sale_domestic</field>
+        <field name="paperformat_id" ref="jal_crm.paper_format_sale_order_from" />
+        <field name="print_report_name">'%s - %s' % (object.partner_id.name, object.name)</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+    </record>    
+
+    <record id="action_fromate_sale_international" model="ir.actions.report">
+        <field name="name">Sale Order International</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">jal_crm.report_sale_international</field>
+        <field name="report_file">jal_crm.report_sale_international</field>
+        <field name="paperformat_id" ref="jal_crm.paper_format_sale_order_from" />
+        <field name="print_report_name">'%s - %s' % (object.partner_id.name, object.name)</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+    </record>  
+    
+    <record id="action_fromate_sale_proforma" model="ir.actions.report">
+        <field name="name">Sale Order Proforma</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">jal_crm.report_sale_proforma</field>
+        <field name="report_file">jal_crm.report_sale_proforma</field>
+        <field name="paperformat_id" ref="jal_crm.paper_format_sale_order_from" />
+        <field name="print_report_name">'%s - %s' % (object.partner_id.name, object.name)</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+    </record>   
+   
+</odoo>

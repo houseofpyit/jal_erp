@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- packing -->
+    <record id="packing_mst_form" model="ir.ui.view">
+        <field name="name">packing.mst.form</field>
+        <field name="model">packing.mst</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1"/>
+                            <field name="capacity_id" options="{'no_quick_create': True}"/>
+                            <field name="pouch_name_id" options="{'no_quick_create': True}"/>
+                            <field name="lid_color_id" options="{'no_quick_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="branding_id" options="{'no_quick_create': True}"/>
+                            <field name="drum_color_id" options="{'no_quick_create': True}"/>
+                            <field name="scoops_id" options="{'no_quick_create': True}"/>
+                            <field name="outer_cartoons_id" options="{'no_quick_create': True}"/>
+                        </group>
+                    </group>                  
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="packing_mst_tree" model="ir.ui.view">
+        <field name="name">packing.mst.tree</field>
+        <field name="model">packing.mst</field>
+        <field name="arch" type="xml" >
+            <tree sample="1">
+                <field name="name"/>
+                <field name="capacity_id"/>
+                <field name="pouch_name_id"/>
+                <field name="lid_color_id"/>
+                <field name="branding_id"/>
+                <field name="drum_color_id"/>
+                <field name="scoops_id"/>
+                <field name="outer_cartoons_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_packing_mst" model="ir.actions.act_window">
+        <field name="name">Packing</field>
+        <field name="res_model">packing.mst</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+    </record>
+
+<!-- packing -->
+    <record id="capacity_mst_form" model="ir.ui.view">
+        <field name="name">capacity.mst.form</field>
+        <field name="model">capacity.mst</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1" />
+                        </group>
+                        <group>
+                            <field name="packaging_type" required="1" />
+                        </group>
+                    </group>  
+                    <group>
+                        <group>  
+                            <field name="weight" />
+                        </group>
+                        <group>
+                            <field name="uom_id" options="{'no_open': True, 'no_create': True}"/>
+                        </group>  
+                    </group>                
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="capacity_mst_tree" model="ir.ui.view">
+        <field name="name">capacity.mst.tree</field>
+        <field name="model">capacity.mst</field>
+        <field name="arch" type="xml" >
+            <tree sample="1">
+                <field name="name"/>
+                <field name="weight"/>
+                <field name="uom_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_capacity_mst" model="ir.actions.act_window">
+        <field name="name">Capacity Per Drum</field>
+        <field name="res_model">capacity.mst</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+    </record>
+
+<!-- pouch name -->
+    <record id="pouch_name_mst_form" model="ir.ui.view">
+        <field name="name">pouch.name.mst.form</field>
+        <field name="model">pouch.name.mst</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1" />
+                        </group>
+                    </group>                    
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="pouch_name_mst_tree" model="ir.ui.view">
+        <field name="name">pouch.name.mst.tree</field>
+        <field name="model">pouch.name.mst</field>
+        <field name="arch" type="xml" >
+            <tree sample="1">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_pouch_name_mst" model="ir.actions.act_window">
+        <field name="name">Pouch Name</field>
+        <field name="res_model">pouch.name.mst</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+    </record>
+
+<!-- branding -->
+    <record id="branding_mst_form" model="ir.ui.view">
+        <field name="name">branding.mst.form</field>
+        <field name="model">branding.mst</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1" />
+                        </group>
+                    </group>                    
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="branding_mst_tree" model="ir.ui.view">
+        <field name="name">branding.mst.tree</field>
+        <field name="model">branding.mst</field>
+        <field name="arch" type="xml" >
+            <tree sample="1">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_branding_mst" model="ir.actions.act_window">
+        <field name="name">Branding</field>
+        <field name="res_model">branding.mst</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+    </record>
+
+<!-- Lid Color -->
+    <record id="lid_color_mst_form" model="ir.ui.view">
+        <field name="name">lid.color.mst.form</field>
+        <field name="model">lid.color.mst</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1" />
+                        </group>
+                        <group>
+                            <field name="color" widget="color_picker"/>
+                        </group>
+                    </group>                    
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="lid_color_mst_tree" model="ir.ui.view">
+        <field name="name">lid.color.mst.tree</field>
+        <field name="model">lid.color.mst</field>
+        <field name="arch" type="xml" >
+            <tree sample="1">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_lid_color_mst" model="ir.actions.act_window">
+        <field name="name">Lid Color</field>
+        <field name="res_model">lid.color.mst</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+    </record>
+
+<!-- Drum Color -->
+    <record id="drum_color_mst_form" model="ir.ui.view">
+        <field name="name">drum.color.mst.form</field>
+        <field name="model">drum.color.mst</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1" />
+                        </group>
+                        <group>
+                            <field name="color" widget="color_picker"/>
+                        </group>
+                    </group>                    
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="drum_color_mst_tree" model="ir.ui.view">
+        <field name="name">drum.color.mst.tree</field>
+        <field name="model">drum.color.mst</field>
+        <field name="arch" type="xml" >
+            <tree sample="1">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_drum_color_mst" model="ir.actions.act_window">
+        <field name="name">Drum Color</field>
+        <field name="res_model">drum.color.mst</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+    </record>
+
+<!-- scoops -->
+    <record id="scoops_mst_form" model="ir.ui.view">
+        <field name="name">scoops.mst.form</field>
+        <field name="model">scoops.mst</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1" />
+                        </group>
+                    </group>                    
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="scoops_mst_tree" model="ir.ui.view">
+        <field name="name">scoops.mst.tree</field>
+        <field name="model">scoops.mst</field>
+        <field name="arch" type="xml" >
+            <tree sample="1">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_scoops_mst" model="ir.actions.act_window">
+        <field name="name">Scoops</field>
+        <field name="res_model">scoops.mst</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+    </record>
+
+<!-- outer cartoons -->
+    <record id="outer_cartoons_mst_form" model="ir.ui.view">
+        <field name="name">outer.cartoons.form</field>
+        <field name="model">outer.cartoons.mst</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1" />
+                        </group>
+                    </group>                    
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="outer_cartoons_mst_tree" model="ir.ui.view">
+        <field name="name">outer.cartoons.tree</field>
+        <field name="model">outer.cartoons.mst</field>
+        <field name="arch" type="xml" >
+            <tree sample="1">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_outer_cartoons_mst" model="ir.actions.act_window">
+        <field name="name">Outer Cartoons</field>
+        <field name="res_model">outer.cartoons.mst</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+    </record>
+
+<!-- Box Color -->
+    <record id="box_color_mst_form" model="ir.ui.view">
+        <field name="name">box.color.mst.form</field>
+        <field name="model">box.color.mst</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1" />
+                        </group>
+                        <group>
+                            <field name="color" widget="color_picker"/>
+                        </group>
+                    </group>                    
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="box_color_mst_tree" model="ir.ui.view">
+        <field name="name">box.color.mst.tree</field>
+        <field name="model">box.color.mst</field>
+        <field name="arch" type="xml" >
+            <tree sample="1">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_box_color_mst" model="ir.actions.act_window">
+        <field name="name">Box Color</field>
+        <field name="res_model">box.color.mst</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+    </record>
+
+<!-- Name -->
+    <record id="name_mst_form" model="ir.ui.view">
+        <field name="name">name.form</field>
+        <field name="model">name.mst</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1" />
+                        </group>
+                    </group>                    
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="name_mst_tree" model="ir.ui.view">
+        <field name="name">name.tree</field>
+        <field name="model">name.mst</field>
+        <field name="arch" type="xml" >
+            <tree sample="1">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_name_mst" model="ir.actions.act_window">
+        <field name="name">Name</field>
+        <field name="res_model">name.mst</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+    </record>
+</odoo>

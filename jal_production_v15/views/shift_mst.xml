@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+ 
+    <record id="shift_mst_form" model="ir.ui.view">
+        <field name="name">shift.mst.form</field>
+        <field name="model">shift.mst</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1" />
+                        </group>
+                    </group>                    
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="shift_mst_tree" model="ir.ui.view">
+        <field name="name">shift.mst.tree</field>
+        <field name="model">shift.mst</field>
+        <field name="arch" type="xml" >
+            <tree sample="1">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_shift_mst" model="ir.actions.act_window">
+        <field name="name">Shift</field>
+        <field name="res_model">shift.mst</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+    </record>
+</odoo>

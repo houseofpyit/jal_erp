@@ -1,0 +1,572 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem
+        id="international_main_menu"
+        name="International"
+        web_icon="jal_crm,static/description/international.png"
+        sequence="6"/>
+        
+        <menuitem
+        id="domestic_main_menu"
+        name="Domestic"
+        web_icon="jal_crm,static/description/domestic.png"
+        sequence="7"/>
+        
+        <menuitem
+        id="trading_main_menu"
+        name="Trading"
+        web_icon="jal_crm,static/description/trading.png"
+        sequence="8"/>
+
+    <!-- International -->
+        <menuitem
+            id="crm_international_main"
+            name="CRM"
+            action="crm.crm_lead_action_pipeline"
+            parent="jal_crm.international_main_menu"
+            sequence="1"/>
+
+        <menuitem
+            id="sale_international_main"
+            name="Sales"
+            action="jal_crm.action_quotations_with_onboarding_international"
+            parent="jal_crm.international_main_menu"
+            sequence="2"/>
+
+        <menuitem
+            id="stock_international_main"
+            name="Product"
+            parent="jal_crm.international_main_menu"
+            sequence="3"/>
+
+            <menuitem
+                id="product_international_main"
+                name="Product"
+                action="stock.product_template_action_product"
+                parent="jal_crm.stock_international_main"
+                sequence="1"/>
+
+            <menuitem
+                id="product_shipping_mst_international_main"
+                name="Product Shipping"
+                action="action_product_shipping_mst"
+                parent="jal_crm.stock_international_main"
+                sequence="2"/>
+
+        <menuitem
+            id="contacts_international_main"
+            name="Contacts"
+            action="contacts.action_contacts"
+            parent="jal_crm.international_main_menu"
+            sequence="4"/>
+
+        <menuitem
+            id="international_configuration_main_menu"
+            name="Configuration"
+            parent="jal_crm.international_main_menu"
+            sequence="5"/>
+
+            <menuitem
+                id="international_configuration_menu"
+                name="Payment Terms"
+                parent="jal_crm.international_configuration_main_menu"
+                action="account.action_payment_term_form"
+                sequence="1"/>
+
+            <menuitem
+                id="international_sale_incoterm_menu"
+                name="Incoterm"
+                parent="jal_crm.international_configuration_main_menu"
+                action="action_sale_incoterm_mst"
+                sequence="2"/>
+
+            <menuitem
+                id="international_sale_terms_menu"
+                name="Delivery Terms"
+                parent="jal_crm.international_configuration_main_menu"
+                action="action_sale_terms_mst"
+                sequence="3"/>
+                
+            <menuitem
+                id="international_sale_port_menu"
+                name="Destination Port"
+                parent="jal_crm.international_configuration_main_menu"
+                action="action_sale_port_mst"
+                sequence="4"/>
+
+            <menuitem
+                id="international_sale_bank_menu"
+                name="Bank"
+                parent="jal_crm.international_configuration_main_menu"
+                action="action_sale_bank_mst"
+                sequence="5"/>
+
+            <menuitem
+                id="international_sale_term_conditions_menu"
+                name="Term &amp; Conditions"
+                parent="jal_crm.international_configuration_main_menu"
+                action="action_sale_term_conditions"
+                sequence="6"/>
+
+            <menuitem
+                id="international_sale_inspection_mst_menu"
+                name="Pre-Shipment Inspection"
+                parent="jal_crm.international_configuration_main_menu"
+                action="action_sale_inspection_mst"
+                sequence="7"/>
+                
+
+        <menuitem
+            id="international_packing_list_main_menu"
+            name="Packing List"
+            parent="jal_crm.international_main_menu"
+            sequence="6"/>
+
+            <menuitem
+                id="international_packing_mst_menu"
+                name="Packing"
+                parent="jal_crm.international_packing_list_main_menu"
+                action="action_packing_mst"
+                sequence="1"/>
+
+            <menuitem
+                id="international_capacity_mst_menu"
+                name="Capacity Per Drum"
+                parent="jal_crm.international_packing_list_main_menu"
+                action="action_capacity_mst"
+                sequence="2"/>
+
+            <menuitem
+                id="international_pouch_name_menu"
+                name="Pouch Name"
+                parent="jal_crm.international_packing_list_main_menu"
+                action="action_pouch_name_mst"
+                sequence="3"/>
+
+            <menuitem
+                id="international_branding_menu"
+                name="Branding"
+                parent="jal_crm.international_packing_list_main_menu"
+                action="action_branding_mst"
+                sequence="4"/>
+
+            <menuitem
+                id="international_lid_color_menu"
+                name="Lid Color"
+                parent="jal_crm.international_packing_list_main_menu"
+                action="action_lid_color_mst"
+                sequence="5"/>
+
+            <menuitem
+                id="international_drum_color_menu"
+                name="Drum Color"
+                parent="jal_crm.international_packing_list_main_menu"
+                action="action_drum_color_mst"
+                sequence="6"/>
+
+            <menuitem
+                id="international_scoops_menu"
+                name="Scoops"
+                parent="jal_crm.international_packing_list_main_menu"
+                action="action_scoops_mst"
+                sequence="7"/>
+
+            <menuitem
+                id="international_outer_cartoons_menu"
+                name="Outer Cartoons"
+                parent="jal_crm.international_packing_list_main_menu"
+                action="action_outer_cartoons_mst"
+                sequence="7"/>
+
+            <menuitem
+                id="international_box_color_mst_menu"
+                name="Box Color"
+                parent="jal_crm.international_packing_list_main_menu"
+                action="action_box_color_mst"
+                sequence="8"/>
+
+            <menuitem
+                id="international_name_mst_menu"
+                name="Name"
+                parent="jal_crm.international_packing_list_main_menu"
+                action="action_name_mst"
+                sequence="9"/>
+
+    <!-- Domestic -->
+        <menuitem
+            id="crm_domestic_main"
+            name="CRM"
+            action="crm.crm_lead_action_pipeline"
+            parent="jal_crm.domestic_main_menu"
+            sequence="1"/>
+
+        <menuitem
+            id="sale_domestic_main"
+            name="Sales"
+            action="jal_crm.action_quotations_with_onboarding_domestic"
+            parent="jal_crm.domestic_main_menu"
+            sequence="2"/>
+
+        <menuitem
+            id="stock_domestic_main"
+            name="Product"
+            parent="jal_crm.domestic_main_menu"
+            sequence="3"/>
+
+            <menuitem
+                id="product_domestic_main"
+                name="Product"
+                action="stock.product_template_action_product"
+                parent="jal_crm.stock_domestic_main"
+                sequence="1"/>
+
+            <menuitem
+                id="product_shipping_mst_domestic_main"
+                name="Product Shipping"
+                action="action_product_shipping_mst"
+                parent="jal_crm.stock_domestic_main"
+                sequence="2"/>
+
+        <menuitem
+            id="contacts_domestic_main"
+            name="Contacts"
+            action="contacts.action_contacts"
+            parent="jal_crm.domestic_main_menu"
+            sequence="4"/>
+
+        <menuitem
+            id="domestic_configuration_main_menu"
+            name="Configuration"
+            parent="jal_crm.domestic_main_menu"
+            sequence="5"/>
+
+            <menuitem
+                id="domestic_configuration_menu"
+                name="Payment Terms"
+                parent="jal_crm.domestic_configuration_main_menu"
+                action="account.action_payment_term_form"
+                sequence="1"/>
+
+            <menuitem
+                id="domestic_sale_incoterm_menu"
+                name="Incoterm"
+                parent="jal_crm.domestic_configuration_main_menu"
+                action="action_sale_incoterm_mst"
+                sequence="2"/>
+
+            <menuitem
+                id="domestic_sale_terms_menu"
+                name="Delivery Terms"
+                parent="jal_crm.domestic_configuration_main_menu"
+                action="action_sale_terms_mst"
+                sequence="3"/>
+                
+            <menuitem
+                id="domestic_sale_port_menu"
+                name="Destination Port"
+                parent="jal_crm.domestic_configuration_main_menu"
+                action="action_sale_port_mst"
+                sequence="4"/>
+
+            <menuitem
+                id="domestic_sale_bank_menu"
+                name="Bank"
+                parent="jal_crm.domestic_configuration_main_menu"
+                action="action_sale_bank_mst"
+                sequence="5"/>
+
+            <menuitem
+                id="domestic_sale_term_conditions_menu"
+                name="Term &amp; Conditions"
+                parent="jal_crm.domestic_configuration_main_menu"
+                action="action_sale_term_conditions"
+                sequence="6"/>
+
+            <menuitem
+                id="domestic_sale_inspection_mst_menu"
+                name="Pre-Shipment Inspection"
+                parent="jal_crm.domestic_configuration_main_menu"
+                action="action_sale_inspection_mst"
+                sequence="7"/>
+
+        <menuitem
+            id="domestic_packing_list_main_menu"
+            name="Packing List"
+            parent="jal_crm.domestic_main_menu"
+            sequence="6"/>
+
+            <menuitem
+                id="domestic_packing_mst_menu"
+                name="Packing"
+                parent="jal_crm.domestic_packing_list_main_menu"
+                action="action_packing_mst"
+                sequence="1"/>
+
+            <menuitem
+                id="domestic_capacity_mst_menu"
+                name="Capacity Per Drum"
+                parent="jal_crm.domestic_packing_list_main_menu"
+                action="action_capacity_mst"
+                sequence="2"/>
+
+            <menuitem
+                id="domestic_pouch_name_menu"
+                name="Pouch Name"
+                parent="jal_crm.domestic_packing_list_main_menu"
+                action="action_pouch_name_mst"
+                sequence="3"/>
+
+            <menuitem
+                id="domestic_branding_menu"
+                name="Branding"
+                parent="jal_crm.domestic_packing_list_main_menu"
+                action="action_branding_mst"
+                sequence="4"/>
+
+            <menuitem
+                id="domestic_lid_color_menu"
+                name="Lid Color"
+                parent="jal_crm.domestic_packing_list_main_menu"
+                action="action_lid_color_mst"
+                sequence="5"/>
+
+            <menuitem
+                id="domestic_drum_color_menu"
+                name="Drum Color"
+                parent="jal_crm.domestic_packing_list_main_menu"
+                action="action_drum_color_mst"
+                sequence="6"/>
+
+            <menuitem
+                id="domestic_scoops_menu"
+                name="Scoops"
+                parent="jal_crm.domestic_packing_list_main_menu"
+                action="action_scoops_mst"
+                sequence="7"/>
+
+            <menuitem
+                id="domestic_outer_cartoons_menu"
+                name="Outer Cartoons"
+                parent="jal_crm.domestic_packing_list_main_menu"
+                action="action_outer_cartoons_mst"
+                sequence="7"/>
+
+            <menuitem
+                id="domestic_box_color_mst_menu"
+                name="Box Color"
+                parent="jal_crm.domestic_packing_list_main_menu"
+                action="action_box_color_mst"
+                sequence="8"/>
+
+            <menuitem
+                id="domestic_name_mst_menu"
+                name="Name"
+                parent="jal_crm.domestic_packing_list_main_menu"
+                action="action_name_mst"
+                sequence="9"/>
+
+    <!-- Trading -->
+        <menuitem
+            id="crm_trading_main"
+            name="CRM"
+            action="crm.crm_lead_action_pipeline"
+            parent="jal_crm.trading_main_menu"
+            sequence="1"/>
+
+        <menuitem
+            id="sale_trading_main"
+            name="Sales"
+            action="jal_crm.action_quotations_with_onboarding_trading"
+            parent="jal_crm.trading_main_menu"
+            sequence="2"/>
+            
+        <menuitem
+            id="stock_trading_main"
+            name="Product"
+            action="stock.product_template_action_product"
+            parent="jal_crm.trading_main_menu"
+            sequence="3"/>
+
+            <menuitem
+                id="product_trading_main"
+                name="Product"
+                action="stock.product_template_action_product"
+                parent="jal_crm.stock_trading_main"
+                sequence="1"/>
+
+            <menuitem
+                id="product_shipping_mst_trading_main"
+                name="Product Shipping"
+                action="action_product_shipping_mst"
+                parent="jal_crm.stock_trading_main"
+                sequence="2"/>
+            
+        <menuitem
+            id="contacts_trading_main"
+            name="Contacts"
+            action="contacts.action_contacts"
+            parent="jal_crm.trading_main_menu"
+            sequence="4"/>
+
+        <menuitem
+            id="trading_configuration_main_menu"
+            name="Configuration"
+            parent="jal_crm.trading_main_menu"
+            sequence="5"/>
+
+            <menuitem
+                id="trading_configuration_menu"
+                name="Payment Terms"
+                parent="jal_crm.trading_configuration_main_menu"
+                action="account.action_payment_term_form"
+                sequence="1"/>
+
+            <menuitem
+                id="trading_sale_incoterm_menu"
+                name="Incoterm"
+                parent="jal_crm.trading_configuration_main_menu"
+                action="action_sale_incoterm_mst"
+                sequence="2"/>
+
+            <menuitem
+                id="trading_sale_terms_menu"
+                name="Delivery Terms"
+                parent="jal_crm.trading_configuration_main_menu"
+                action="action_sale_terms_mst"
+                sequence="3"/>
+                
+            <menuitem
+                id="trading_sale_port_menu"
+                name="Destination Port"
+                parent="jal_crm.trading_configuration_main_menu"
+                action="action_sale_port_mst"
+                sequence="4"/>
+
+            <menuitem
+                id="trading_sale_bank_menu"
+                name="Bank"
+                parent="jal_crm.trading_configuration_main_menu"
+                action="action_sale_bank_mst"
+                sequence="5"/>
+
+            <menuitem
+                id="trading_sale_term_conditions_menu"
+                name="Term &amp; Conditions"
+                parent="jal_crm.trading_configuration_main_menu"
+                action="action_sale_term_conditions"
+                sequence="6"/>
+
+            <menuitem
+                id="trading_sale_inspection_mst_menu"
+                name="Pre-Shipment Inspection"
+                parent="jal_crm.trading_configuration_main_menu"
+                action="action_sale_inspection_mst"
+                sequence="7"/>
+
+        <menuitem
+            id="trading_packing_list_main_menu"
+            name="Packing List"
+            parent="jal_crm.trading_main_menu"
+            sequence="6"/>
+
+            <menuitem
+                id="trading_packing_mst_menu"
+                name="Packing"
+                parent="jal_crm.trading_packing_list_main_menu"
+                action="action_packing_mst"
+                sequence="1"/>
+
+            <menuitem
+                id="trading_capacity_mst_menu"
+                name="Capacity Per Drum"
+                parent="jal_crm.trading_packing_list_main_menu"
+                action="action_capacity_mst"
+                sequence="2"/>
+
+            <menuitem
+                id="trading_pouch_name_menu"
+                name="Pouch Name"
+                parent="jal_crm.trading_packing_list_main_menu"
+                action="action_pouch_name_mst"
+                sequence="3"/>
+
+            <menuitem
+                id="trading_branding_menu"
+                name="Branding"
+                parent="jal_crm.trading_packing_list_main_menu"
+                action="action_branding_mst"
+                sequence="4"/>
+
+            <menuitem
+                id="trading_lid_color_menu"
+                name="Lid Color"
+                parent="jal_crm.trading_packing_list_main_menu"
+                action="action_lid_color_mst"
+                sequence="5"/>
+
+            <menuitem
+                id="trading_drum_color_menu"
+                name="Drum Color"
+                parent="jal_crm.trading_packing_list_main_menu"
+                action="action_drum_color_mst"
+                sequence="6"/>
+
+            <menuitem
+                id="trading_scoops_menu"
+                name="Scoops"
+                parent="jal_crm.trading_packing_list_main_menu"
+                action="action_scoops_mst"
+                sequence="7"/>
+
+            <menuitem
+                id="trading_outer_cartoons_menu"
+                name="Outer Cartoons"
+                parent="jal_crm.trading_packing_list_main_menu"
+                action="action_outer_cartoons_mst"
+                sequence="7"/>
+
+            <menuitem
+                id="trading_box_color_mst_menu"
+                name="Box Color"
+                parent="jal_crm.trading_packing_list_main_menu"
+                action="action_box_color_mst"
+                sequence="8"/>
+
+            <menuitem
+                id="trading_name_mst_menu"
+                name="Name"
+                parent="jal_crm.trading_packing_list_main_menu"
+                action="action_name_mst"
+                sequence="9"/>
+
+    <menuitem 
+        action="action_jal_purchase_requisite" 
+        id="menu_purchase_requisite" 
+        name="Purchase Requisition" 
+        web_icon="jal_crm,static/description/pur_req.png"
+        sequence="20"/>
+
+    <menuitem
+        id="crm_team_config_crm"
+        name="Sales Teams"
+        parent="master.master_main_menu"
+        action="sales_team.crm_team_action_config"
+        sequence="6"/>
+
+    <menuitem
+        id="crm.crm_menu_root"
+        active="False"/>
+
+    <menuitem
+        id="sale.sale_menu_root"
+        active="False"/>
+
+    <menuitem
+        id="contacts.menu_contacts"
+        active="False"/>
+
+    <menuitem id="sale.sale_order_menu"
+        active="False"/>
+
+</odoo>

@@ -1,0 +1,16 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_jal_production_user,jal_production_user,model_jal_production,jal_production_v15.res_group_production_user,1,1,1,0
+access_jal_production_admin,jal_production_admin,model_jal_production,jal_production_v15.res_group_production_admin,1,1,1,1
+access_jal_production_line,jal_production_line,model_jal_production_line,,1,1,1,1
+
+access_jal_quality_user,jal_quality_user,model_jal_quality,jal_production_v15.res_group_quality_user,1,1,1,1
+access_jal_quality_admin,jal_quality_admin,model_jal_quality,jal_production_v15.res_group_quality_admin,1,1,1,1
+access_packing_quality_line,packing_quality_line,model_packing_quality_line,,1,1,1,1
+access_finish_quality_line,finish_quality_line,model_finish_quality_line,,1,1,1,1
+access_quality_parameter_line,quality_parameter_line,model_quality_parameter_line,,1,1,1,1
+
+access_shift_mst,shift_mst,model_shift_mst,,1,1,1,1
+
+access_tempalte_quality_parameter,tempalte_quality_parameter,model_tempalte_quality_parameter,,1,1,1,1
+access_jal_product_attribute,jal_product_attribute,model_jal_product_attribute,,1,1,1,1
+access_quality_value,quality_value,model_quality_value,,1,1,1,1

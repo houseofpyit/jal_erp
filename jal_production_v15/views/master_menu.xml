@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem
+        id="production_main_menu"
+        name="Production"
+        web_icon="jal_production_v15,static/description/production.png"
+        sequence="10"/>
+        
+        <menuitem
+            id="jal_production_main"
+            name="Production"
+            action="action_jal_production"
+            parent="jal_production_v15.production_main_menu"
+            groups="jal_production_v15.res_group_production_user,jal_production_v15.res_group_production_admin"
+            sequence="1"/>
+
+        <menuitem
+            id="jal_quality_main"
+            name="Quality"
+            action="action_jal_quality"
+            parent="jal_production_v15.production_main_menu"
+            groups="jal_production_v15.res_group_quality_user,jal_production_v15.res_group_quality_admin"
+            sequence="2"/>
+
+        <menuitem
+            id="shift_mst_main"
+            name="Shift"
+            action="action_shift_mst"
+            parent="jal_production_v15.production_main_menu"
+            sequence="3"/>
+
+    <menuitem
+        id="jal_product_attribute_menu"
+        name="Product Attribute" 
+        action="action_jal_product_attribute"
+        parent="stock.menu_product_in_config_stock"
+        sequence="7"/>
+
+    <menuitem
+        id="quality_value_sub_menu"
+        name="Quality value"
+        action="action_quality_value"
+        parent="stock.menu_product_in_config_stock"
+        sequence="8"/>
+
+</odoo>

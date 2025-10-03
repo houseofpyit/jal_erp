@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sale_order_form_view_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form.view.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_lead" type="object" class="oe_stat_button" icon="fa-address-card" attrs="{'invisible': [('lead_count', '=', 0)]}">
+                    <field name="lead_count" widget="statinfo" string="Lead"/>
+                </button>
+                <button name="action_view_pur_req" type="object" class="oe_stat_button" icon="fa-shopping-cart" attrs="{'invisible': [('purchase_req_count', '=', 0)]}">
+                    <field name="purchase_req_count" widget="statinfo" string="Purchase Requisition"/>
+                </button>
+            </xpath>    
+            <xpath expr="//button[@name='action_quotation_send']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="attributes">
+                <attribute name="statusbar_visible">draft,create_pi,sale</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_cancel']" position="before">
+                <button name="action_create_pi" string="Create PI" class="btn-primary" type="object" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                <button name="action_confirm" id="action_confirm" data-hotkey="v" string="Confirm PI" class="btn-primary" type="object" attrs="{'invisible': [('state', '!=', 'create_pi')]}"/>
+                <button name="create_purchase_requisite" string="Send Purchase Request" class="btn-primary" type="object" attrs="{'invisible': ['|',('state', '!=', 'sale'),('purchase_req_count', '!=', 0)]}"/>
+            </xpath>
+            <xpath expr="//button[@name='action_confirm'][1]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_confirm'][2]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>	
+            <xpath expr="//field[@name='team_id']" position="after">
+                <field name="business_type" />
+            </xpath>	
+            <xpath expr="//field[@name='validity_date']" position="attributes">
+                <attribute name="attrs">{'invisible': [('business_type', '==', 'international')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='sale_order_template_id']" position="after">
+                <field name="currency_id" options="{'no_create': True}" readonly="0" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
+                <field name="bank_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': ['|',('business_type', '!=', 'international'),('state', '==', 'draft')],'readonly': [('state', '=', 'sale')]}"/>
+                <field name="po_no" attrs="{'invisible': ['|',('business_type', '!=', 'international'),('state', '==', 'draft')],'readonly': [('state', '=', 'sale')]}"/>
+                <field name="po_date" attrs="{'invisible': ['|',('business_type', '!=', 'international'),('state', '==', 'draft')],'readonly': [('state', '=', 'sale')]}"/>
+                <field name="reference" attrs="{'invisible': ['|',('business_type', '!=', 'international'),('state', '==', 'draft')],'readonly': [('state', '=', 'sale')]}"/>
+            </xpath>
+            <xpath expr="//page[@name='order_lines']//field[@name='order_line']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', 'in', ('done','cancel','sale'))]}</attribute>
+            </xpath>
+            <!-- <xpath expr="//field[@name='date']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', 'in', ('done','cancel','sale'))]}</attribute>
+            </xpath> -->
+            <xpath expr="//page[@name='order_lines']" position="after">
+                <page string="PI Information" name="pi_information" attrs="{'invisible': ['|',('business_type', '!=', 'international'),('state', '==', 'draft')]}">
+                    <group>
+                        <group>
+                            <field name="freight" attrs="{'readonly': [('state', '=', 'sale')]}"/>
+                            <field name="insurance" attrs="{'readonly': [('state', '=', 'sale')]}"/>
+                            <field name="fob_rates" attrs="{'readonly': [('state', '=', 'sale')]}"/>
+                        </group>
+                        <group>
+                            <field name="inspection_id" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': [('state', '=', 'sale')]}"/>
+                            <field name="lading_type" attrs="{'readonly': [('state', '=', 'sale')]}"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='sale_order_template_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//label[@for='pricelist_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div/field[@name='pricelist_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div/button[@name='update_prices']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//page/group[@name='note_group']" position="before">
+                <group>
+                    <group>
+                        <field name="conditions_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')]}"/>
+                    </group>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '=', 'sale')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="before">
+                <field name="incoterm_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="terms_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
+                <field name="country_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
+                <field name="port_id" domain="[('country_id', '=', country_id)]" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
+                <field name="palletized_type" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
+            </xpath>
+            <xpath expr="//tree/field[@name='product_template_id']" position="after">
+                <field name="shipping_id" width="150px" attrs="{'column_invisible': [('parent.business_type', '!=', 'international')]}"/>
+            </xpath>
+            <xpath expr="//tree" position="attributes">
+                <attribute name="editable"></attribute>
+                <!-- <tree string="Sales Order Lines" editable="bottom"></tree> -->
+            </xpath>
+
+            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='product_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='product_id']" position="after">
+                <field name="product_template_id" string="Product" options="{'no_quick_create': True}" attrs="{'required': [('display_type', '=', False)]}" readonly="0" context="{'partner_id': parent.partner_id, 'quantity': product_uom_qty, 'pricelist': parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id, 'default_list_price': price_unit, 'default_description_sale': name}" domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" widget="product_configurator"/>
+                <field name="shipping_id" width="150px" attrs="{'invisible': [('parent.business_type', '!=', 'international')]}"/>
+                <field name="hsn_id" options="{'no_quick_create': True}" attrs="{'invisible': [('parent.business_type', '=', 'international')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='analytic_tag_ids']" position="after">
+                <field name="packing_type" attrs="{'invisible': [('parent.business_type', '!=', 'international')],'required': [('parent.business_type', '=', 'international'),('display_type', '=', False)]}"/>
+                <field name="drum_cap_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', '!=', 'drum')]}"/>
+                <field name="bucket_cap_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', 'not in', ('bucket','usa_bucket'))]}"/>
+                <field name="box_cap_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', '!=', 'pouch')]}"/>
+                <field name="name_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': ['|',('packing_type', '=', 'pouch'),('packing_type', '=', False)]}"/>
+                <field name="branding_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': ['|',('packing_type', '=', 'pouch'),('packing_type', '=', False)]}"/>
+                <field name="lid_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', 'not in', ('bucket','usa_bucket'))]}"/>
+                <field name="drum_color_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', 'not in', ('bucket','usa_bucket'))]}"/>
+                <field name="scoops_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', '!=', 'usa_bucket')]}"/>
+                <field name="outer_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', '!=', 'usa_bucket')]}"/>
+                <field name="pouch_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', '!=', 'pouch')]}"/>
+                <field name="box_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', '!=', 'pouch')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form/field[@name='name']" position="after">
+                <label for="packing_name" attrs="{'invisible': ['|',('parent.business_type', '!=', 'international'),('display_type', '=', 'line_section')]}"/>
+                <field name="packing_name" attrs="{'invisible': ['|',('parent.business_type', '!=', 'international'),('display_type', '=', 'line_section')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form/group/group/label[@for='customer_lead']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form/group/group/div[@name='lead']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form/div[@name='invoice_lines']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='name']" position="after">
+                <field name="packing_name" attrs="{'column_invisible': [('parent.business_type', '!=', 'international')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form/label[@for='name']" position="attributes">
+                <attribute name="string">Loading Description</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='name']" position="attributes">
+                <attribute name="string">Loading Description</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='product_template_id']" position="attributes">
+                <attribute name="width">150px</attribute>
+                <!-- <attribute name="string">Packing</attribute> -->
+                <!-- <attribute name="domain">[('is_packing', '=', True)]</attribute> -->
+            </xpath>
+            <xpath expr="//control/create[@name='add_note_control']" position="replace"/>
+        </field>
+    </record>
+
+    <record id="hop_sale_order_form_view_inherit" model="ir.ui.view">
+        <field name="name">transaction.sale.order.form.view.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="transaction.hop_inherit_sale_order"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page/group[@name='note_group']/group" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page/group[@name='note_group']/group" position="replace">
+                <group colspan="4">
+                    <field name="note" class="oe-bordered-editor" nolabel="1" placeholder="Terms and conditions..."/>
+                </group>
+            </xpath>
+            <xpath expr="//tree/field[@name='disc_per']" position="attributes">
+                <attribute name="attrs">{'column_invisible': [('parent.business_type', '=', 'international')]}</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='disc_amt']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='add_amt']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='taxablevalue']" position="attributes">
+                <attribute name="attrs">{'column_invisible': [('parent.business_type', '=', 'international')]}</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='gst_ids']" position="attributes">
+                <attribute name="attrs">{'column_invisible': [('parent.business_type', '=', 'international')]}</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='sgst_amt']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='cgst_amt']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='igst_amt']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='final_amt']" position="attributes">
+                <attribute name="attrs">{'column_invisible': [('parent.business_type', '=', 'international')]}</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='hsn_id']" position="attributes">
+                <attribute name="attrs">{'column_invisible': [('parent.business_type', '=', 'international')]}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='disc_per']" position="attributes">
+                <attribute name="attrs">{'invisible': [('parent.business_type', '=', 'international')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='disc_amt']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='add_amt']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='taxablevalue']" position="attributes">
+                <attribute name="attrs">{'invisible': [('parent.business_type', '=', 'international')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='gst_ids']" position="attributes">
+                <attribute name="attrs">{'invisible': [('parent.business_type', '=', 'international')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='sgst_amt']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='cgst_amt']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='igst_amt']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='final_amt']" position="attributes">
+                <attribute name="attrs">{'invisible': [('parent.business_type', '=', 'international')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    
+
+
+    <record id="action_quotations_with_onboarding_international" model="ir.actions.act_window">
+        <field name="name">Quotations</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/>
+                 <!-- <field name="views" eval="[(ref('jal_crm.sale_order_form_view_international'), 'form'), (ref('sale.view_quotation_tree_with_onboarding'), 'tree')]"/> -->
+            <!-- <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('sale.view_quotation_tree_with_onboarding')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('jal_crm.sale_order_form_view_international')})]"/> -->
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+        <field name="context">{'search_default_my_quotation': 1,'default_business_type':'international'}</field>
+        <field name="domain">[('business_type', '=', 'international')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a new quotation, the first step of a new sale!
+            </p><p>
+            Once the quotation is confirmed by the customer, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_quotations_with_onboarding_domestic" model="ir.actions.act_window">
+        <field name="name">Quotations</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/>
+            <!-- <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('sale.view_quotation_tree_with_onboarding')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('jal_crm.sale_order_form_view_domestic')})]"/> -->
+        <!-- <field name="views" eval="[(ref('jal_crm.sale_order_form_view_domestic'), 'form'), (ref('sale.view_quotation_tree_with_onboarding'), 'tree')]"/> -->
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+        <field name="context">{'search_default_my_quotation': 1,'default_business_type':'domestic'}</field>
+        <field name="domain">[('business_type', '=', 'domestic')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a new quotation, the first step of a new sale!
+            </p><p>
+            Once the quotation is confirmed by the customer, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_quotations_with_onboarding_trading" model="ir.actions.act_window">
+        <field name="name">Quotations</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+        <field name="context">{'search_default_my_quotation': 1,'default_business_type':'trading'}</field>
+        <field name="domain">[('business_type', '=', 'trading')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a new quotation, the first step of a new sale!
+            </p><p>
+            Once the quotation is confirmed by the customer, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
+            </p>
+        </field>
+    </record>
+
+</odoo>                            

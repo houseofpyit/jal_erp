@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_sale_proforma">
+            <t t-call="web.basic_layout">
+                <div class="page">
+                    <style>
+                        td{
+                            font-size:14px;
+                            padding-left:10px;
+                            padding-right:5px;
+                        }
+                        <!-- span{
+                            padding:5px;
+                        } -->
+                        td, th, table {
+                            border-collapse: collapse !important;
+                        }
+                    </style>
+                
+                    <t t-foreach="docs" t-as="o">
+                        <table style="width:100%;border: 1px solid black;" v-align="top">
+                            <tr>
+                                <td width="60%" style="vertical-align: top;" >
+                                    <b><span style="font-size:30px;" t-esc="o.company_id.name" /></b><br/>
+                                    <span t-esc="o.company_id.street" /><span t-esc="o.company_id.street2" />
+                                    <span t-esc="o.company_id.city" />,<span t-esc="o.company_id.state_id.name" />,<span t-esc="o.company_id.zip" /><br/>
+                                    <span>E.mail.: </span><span style="padding-right:5px;"  t-esc="o.company_id.email"/>
+                                    <span>Web: </span><span  t-esc="o.company_id.website"/><br/>
+                                    <span>GSTIN: </span><span t-esc="o.company_id.vat" />
+                                </td>
+                                <td width="40%" style="padding-left:10px;">
+                                    <b><span style="font-size:20px;padding-right:5px;">PROFORMA INVOICE <span style="font-size:20px;" t-esc="o.name" /></span></b><br/>
+                                    <span >PO : </span><span t-esc="o.po_no" style=""/>
+                                    <span style="padding-left:5px;">PO Date: </span><t t-if="o.po_date">
+                                        <span t-esc="o.po_date.strftime('%d/%m/%Y')"/>
+                                    </t><br/>
+                                    <span >QUOTE : </span><span t-esc="o.po_no" style=""/>
+                                    <span style="padding-left:5px;">VALIDITY : </span><span t-esc="o.payment_term_id.name" />
+                                </td>
+                            </tr>
+                        </table>
+                        <table style="width:100%;border: 1px solid black;border-top:none;" >
+                            <tr>
+                                <td colspan="2" style="padding-bottom:5px;padding-top:5px;">
+                                    <b><span style="padding-bottom:5px;">BENEFICIARY'S BANK DETAILS</span></b>
+                                </td>
+                                <td colspan="2" style="padding-bottom:5px;padding-top:5px;">
+                                    <b><span style="padding-bottom:5px;">ADDITIONAL BANK DETAILS </span></b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="15%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
+                                    <span>Bank :</span>
+                                    <span>A/C No. :</span><br/>
+                                    <span>RTGS/MICR Code : </span><br/>
+                                    <span>Branch :</span><br/>
+                                    <span>SWIFT Code : </span>
+                                </td>
+                                <td width="35%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
+                                    <span style="padding-top:0px;" t-esc="o.bank_id.name" /><br/>
+                                    <span style="padding-top:0px;" t-esc="o.bank_id.bank_ac_name" /><br/>
+                                    <span style="padding-top:0px;" t-esc="o.bank_id.bank_ac_no" /><br/>
+                                    <span style="padding-top:0px;" t-esc="o.bank_id.bank_branch_ifsc"/>
+                                </td>
+                                <td width="15%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
+                                    <span>Name (Correspondent Bank) :</span><br/>
+                                    <span>Currency :</span><br/>
+                                    <span>Swift Code: </span><br/>
+                                    <span>Account Number : </span>
+                                </td>
+                                <td width="35%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
+                                    <span t-esc="o.bank_id.name" /><br/>
+                                    <span t-esc="o.bank_id.bank_ac_name" /><br/>
+                                    <span t-esc="o.bank_id.bank_ac_no" /><br/>
+                                    <span t-esc="o.bank_id.bank_branch_ifsc"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="padding-bottom:5px;padding-top:5px;">
+                                    <b><span style="padding-bottom:5px;">CONSIGNEE</span></b>
+                                </td>
+                                <td colspan="2" style="padding-bottom:5px;padding-top:5px;">
+                                    <b><span style="padding-bottom:5px;">BUYER &amp; NOTIFY (1) </span></b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="25%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
+                                    <span>Name</span><br/>
+                                    <span>Company</span><br/>
+                                    <span>Address</span><br/>
+                                    <span>Country</span><br/>
+                                    <span>Phone</span><br/>
+                                    <span>Email</span><br/>
+                                    <span>GST No.</span>
+                                </td>
+                                <td width="25%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
+                                    <span t-esc="o.partner_id.name" /><br/>
+                                    <span t-esc="o.partner_id.name" /><br/>
+                                    <span t-esc="o.partner_id.street" style="padding-right:3px;"/>
+                                    <span t-esc="o.partner_id.street2" style="padding-right:3px;"/>
+                                    <span t-esc="o.partner_id.city" style="padding-right:3px;"/>,<span t-esc="o.partner_id.state_id.name" style="padding-right:3px;"/>,<span t-esc="o.partner_id.zip" /><br/>
+                                    <span  t-esc="o.partner_id.country_id.name" /><br/>
+                                    <span  t-esc="o.partner_id.phone" style="padding-right:3px;"/><span t-esc="o.partner_id.mobile" /><br/>
+                                    <span t-esc="o.partner_id.email" /><br/>
+                                    <span t-esc="o.partner_id.vat" />
+                                </td>
+                                <td width="25%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
+                                    <!-- <span>Name (Correspondent Bank) :</span><br/>
+                                    <span>Currency :</span><br/>
+                                    <span>Swift Code: </span><br/>
+                                    <span>Account Number : </span> -->
+                                </td>
+                                <td width="25%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
+                                    <!-- <span t-esc="o.bank_id.name" /><br/>
+                                    <span t-esc="o.bank_id.bank_ac_name" /><br/>
+                                    <span t-esc="o.bank_id.bank_ac_no" /><br/>
+                                    <span t-esc="o.bank_id.bank_branch_ifsc"/> -->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="padding-bottom:5px;padding-top:5px;">
+                                    <b><span style="padding-bottom:5px;">BUYER REFERENCE DETAILS</span></b>
+                                </td>
+                                <td colspan="2" style="padding-bottom:5px;padding-top:5px;">
+                                    <b><span style="padding-bottom:5px;">DELIVERY AND PAYMENT TERMS</span></b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="25%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
+                                    <!-- <span>Name</span><br/>
+                                    <span>Company</span><br/>
+                                    <span>Address</span><br/>
+                                    <span>Country</span><br/>
+                                    <span>Phone</span><br/>
+                                    <span>Email</span><br/>
+                                    <span>GST No.</span> -->
+                                </td>
+                                <td width="25%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
+                                    <!-- <span t-esc="o.partner_id.name" /><br/>
+                                    <span t-esc="o.partner_id.name" /><br/>
+                                    <span t-esc="o.partner_id.street" style="padding-right:3px;"/>
+                                    <span t-esc="o.partner_id.street2" style="padding-right:3px;"/>
+                                    <span t-esc="o.partner_id.city" style="padding-right:3px;"/>,<span t-esc="o.partner_id.state_id.name" style="padding-right:3px;"/>,<span t-esc="o.partner_id.zip" /><br/>
+                                    <span  t-esc="o.partner_id.country_id.name" /><br/>
+                                    <span  t-esc="o.partner_id.phone" style="padding-right:3px;"/><span t-esc="o.partner_id.mobile" /><br/>
+                                    <span t-esc="o.partner_id.email" /><br/>
+                                    <span t-esc="o.partner_id.vat" /> -->
+                                </td>
+                                <td width="25%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
+                                    <span>INCOTERMS :</span><br/>
+                                    <span>DELIVERY TERMS :</span><br/><br/>
+                                    <span>PAYMENT TERMS :</span>
+                                </td>
+                                <td width="25%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
+                                    <span t-esc="o.incoterm_id.name" /><br/>
+                                    <span t-esc="o.terms_id.name" /><br/><br/>
+                                    <span t-esc="o.payment_term_id.name"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" style="padding-bottom:5px;padding-top:5px;">
+                                    <b><span style="padding-bottom:5px;">TRANSPORT DETAILS</span></b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" width="25%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
+                                    <span>PORT OF LOADING : </span><br/>
+                                    <span>PORT OF DISCHARGE : </span><br/>
+                                    <span>COUNTRY OF FINAL DESTINATION :</span><br/>
+                                    <span>COUNTRY OF ORIGIN OF GOODS :</span>
+                                </td>
+                                <td colspan="2" width="25%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
+                                    <span t-esc="o.partner_id.name" /><br/>
+                                    <span t-esc="o.partner_id.name" /><br/>
+                                    <span t-esc="o.partner_id.street" style="padding-right:3px;"/>
+                                    <span t-esc="o.partner_id.street2" style="padding-right:3px;"/>
+                                    <span t-esc="o.partner_id.city" style="padding-right:3px;"/>,<span t-esc="o.partner_id.state_id.name" style="padding-right:3px;"/>,<span t-esc="o.partner_id.zip" /><br/>
+                                    <span  t-esc="o.partner_id.country_id.name" /><br/>
+                                    <span  t-esc="o.partner_id.phone" style="padding-right:3px;"/><span t-esc="o.partner_id.mobile" /><br/>
+                                    <span t-esc="o.partner_id.email" /><br/>
+                                    <span t-esc="o.partner_id.vat" />
+                                </td>
+                            </tr>
+                        </table>
+
+                        <table width="100%" style="border: 1px solid black;border-top:none;">
+                            <tr>
+                                <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:14px;text-align:center;">SRL</th>
+                                <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:14px;text-align:center;">PRODUCT</th>
+                                <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:14px;text-align:center;">PACKING DESCRIPTION</th>
+                                <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:14px;text-align:center;">TOTAL PACKING</th>
+                                <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:14px;text-align:center;">QUANTITY UNITS</th>
+                                <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:14px;text-align:center;">UNIT PRICE</th>
+                                <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:14px;text-align:center;">TOTAL PRICE</th>
+                            </tr>
+                            <t t-set="srl" t-value="0" />
+                            <t t-set="tot_pcs" t-value="0" />
+                            <t t-set="tot_amt" t-value="0" />
+                            <t t-set="tot_final_amt" t-value="0" />
+                            
+                            <t t-foreach="o.order_line" t-as="item">
+                                <t t-if="item.product_id">
+                                    <t t-set="srl" t-value="srl + 1" />
+                                    <t t-set="tot_pcs" t-value="tot_pcs + item.product_uom_qty" />
+                                    <t t-set="tot_amt" t-value="tot_amt + item.price_unit" />
+                                    <t t-set="tot_final_amt" t-value="tot_final_amt + item.price_subtotal" />
+                                    <tr>
+                                        <td style="text-align: center;border-right: 1px solid black;">
+                                            <span><span t-esc="srl"></span></span>
+                                        </td>
+                                        <td style="text-align: left;border-right: 1px solid black;">
+                                            <span><span t-esc="item.product_id.name"></span></span>
+                                        </td>
+                                        <td style="text-align: left;border-right: 1px solid black;">
+                                            <!-- <span ><span t-esc="item.hsn_id.name"></span></span> -->
+                                        </td>
+                                        <td style="text-align: right;border-right: 1px solid black;">
+                                            <!-- <span ><span t-esc="item.product_uom_qty"></span></span> -->
+                                        </td>
+                                        <td style="text-align: center;border-right: 1px solid black;">
+                                            <span style="padding-right:2px;" t-esc="item.product_uom_qty"/><span t-esc="item.product_uom.name"/>
+                                        </td>
+                                        <td style="text-align: right;border-right: 1px solid black;">
+                                            <span ><span t-esc="'%.2f'% (item.price_unit)"></span></span>
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <span ><span t-esc="'%.2f'% (item.price_subtotal)"></span></span>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <t t-elif="item.name">
+                                    <t t-set="srl" t-value="0" />
+                                    <tr>
+                                        <td colspan="7" style="border: 1px solid black;padding-bottom:2px;padding-top:4px;">
+                                            <b><span t-esc="item.name"/></b>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </t>
+                            <tr style="border:1px solid black;border-left:none;border-right:none;">
+                                <td style="border:1px solid black;border-left:none;border-right:none;border-right: 1px solid black;"></td>
+                                <td style="border:1px solid black;border-left:none;border-right:none;border-right: 1px solid black;"></td>
+                                <td style="border:1px solid black;border-left:none;border-right:none;border-right: 1px solid black;"></td>
+                                <td style="border:1px solid black;border-left:none;border-right:none;text-align:right;border-right: 1px solid black;">
+                                </td>
+                                <td style="border:1px solid black;border-left:none;border-right:none;text-align:right;border-right: 1px solid black;">
+                                </td>
+                                <!-- <td style="border:1px solid black;border-left:none;border-right:none;text-align:right;border-right: 1px solid black;">
+                                    <t t-esc="tot_pcs" />
+                                </td> -->
+                                <td style="border:1px solid black;border-left:none;border-right:none;text-align:right;border-right: 1px solid black;">
+                                    <t t-esc="'%.2f'% (tot_amt)" />
+                                </td>
+                                <td style="border:1px solid black;border-left:none;border-right:none;text-align:right;">
+                                    <t t-esc="'%.2f'% (tot_final_amt)" />
+                                </td>
+                            </tr>
+                        </table>
+                        <t t-if="o.tax_totals_json">
+                            <t t-set="tax_totals" t-value="json.loads(o.tax_totals_json)"/>
+
+                            <table style="width:100%;border: 1px solid black;border-top:none;">
+                                <tr>
+                                    <td style="width: 60%;padding:10px;">
+                                        <span style="padding-right:3px;"><b>PALLETIZED CARGO :</b></span> <span t-esc="o.palletized_type"/> <br/>
+                                        <span style="padding-right:3px;"><b>PRE-SHIPMENT INSPECTION : </b></span> <span t-esc="o.inspection_id.name"/> <br/>
+                                        <span style="padding-right:3px;"><b>TOTAL FREIGHT :</b></span> <span t-esc="o.freight"/> <br/>
+                                        <span style="padding-right:3px;"><b>TOTAL INSURANCE : </b></span> <span t-esc="o.insurance"/>
+                                        
+                                    </td>
+
+                                    <td style="width: 40%;padding:10px;border-left: 1px solid black;">
+                                        <t t-if="tax_totals.get('amount_untaxed')">
+                                            <div>
+                                                <span>Untaxed Amount:</span>
+                                                <span style="float: right;" t-esc="tax_totals['amount_untaxed']"/>
+                                            </div>
+                                        </t>
+
+                                        <t t-foreach="tax_totals.get('subtotals', [])" t-as="subtotal">
+                                            <t t-set="subtotal_to_show" t-value="subtotal['name']"/>
+                                            <t t-foreach="tax_totals['groups_by_subtotal'].get(subtotal_to_show, [])" t-as="amount_by_group">
+                                                <div>
+                                                    <span t-esc="amount_by_group['tax_group_name']"/>:
+                                                    <span style="float: right;" t-esc="amount_by_group['tax_group_amount']"/>
+                                                </div>
+                                            </t>
+                                        </t>
+
+                                        <t t-if="tax_totals.get('amount_total')">
+                                            <div>
+                                                <b><span>Total Amount:</span></b>
+                                                <b><span style="float: right;" t-esc="tax_totals['amount_total']"/></b>
+                                            </div>
+                                        </t>
+                                    </td>
+                                </tr>
+                            </table>
+                        </t>
+                        <table style="width:100%;border: 1px solid black;border-top:none;" >
+                            <tr>
+                                <td>    
+                                    <b><span>TERMS &amp; CONDITIONS</span></b><br/>
+                                    <span t-esc="o.note" />
+                                </td>
+                                <td style="text-align:right;">    
+                                    <b><span>APPROVED BY</span></b><br/>
+                                    <t t-if="o.company_id.logo">
+                                        <img class="img img-responsive" t-att-src="image_data_uri(o.company_id.logo)" alt="Logo" style="width:100px; height:100px;" />
+                                    </t>
+                                </td>
+                            </tr>
+                        </table>
+                    </t>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>

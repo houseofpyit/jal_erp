@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sequence_jal_purchase_requisite" model="ir.sequence">
+        <field name="name">Pur Req Seq</field>
+        <field name="code">jal.purchase.requisite.seq</field>
+        <field name="active">TRUE</field>
+        <field name="prefix">PR</field>
+        <field name="company_id" eval="False"/>
+        <field name="padding">5</field>
+    </record>
+    
+</odoo>

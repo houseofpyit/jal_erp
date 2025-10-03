@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.rule" id="jal_production_company_rule">
+        <field name="name">Production multi company</field>
+        <field name="model_id" ref="model_jal_production"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record model="ir.rule" id="jal_quality_company_rule">
+        <field name="name">Quality multi company</field>
+        <field name="model_id" ref="model_jal_quality"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+</odoo>

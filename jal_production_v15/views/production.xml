@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model='ir.ui.view' id='jal_production_form'>
+        <field name='name'>jal.production.form</field>
+        <field name='model'>jal.production</field>
+        <field name='arch' type='xml'>
+            <form>
+                <header>
+                    <!-- <button string="Create Quality" name="create_quality_btn" type="object" class="btn-primary" attrs="{'invisible': [('quality_count' ,'!=', 0),('state' ,'!=', 'draft')]}" /> -->
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                    <!-- <button name="action_view_quality" type="object" class="oe_stat_button" icon="" attrs="{'invisible': [('quality_count', '=', 0)]}">
+                        <field name="quality_count" widget="statinfo" string="Quality"/>
+                    </button> -->
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date" readonly="1" />
+                            <field name="quality_count" invisible="1"/>
+                            <field name='company_id' invisible="1"/>
+                            <field name='product_id' options="{'no_create': True}" domain="[('is_finished_goods', '=', True)]" required="1"/>
+                        </group>
+                        <group>
+                            <field name='shift_id' options="{'no_quick_create': True}" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Raw Material Products">
+                            <field name="line_ids" >
+                                <tree editable="bottom">
+                                    <field name="product_id" required="1" options="{'no_quick_create': True}" domain="[('is_raw_material', '=', True)]"/>
+                                    <field name="uom_id" readonly="1" force_save="1"/>
+                                    <field name="qty" attrs="{'readonly': [('parent.state','!=','draft')]}"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    
+
+    <record model='ir.ui.view' id='jal_production_tree'>
+        <field name='name'>jal.production.tree</field>
+        <field name='model'>jal.production</field>
+        <field name='arch' type='xml'>
+            <tree>
+                <field name='name'/>
+                <field name="product_id" />
+                <field name="shift_id" />
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_jal_production_filter" model="ir.ui.view">
+        <field name="name">jal.production.filter</field>
+        <field name="model">jal.production</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Search" filter_domain="['|','|',('name', 'ilike', self),('product_id', 'ilike', self),('shift_id', 'ilike', self)]"/>
+                <field name="product_id"/>
+                <field name="shift_id" />
+                <separator/>
+                    <filter string="Date" name="date" date="date"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Product" name="group_by_product_id" domain="[]" context="{'group_by': 'product_id'}"/>
+                    <filter string="Shift" name="group_shift_id" domain="[]" context="{'group_by': 'shift_id'}"/>
+                    <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="action_jal_production" model="ir.actions.act_window">
+        <field name="name">Production</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">jal.production</field>
+        <!-- <field name="context">{"search_default_filter_draft":1,"search_default_filter_request":1}</field> -->
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

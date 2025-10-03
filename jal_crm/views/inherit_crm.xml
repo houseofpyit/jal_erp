@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <record id="crm_lead_form_view_inherit" model="ir.ui.view">
+        <field name="name">crm.lead.form.view.inherit</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group/field[@name='priority']" position="replace">
+                <field name="priority" />
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="before">
+                <field name="country_id" />
+            </xpath>
+            <xpath expr="//group[@name='lead_priority']/field[@name='priority']" position="replace">
+                <field name="priority" />
+            </xpath>
+            <xpath expr="//field[@name='team_id']" position="after">
+                <field name="business_type" />
+                <field name="continent_type" invisible="0"/>
+            </xpath>
+            <xpath expr="//h2[hasclass('o_row') and hasclass('no-gutters') and hasclass('align-items-end')]/div[hasclass('col')][1]" position="before">
+                <div class="col" attrs="{'invisible': [('type', '=', 'lead')]}">
+                    <label for="quantity" class="oe_edit_only"/>
+                    <div class="o_row">
+                        <field name="quantity" class="oe_inline"/>
+                        <span class="oe_grey p-2"> Qty </span>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_lead_kanban_view_inherit" model="ir.ui.view">
+        <field name="name">crm.lead.kanban.view.inherit</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_kanban_view_leads"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="replace">
+                <kanban class="o_kanban_small_column o_opportunity_kanban"
+                    default_group_by="stage_id"
+                    default_order="priority asc"
+                    archivable="false"
+                    sample="1">
+                    <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Description"}}'/>
+                    <field name="probability"/>
+                    <field name="color"/>
+                    <field name="priority"/>
+                    <field name="expected_revenue"/>
+                    <field name="kanban_state"/>
+                    <field name="activity_date_deadline"/>
+                    <field name="user_email"/>
+                    <field name="user_id"/>
+                    <field name="partner_id"/>
+                    <field name="activity_summary"/>
+                    <field name="active"/>
+                    <field name="company_currency"/>
+                    <field name="activity_state" />
+                    <field name="activity_ids" />
+                    <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}' sum_field="expected_revenue" help="This bar allows to filter the opportunities based on scheduled activities."/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <t t-set="lost_ribbon" t-value="!record.active.raw_value and record.probability and record.probability.raw_value == 0"/>
+                            <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} #{lost_ribbon ? 'oe_kanban_card_ribbon' : ''} oe_kanban_global_click oe_kanban_card d-flex flex-column">
+                                <div class="ribbon ribbon-top-right"
+                                    attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">
+                                    <span class="bg-danger">Lost</span>
+                                </div>
+
+                                <div class="o_dropdown_kanban dropdown">
+                                    <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                        <span class="fa fa-ellipsis-v"/>
+                                    </a>
+                                    <div class="dropdown-menu" role="menu">
+                                        <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit</a></t>
+                                        <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                    </div>
+                                </div>
+                                <div class="oe_kanban_content flex-grow-1">
+                                    <t t-if="record.priority.raw_value == '0'">
+                                        <div style="background-color: red; text-align: center; font-weight: bold; color: white; border-radius: 4px; padding: 2px;">
+                                            Hot
+                                        </div>
+                                    </t>
+                                    <t t-if="record.priority.raw_value == '1'">
+                                        <div style="background-color: yellow; text-align: center; font-weight: bold; border-radius: 4px; padding: 2px;">
+                                            Mild
+                                        </div>
+                                    </t>
+                                    <t t-if="record.priority.raw_value == '2'">
+                                        <div style="background-color: blue; text-align: center; font-weight: bold; color: white; border-radius: 4px; padding: 2px;">
+                                            Cold
+                                        </div>
+                                    </t>
+                                    <div class="oe_kanban_content flex-grow-1">
+                                        <!-- Partner & Lead Name -->
+                                        <div class="o_kanban_record_title oe_kanban_details">
+                                            <strong><field name="partner_id"/></strong>
+                                        </div>
+                                        <!-- Quantity & Country -->
+                                        <div class="o_kanban_record_subtitle">
+                                            <strong>Qty:</strong> <field name="quantity"/>
+                                        </div>
+                                        <div class="o_kanban_record_subtitle">
+                                            <strong>Country:</strong> <field name="country_id"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="oe_clear"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_lead_create_form_view_inherit" model="ir.ui.view">
+        <field name="name">crm.lead.create.form.view.inherit</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.quick_create_opportunity_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div/field[@name='priority']" position="replace">
+                <field name="priority" class="oe_inline" nolabel="1" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_lead_tree_view_inherit" model="ir.ui.view">
+        <field name="name">crm.lead.tree.view.inherit</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_tree_view_oppor"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='priority']" position="replace">
+                <field name="priority" optional="hide" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_view_crm_case_opportunities_filter" model="ir.ui.view">
+        <field name="name">inherit.crm.lead.search.opportunities</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.view_crm_case_opportunities_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='saleschannel']" position="after">
+                <filter string="Priority" name="priority" context="{'group_by':'priority'}"/>
+                <filter string="Continent" name="continent_type" context="{'group_by':'continent_type'}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

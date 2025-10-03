@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model='ir.ui.view' id='jal_purchase_requisite_form'>
+        <field name='name'>jal.purchase.requisite.form</field>
+        <field name='model'>jal.purchase.requisite</field>
+        <field name='arch' type='xml'>
+            <form>
+                <header>
+                    <button string="Create PO" name="create_purchase_po" type="object" class="btn-primary" attrs="{'invisible': ['|',('state', '=', 'confirm'),('is_po_count' ,'!=', 0)]}" />
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                    <button name="action_view_pur_order" type="object" class="oe_stat_button" icon="fa-shopping-cart" attrs="{'invisible': [('is_po_count', '=', 0)]}">
+                        <field name="is_po_count" widget="statinfo" string="Purchase Order"/>
+                    </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date_order" readonly="1" />
+                            <!-- <field name="is_po_count"  /> -->
+                            <field name="user_id" invisible="1"/>
+                            <field name='company_id' invisible="1"/>
+                        </group>
+                        <group>
+                            <field name='sale_id' options="{'no_create': True,}" readonly="1"/>
+                            <field name="date_confirm" readonly="1" attrs="{'invisible': [('state', '=', 'draft')]}" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Products">
+                            <field name="line_ids" >
+                                <tree editable="bottom">
+                                    <field name="product_id" required="1" />
+                                    <field name="uom_id" options="{'no_create': True}" attrs="{'readonly': [('parent.state','!=','draft')]}"/>
+                                    <field name="qty" attrs="{'readonly': [('parent.state','!=','draft')]}"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+
+    <record model='ir.ui.view' id='jal_purchase_requisite_tree'>
+        <field name='name'>jal.purchase.requisite.tree</field>
+        <field name='model'>jal.purchase.requisite</field>
+        <field name='arch' type='xml'>
+            <tree decoration-success="state == 'approve'" decoration-info="state == 'request'" decoration-danger="state == 'reject'">
+                <field name='name'/>
+                <field name="user_id" />
+                <field name="date_order" />
+                <field name="state" decoration-success="state == 'approve'" decoration-info="state == 'request'" decoration-danger="state == 'reject'" widget="badge" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_jal_purchase_requisite_filter" model="ir.ui.view">
+        <field name="name">jal.purchase.requisite.filter</field>
+        <field name="model">jal.purchase.requisite</field>
+        <field name="arch" type="xml">
+            <search string="Purchase Requisite Filter">
+                <field name="name" string="Search" filter_domain="['|',('name', 'ilike', self),('date_order', 'ilike', self)]"/>
+                <!-- <field name="product_id"/>
+                <field name="vendor_id" /> -->
+                <group expand="0" string="Group By">
+                    <filter domain="[('state','=','draft')]" string="Draft" name="filter_draft"/>
+                    <filter domain="[('state','=','request')]" string="Request" name="filter_request"/>
+                    <separator/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="action_jal_purchase_requisite" model="ir.actions.act_window">
+        <field name="name">Purchase Requisition</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">jal.purchase.requisite</field>
+        <!-- <field name="context">{"search_default_filter_draft":1,"search_default_filter_request":1}</field> -->
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

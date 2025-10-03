@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+ 
+<!-- Incoterm -->
+    <record id="sale_incoterm_mst_form" model="ir.ui.view">
+        <field name="name">sale.incoterm.mst.form</field>
+        <field name="model">sale.incoterm.mst</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1" />
+                        </group>
+                    </group>                    
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="sale_incoterm_mst_tree" model="ir.ui.view">
+        <field name="name">sale.incoterm.mst.tree</field>
+        <field name="model">sale.incoterm.mst</field>
+        <field name="arch" type="xml" >
+            <tree sample="1">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_sale_incoterm_mst" model="ir.actions.act_window">
+        <field name="name">Incoterm</field>
+        <field name="res_model">sale.incoterm.mst</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+    </record>
+
+<!-- Delivery Terms -->
+    <record id="sale_terms_mst_form" model="ir.ui.view">
+        <field name="name">sale.terms.mst.form</field>
+        <field name="model">sale.terms.mst</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1" />
+                        </group>
+                    </group>                    
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="sale_terms_mst_tree" model="ir.ui.view">
+        <field name="name">sale.terms.mst.tree</field>
+        <field name="model">sale.terms.mst</field>
+        <field name="arch" type="xml" >
+            <tree sample="1">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_sale_terms_mst" model="ir.actions.act_window">
+        <field name="name">Delivery Terms</field>
+        <field name="res_model">sale.terms.mst</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+    </record>
+
+<!-- Destination Port -->
+    <record id="sale_port_mst_form" model="ir.ui.view">
+        <field name="name">sale.port.mst.form</field>
+        <field name="model">sale.port.mst</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1" />
+                        </group>
+                        <group>
+                            <field name="country_id" options="{'no_open': True, 'no_create': True}"/>
+                        </group>
+                    </group>                    
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="sale_port_mst_tree" model="ir.ui.view">
+        <field name="name">sale.port.mst.tree</field>
+        <field name="model">sale.port.mst</field>
+        <field name="arch" type="xml" >
+            <tree sample="1">
+                <field name="name"/>
+                <field name="country_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_sale_port_mst" model="ir.actions.act_window">
+        <field name="name">Destination Port</field>
+        <field name="res_model">sale.port.mst</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+    </record>
+
+<!-- Bank -->
+    <record id="sale_bank_mst_form" model="ir.ui.view">
+        <field name="name">sale.bank.mst.form</field>
+        <field name="model">bank.mst</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1"/>
+                            <field name="bank_ac_name" />
+                        </group>    
+                        <group>
+                            <field name="bank_ac_no" />
+                            <field name="bank_branch_ifsc" />
+                        </group>  
+                    </group>                  
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="sale_bank_mst_tree" model="ir.ui.view">
+        <field name="name">sale.bank.mst.tree</field>
+        <field name="model">bank.mst</field>
+        <field name="arch" type="xml" >
+            <tree sample="1">
+                <field name="name" />
+                <field name="bank_ac_name" />
+                <field name="bank_ac_no" />
+                <field name="bank_branch_ifsc" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_sale_bank_mst" model="ir.actions.act_window">
+        <field name="name">Bank</field>
+        <field name="res_model">bank.mst</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+    </record>
+
+<!-- Term &amp; Conditions -->
+    <record id="sale_term_conditions_form" model="ir.ui.view">
+        <field name="name">sale.term.conditions.form</field>
+        <field name="model">sale.term.conditions</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1"/>
+                        </group>    
+                    </group> 
+                    <group name="note_group" col="6" class="mt-2 mt-md-0">
+                        <group colspan="4">
+                            <field name="note" class="oe-bordered-editor" nolabel="1" placeholder="Terms and conditions..."/>
+                        </group>
+                        <div class="oe_clear"/>
+                    </group>               
+                </sheet>    
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="sale_term_conditions_tree" model="ir.ui.view">
+        <field name="name">sale.term.conditions.tree</field>
+        <field name="model">sale.term.conditions</field>
+        <field name="arch" type="xml" >
+            <tree sample="1">
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_sale_term_conditions" model="ir.actions.act_window">
+        <field name="name">Term &amp; Conditions</field>
+        <field name="res_model">sale.term.conditions</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+    </record>
+
+<!-- Term &amp; Conditions -->
+    <record id="sale_tinspection_mst_form" model="ir.ui.view">
+        <field name="name">sale.inspection.mst.form</field>
+        <field name="model">sale.inspection.mst</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1"/>
+                        </group>    
+                    </group>              
+                </sheet>    
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="sale_inspection_mst_tree" model="ir.ui.view">
+        <field name="name">sale.inspection.mst.tree</field>
+        <field name="model">sale.inspection.mst</field>
+        <field name="arch" type="xml" >
+            <tree sample="1">
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_sale_inspection_mst" model="ir.actions.act_window">
+        <field name="name">Pre-Shipment Inspection</field>
+        <field name="res_model">sale.inspection.mst</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+    </record>
+</odoo>
