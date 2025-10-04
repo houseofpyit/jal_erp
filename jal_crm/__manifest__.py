@@ -8,7 +8,7 @@
     'maintainer': "",
     'website': "",
     'category': 'Tools',
-    'depends': ['base','crm','sale_management','purchase','stock','l10n_in','transaction'],
+    'depends': ['base','crm','sale_management','purchase','stock','l10n_in','transaction','sale_stock','sale_crm'],
     'data': [
         'data/sequence.xml',
         'security/ir.model.access.csv',
