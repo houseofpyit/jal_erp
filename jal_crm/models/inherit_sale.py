@@ -129,6 +129,7 @@ class inheritedSaleOrderLine(models.Model):
    packing_type = fields.Selection([("drum", "Drum"), ("bucket", "Bucket"),("usa_bucket", "USA-Bucket"), ("pouch", "Pouch")],string="Packing Type")
    packing_name = fields.Text(string="Packing Description")
    is_des = fields.Boolean(string="Is Packing Description", compute="_compute_packing_name", store=True)
+   name = fields.Text(string='Description',required=False)
       
    @api.depends(
       'packing_type', 'name_id', 'drum_cap_id', 'bucket_cap_id', 'box_cap_id',

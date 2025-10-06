@@ -24,9 +24,23 @@
                     <label for="quantity" class="oe_edit_only"/>
                     <div class="o_row">
                         <field name="quantity" class="oe_inline"/>
-                        <span class="oe_grey p-2"> Qty </span>
                     </div>
                 </div>
+                <div class="col">
+                    <label for="unit_id" class="oe_edit_only"/>
+                    <div class="o_row">
+                        <field name="unit_id" class="oe_inline" options="{'no_open': True, 'no_create': True}"/>
+                    </div>
+                </div>
+                <div class="col">
+                    <label for="unit_price" class="oe_edit_only"/>
+                    <div class="o_row">
+                        <field name="unit_price" class="oe_inline"  widget="monetary"/>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="company_currency" readonly="0" options="{'no_open': True, 'no_create': True}"/>
             </xpath>
         </field>
     </record>

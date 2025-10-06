@@ -28,6 +28,12 @@
             <xpath expr="//button[@name='action_confirm'][1]" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
+            <xpath expr="//page[@name='other_information']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='other_information']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
             <xpath expr="//button[@name='action_confirm'][2]" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>	
@@ -147,6 +153,7 @@
             </xpath>
             <xpath expr="//tree/field[@name='name']" position="attributes">
                 <attribute name="string">Loading Description</attribute>
+                <attribute name="required">0</attribute>
             </xpath>
             <xpath expr="//tree/field[@name='product_template_id']" position="attributes">
                 <attribute name="width">150px</attribute>
@@ -157,15 +164,26 @@
         </field>
     </record>
 
+    <record id="sale_order_option_view_inherit" model="ir.ui.view">
+        <field name="name">sale.order.option.view.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_management.sale_order_form_quote"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='optional_products']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='customer_signature']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    
     <record id="action_quotations_with_onboarding_international" model="ir.actions.act_window">
         <field name="name">Quotations</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">sale.order</field>
         <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/>
-                 <!-- <field name="views" eval="[(ref('jal_crm.sale_order_form_view_international'), 'form'), (ref('sale.view_quotation_tree_with_onboarding'), 'tree')]"/> -->
-            <!-- <field name="view_ids" eval="[(5, 0, 0),
-                (0, 0, {'view_mode': 'tree', 'view_id': ref('sale.view_quotation_tree_with_onboarding')}),
-                (0, 0, {'view_mode': 'form', 'view_id': ref('jal_crm.sale_order_form_view_international')})]"/> -->
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
         <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
         <field name="context">{'search_default_my_quotation': 1,'default_business_type':'international'}</field>
@@ -184,10 +202,6 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">sale.order</field>
         <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/>
-            <!-- <field name="view_ids" eval="[(5, 0, 0),
-                (0, 0, {'view_mode': 'tree', 'view_id': ref('sale.view_quotation_tree_with_onboarding')}),
-                (0, 0, {'view_mode': 'form', 'view_id': ref('jal_crm.sale_order_form_view_domestic')})]"/> -->
-        <!-- <field name="views" eval="[(ref('jal_crm.sale_order_form_view_domestic'), 'form'), (ref('sale.view_quotation_tree_with_onboarding'), 'tree')]"/> -->
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
         <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
         <field name="context">{'search_default_my_quotation': 1,'default_business_type':'domestic'}</field>
