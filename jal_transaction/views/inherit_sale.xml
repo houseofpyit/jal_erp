@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hop_sale_order_form_view_inherit" model="ir.ui.view">
+        <field name="name">transaction.sale.order.form.view.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="transaction.hop_inherit_sale_order"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page/group[@name='note_group']/group" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page/group[@name='note_group']/group" position="replace">
+                <group colspan="4">
+                    <field name="note" class="oe-bordered-editor" nolabel="1" placeholder="Terms and conditions..."/>
+                </group>
+            </xpath>
+            <xpath expr="//tree/field[@name='disc_per']" position="attributes">
+                <attribute name="attrs">{'column_invisible': [('parent.business_type', '=', 'international')]}</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='disc_amt']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='add_amt']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='taxablevalue']" position="attributes">
+                <attribute name="attrs">{'column_invisible': [('parent.business_type', '=', 'international')]}</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='gst_ids']" position="attributes">
+                <attribute name="attrs">{'column_invisible': [('parent.business_type', '=', 'international')]}</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='sgst_amt']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='cgst_amt']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='igst_amt']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='final_amt']" position="attributes">
+                <attribute name="attrs">{'column_invisible': [('parent.business_type', '=', 'international')]}</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='hsn_id']" position="attributes">
+                <attribute name="attrs">{'column_invisible': [('parent.business_type', '=', 'international')]}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='disc_per']" position="attributes">
+                <attribute name="attrs">{'invisible': [('parent.business_type', '=', 'international')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='disc_amt']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='add_amt']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='taxablevalue']" position="attributes">
+                <attribute name="attrs">{'invisible': [('parent.business_type', '=', 'international')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='gst_ids']" position="attributes">
+                <attribute name="attrs">{'invisible': [('parent.business_type', '=', 'international')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='sgst_amt']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='cgst_amt']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='igst_amt']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='final_amt']" position="attributes">
+                <attribute name="attrs">{'invisible': [('parent.business_type', '=', 'international')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale_order_form_view_inherit_jal" model="ir.ui.view">
+        <field name="name">sale.order.form.view.inherit.jal</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="jal_crm.sale_order_form_view_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='shipping_id']" position="after">
+                <field name="hsn_id" options="{'no_quick_create': True}" attrs="{'invisible': [('parent.business_type', '=', 'international')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>                            

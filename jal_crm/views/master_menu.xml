@@ -548,13 +548,6 @@
         sequence="20"/>
 
     <menuitem
-        id="crm_team_config_crm"
-        name="Sales Teams"
-        parent="master.master_main_menu"
-        action="sales_team.crm_team_action_config"
-        sequence="6"/>
-
-    <menuitem
         id="crm.crm_menu_root"
         active="False"/>
 

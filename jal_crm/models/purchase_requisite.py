@@ -53,7 +53,6 @@ class JalPurchaseRequisite(models.Model):
                'product_qty':line.qty,
                'product_uom':line.uom_id.id,
                'date_planned': fields.Datetime.now(),
-               'hsn_id':line.product_id.hsn_id.id,
                'price_unit': line.product_id.standard_price,
                'name': (f"{line.product_id.description_purchase}" if line.product_id.description_purchase else f"{line.product_id.display_name}"),
             }))

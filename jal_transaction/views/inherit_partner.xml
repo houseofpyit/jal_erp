@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="master_res_partner_form_view_inherit" model="ir.ui.view">
+        <field name="name">master.res.partner.form.view.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="master.party_mst_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='remarks']" position="after">
+                <field name="team_id" options="{'no_open': True, 'no_create': True}"/>
+                <field name="business_type" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
