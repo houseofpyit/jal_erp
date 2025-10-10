@@ -29,7 +29,11 @@
                                 <td width="80%" style="vertical-align: top; text-align:right;padding-right:10px;" >
                                         <b><span style="font-size:30px;" t-esc="o.company_id.name" /></b><br/>
                                         <span t-esc="o.company_id.street" /><span t-esc="o.company_id.street2" />
-                                        <span t-esc="o.company_id.city" />,<span t-esc="o.company_id.state_id.name" />,<span t-esc="o.company_id.zip" /><br/>
+                                        <span t-esc="o.company_id.city" /><t t-if="o.company_id.state_id">
+                                            ,<span t-esc="o.company_id.state_id.name" />
+                                        </t><t t-if="o.company_id.zip">
+                                            ,<span t-esc="o.company_id.zip" />
+                                        </t><br/>
                                         <span>E.mail.: </span><span style="padding-right:4px;" t-esc="o.company_id.email"/>
                                         <span>Web: </span><span  t-esc="o.company_id.website"/><br/>
                                         <span>GSTIN: </span><span t-esc="o.company_id.vat" />
@@ -54,7 +58,11 @@
                                 <td>
                                     <span t-esc="o.company_id.street" /><br/>
                                     <span t-esc="o.company_id.street2" /><br/>
-                                    <span t-esc="o.company_id.city" />,<span t-esc="o.company_id.state_id.name" />,<span t-esc="o.company_id.zip" /><br/>
+                                    <span t-esc="o.company_id.city" /><t t-if="o.company_id.state_id">
+                                        ,<span t-esc="o.company_id.state_id.name" />
+                                    </t><t t-if="o.company_id.zip">
+                                        ,<span t-esc="o.company_id.zip" />
+                                    </t><br/>
                                     <span style="padding-right:4px;" t-esc="o.company_id.email"/>
                                     <span  t-esc="o.company_id.website"/><br/>
                                     <span t-esc="o.company_id.vat" />
@@ -62,7 +70,11 @@
                                 <td>
                                     <span t-esc="o.partner_id.street" /><br/>
                                     <span t-esc="o.partner_id.street2" /><br/>
-                                    <span t-esc="o.partner_id.city" />,<span t-esc="o.partner_id.state_id.name" />,<span t-esc="o.partner_id.zip" /><br/>
+                                    <span t-esc="o.partner_id.city" /><t t-if="o.partner_id.state_id">
+                                        ,<span t-esc="o.partner_id.state_id.name" />
+                                    </t><t t-if="o.partner_id.zip">
+                                        ,<span t-esc="o.partner_id.zip" />
+                                    </t><br/>
                                     <span style="padding-right:4px;" t-esc="o.partner_id.email"/>
                                     <span  t-esc="o.partner_id.website"/><br/>
                                     <span t-esc="o.partner_id.vat" />
@@ -80,7 +92,11 @@
                                 <td>
                                     <span t-esc="o.company_id.street" /><br/>
                                     <span t-esc="o.company_id.street2" /><br/>
-                                    <span t-esc="o.company_id.city" />,<span t-esc="o.company_id.state_id.name" />,<span t-esc="o.company_id.zip" /><br/>
+                                    <span t-esc="o.company_id.city" /><t t-if="o.company_id.state_id">
+                                        ,<span t-esc="o.company_id.state_id.name" />
+                                    </t><t t-if="o.company_id.zip">
+                                        ,<span t-esc="o.company_id.zip" />
+                                    </t><br/>
                                     <span style="padding-right:4px;" t-esc="o.company_id.email"/>
                                     <span  t-esc="o.company_id.website"/><br/>
                                     <span t-esc="o.company_id.vat" />

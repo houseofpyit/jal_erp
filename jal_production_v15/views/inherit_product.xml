@@ -20,8 +20,8 @@
                 <page name="quality_parameter" string="Quality Parameter" attrs="{'invisible': [('is_finished_goods', '!=', True)]}">
                     <field name="quality_para_ids" >
                         <tree editable="bottom">
-                            <field name="item_attribute" options="{'no_create': True}"/>
-                            <field name="required_value" options="{'no_create': True}"/>
+                            <field name="item_attribute" options="{'no_quick_create': True}"/>
+                            <field name="required_value" options="{'no_quick_create': True}"/>
                             <field name="tollerance_range" invisible="1"/>
                             <field name="remarks"/>
                             <field name="attachment_ids" widget="many2many_binary" invisible="1"/>

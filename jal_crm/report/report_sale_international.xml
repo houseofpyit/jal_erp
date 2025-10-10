@@ -24,7 +24,11 @@
                                 <td width="70%" style="vertical-align: top;" >
                                     <b><span style="font-size:30px;" t-esc="o.company_id.name" /></b><br/>
                                     <span t-esc="o.company_id.street" /><span t-esc="o.company_id.street2" />
-                                    <span t-esc="o.company_id.city" />,<span t-esc="o.company_id.state_id.name" />,<span t-esc="o.company_id.zip" /><br/>
+                                    <span t-esc="o.company_id.city" /><t t-if="o.company_id.state_id">
+                                        ,<span t-esc="o.company_id.state_id.name" />
+                                    </t><t t-if="o.company_id.zip">
+                                        ,<span t-esc="o.company_id.zip" />
+                                    </t><br/>
                                     <span>E.mail.: </span><span style="padding-right:5px;"  t-esc="o.company_id.email"/>
                                     <span>Web: </span><span  t-esc="o.company_id.website"/><br/>
                                     <span>GSTIN: </span><span t-esc="o.company_id.vat" />
@@ -56,7 +60,11 @@
                                     <span t-esc="o.partner_id.name" /><br/>
                                     <span t-esc="o.partner_id.street" style="padding-right:3px;"/>
                                     <span t-esc="o.partner_id.street2" style="padding-right:3px;"/>
-                                    <span t-esc="o.partner_id.city" style="padding-right:3px;"/>,<span t-esc="o.partner_id.state_id.name" style="padding-right:3px;"/>,<span t-esc="o.partner_id.zip" /><br/>
+                                    <span t-esc="o.partner_id.city" /><t t-if="o.partner_id.state_id">
+                                        ,<span t-esc="o.partner_id.state_id.name" />
+                                    </t><t t-if="o.partner_id.zip">
+                                        ,<span t-esc="o.partner_id.zip" />
+                                    </t><br/>
                                     <span  t-esc="o.partner_id.country_id.name" /><br/>
                                     <span  t-esc="o.partner_id.phone" style="padding-right:3px;"/><span t-esc="o.partner_id.mobile" /><br/>
                                     <span t-esc="o.partner_id.email" /><br/>

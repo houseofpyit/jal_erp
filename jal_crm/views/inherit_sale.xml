@@ -37,9 +37,9 @@
             <xpath expr="//button[@name='action_confirm'][2]" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>	
-            <xpath expr="//field[@name='team_id']" position="after">
+            <!-- <xpath expr="//field[@name='team_id']" position="after">
                 <field name="business_type" />
-            </xpath>	
+            </xpath>	 -->
             <xpath expr="//field[@name='validity_date']" position="attributes">
                 <attribute name="attrs">{'invisible': [('business_type', '==', 'international')]}</attribute>
             </xpath>
@@ -49,6 +49,12 @@
                 <field name="po_no" attrs="{'invisible': ['|',('business_type', '!=', 'international'),('state', '==', 'draft')],'readonly': [('state', '=', 'sale')]}"/>
                 <field name="po_date" attrs="{'invisible': ['|',('business_type', '!=', 'international'),('state', '==', 'draft')],'readonly': [('state', '=', 'sale')]}"/>
                 <field name="reference" attrs="{'invisible': ['|',('business_type', '!=', 'international'),('state', '==', 'draft')],'readonly': [('state', '=', 'sale')]}"/>
+
+                <field name="freight" attrs="{'readonly': [('state', '=', 'sale')],'invisible': ['|',('business_type', '!=', 'international'),('state', '==', 'draft')]}"/>
+                <field name="insurance" attrs="{'readonly': [('state', '=', 'sale')],'invisible': ['|',('business_type', '!=', 'international'),('state', '==', 'draft')]}"/>
+                <field name="fob_rates" attrs="{'readonly': [('state', '=', 'sale')],'invisible': ['|',('business_type', '!=', 'international'),('state', '==', 'draft')]}"/>
+                <field name="inspection_id" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': [('state', '=', 'sale')],'invisible': ['|',('business_type', '!=', 'international'),('state', '==', 'draft')]}"/>
+                <field name="lading_type" attrs="{'readonly': [('state', '=', 'sale')],'invisible': ['|',('business_type', '!=', 'international'),('state', '==', 'draft')]}"/>
             </xpath>
             <xpath expr="//page[@name='order_lines']//field[@name='order_line']" position="attributes">
                 <attribute name="attrs">{'readonly': [('state', 'in', ('done','cancel','sale'))]}</attribute>
@@ -56,21 +62,6 @@
             <!-- <xpath expr="//field[@name='date']" position="attributes">
                 <attribute name="attrs">{'readonly': [('state', 'in', ('done','cancel','sale'))]}</attribute>
             </xpath> -->
-            <xpath expr="//page[@name='order_lines']" position="after">
-                <page string="PI Information" name="pi_information" attrs="{'invisible': ['|',('business_type', '!=', 'international'),('state', '==', 'draft')]}">
-                    <group>
-                        <group>
-                            <field name="freight" attrs="{'readonly': [('state', '=', 'sale')]}"/>
-                            <field name="insurance" attrs="{'readonly': [('state', '=', 'sale')]}"/>
-                            <field name="fob_rates" attrs="{'readonly': [('state', '=', 'sale')]}"/>
-                        </group>
-                        <group>
-                            <field name="inspection_id" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': [('state', '=', 'sale')]}"/>
-                            <field name="lading_type" attrs="{'readonly': [('state', '=', 'sale')]}"/>
-                        </group>
-                    </group>
-                </page>
-            </xpath>
             <xpath expr="//field[@name='sale_order_template_id']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
@@ -102,8 +93,9 @@
                 <field name="country_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
                 <field name="port_id" domain="[('country_id', '=', country_id)]" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
                 <field name="palletized_type" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
+                <field name="business_type" invisible="0"/>
             </xpath>
-            <xpath expr="//tree/field[@name='product_template_id']" position="after">
+            <xpath expr="//tree/field[@name='product_template_id']" position="before">
                 <field name="shipping_id" width="150px" attrs="{'column_invisible': [('parent.business_type', '!=', 'international')]}"/>
             </xpath>
             <xpath expr="//tree" position="attributes">
@@ -115,8 +107,8 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//field[@name='order_line']/form/group/group/field[@name='product_id']" position="after">
-                <field name="product_template_id" string="Product" options="{'no_quick_create': True}" attrs="{'required': [('display_type', '=', False)]}" readonly="0" context="{'partner_id': parent.partner_id, 'quantity': product_uom_qty, 'pricelist': parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id, 'default_list_price': price_unit, 'default_description_sale': name}" domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" widget="product_configurator"/>
                 <field name="shipping_id" width="150px" attrs="{'invisible': [('parent.business_type', '!=', 'international')]}"/>
+                <field name="product_tmpl_id" string="Product" options="{'no_quick_create': True}" attrs="{'required': [('display_type', '=', False)]}" readonly="0" context="{'partner_id': parent.partner_id, 'quantity': product_uom_qty, 'pricelist': parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id, 'default_list_price': price_unit, 'default_description_sale': name}" domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" widget="product_configurator"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/form/group/group/field[@name='analytic_tag_ids']" position="after">
                 <field name="packing_type" attrs="{'invisible': [('parent.business_type', '!=', 'international')],'required': [('parent.business_type', '=', 'international'),('display_type', '=', False)]}"/>
@@ -155,10 +147,14 @@
                 <attribute name="string">Loading Description</attribute>
                 <attribute name="required">0</attribute>
             </xpath>
-            <xpath expr="//tree/field[@name='product_template_id']" position="attributes">
-                <attribute name="width">150px</attribute>
-                <!-- <attribute name="string">Packing</attribute> -->
-                <!-- <attribute name="domain">[('is_packing', '=', True)]</attribute> -->
+            <xpath expr="//tree/field[@name='product_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='product_template_id']" position="replace">
+                <!-- <attribute name="width">150px</attribute>
+                <attribute name="invisible">0</attribute>
+                <attribute name="force_save">1</attribute> -->
+                <field name="product_tmpl_id" string="Product" options="{'no_quick_create': True}" readonly="0" context="{'partner_id': parent.partner_id, 'quantity': product_uom_qty, 'pricelist': parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id, 'default_list_price': price_unit, 'default_description_sale': name}" domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" />
             </xpath>
             <xpath expr="//control/create[@name='add_note_control']" position="replace"/>
         </field>

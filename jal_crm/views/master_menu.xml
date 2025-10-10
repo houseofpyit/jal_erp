@@ -23,7 +23,7 @@
         <menuitem
             id="crm_international_main"
             name="CRM"
-            action="crm.crm_lead_action_pipeline"
+            action="crm_lead_action_pipeline_international"
             parent="jal_crm.international_main_menu"
             sequence="1"/>
 
@@ -49,7 +49,7 @@
 
             <menuitem
                 id="product_shipping_mst_international_main"
-                name="Product Shipping"
+                name="Product Label"
                 action="action_product_shipping_mst"
                 parent="jal_crm.stock_international_main"
                 sequence="2"/>
@@ -197,7 +197,7 @@
         <menuitem
             id="crm_domestic_main"
             name="CRM"
-            action="crm.crm_lead_action_pipeline"
+            action="crm_lead_action_pipeline_domestic"
             parent="jal_crm.domestic_main_menu"
             sequence="1"/>
 
@@ -223,7 +223,7 @@
 
             <menuitem
                 id="product_shipping_mst_domestic_main"
-                name="Product Shipping"
+                name="Product Label"
                 action="action_product_shipping_mst"
                 parent="jal_crm.stock_domestic_main"
                 sequence="2"/>
@@ -370,7 +370,7 @@
         <menuitem
             id="crm_trading_main"
             name="CRM"
-            action="crm.crm_lead_action_pipeline"
+            action="crm_lead_action_pipeline_trading"
             parent="jal_crm.trading_main_menu"
             sequence="1"/>
 
@@ -397,7 +397,7 @@
 
             <menuitem
                 id="product_shipping_mst_trading_main"
-                name="Product Shipping"
+                name="Product Label"
                 action="action_product_shipping_mst"
                 parent="jal_crm.stock_trading_main"
                 sequence="2"/>
@@ -541,11 +541,17 @@
                 sequence="9"/>
 
     <menuitem 
-        action="action_jal_purchase_requisite" 
-        id="menu_purchase_requisite" 
+        id="main_menu_purchase_requisite" 
         name="Purchase Requisition" 
         web_icon="jal_crm,static/description/pur_req.png"
         sequence="20"/>
+
+    <menuitem 
+        action="action_jal_purchase_requisite" 
+        id="menu_purchase_requisite" 
+        name="Purchase Requisition" 
+        parent="main_menu_purchase_requisite"
+        sequence="1"/>
 
     <menuitem
         id="crm.crm_menu_root"
@@ -560,6 +566,9 @@
         active="False"/>
 
     <menuitem id="sale.sale_order_menu"
+        active="False"/>
+
+    <menuitem id="calendar.mail_menu_calendar"
         active="False"/>
 
 </odoo>

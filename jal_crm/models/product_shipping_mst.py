@@ -4,7 +4,7 @@ from odoo.exceptions import UserError, ValidationError
 
 class ProductShippingMst(models.Model):
     _name = 'product.shipping.mst'
-    _description = 'Area Master'
+    _description = 'Product Label'
     _inherit = ['mail.thread']
     _order = 'id desc'
     

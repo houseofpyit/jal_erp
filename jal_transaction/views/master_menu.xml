@@ -2,6 +2,27 @@
 <odoo>
 
     <menuitem
+        id="jal_crm.contacts_international_main"
+        name="Contacts"
+        action="master.action_party_mst"
+        parent="jal_crm.international_main_menu"
+        sequence="4"/>
+
+    <menuitem
+        id="jal_crm.contacts_domestic_main"
+        name="Contacts"
+        action="master.action_party_mst"
+        parent="jal_crm.domestic_main_menu"
+        sequence="4"/>
+
+    <menuitem
+        id="jal_crm.contacts_trading_main"
+        name="Contacts"
+        action="master.action_party_mst"
+        parent="jal_crm.trading_main_menu"
+        sequence="4"/>
+
+    <menuitem
         id="crm_team_config_crm"
         name="Sales Teams"
         parent="master.master_main_menu"

@@ -31,7 +31,7 @@
     </record>
 
     <record id="action_product_shipping_mst" model="ir.actions.act_window">
-        <field name="name">Product Shipping</field>
+        <field name="name">Product Label</field>
         <field name="res_model">product.shipping.mst</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
