@@ -97,8 +97,8 @@
                                     <span>Address</span><br/>
                                     <span>Country</span><br/>
                                     <span>Phone</span><br/>
-                                    <span>Email</span><br/>
-                                    <span>GST No.</span>
+                                    <span>Email</span>
+                                    <!-- <span>GST No.</span> -->
                                 </td>
                                 <td width="25%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
                                     <span t-esc="o.partner_id.name" /><br/>
@@ -112,8 +112,8 @@
                                     </t>
                                     <span  t-esc="o.partner_id.country_id.name" /><br/>
                                     <span  t-esc="o.partner_id.phone" style="padding-right:3px;"/><span t-esc="o.partner_id.mobile" /><br/>
-                                    <span t-esc="o.partner_id.email" /><br/>
-                                    <span t-esc="o.partner_id.vat" />
+                                    <span t-esc="o.partner_id.email" />
+                                    <!-- <span t-esc="o.partner_id.vat" /> -->
                                 </td>
                                 <td width="25%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
                                     <t t-if="o.buyer_notify_id">
