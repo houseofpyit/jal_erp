@@ -121,6 +121,9 @@
                         <group>
                             <field name="name" required="1" />
                         </group>
+                        <group>
+                            <field name="pouch_type" />
+                        </group>
                     </group>                    
                 </sheet>
                 <div class="oe_chatter">
@@ -136,6 +139,7 @@
         <field name="arch" type="xml" >
             <tree sample="1">
                 <field name="name"/>
+                 <field name="pouch_type" />
             </tree>
         </field>
     </record>
@@ -410,6 +414,9 @@
                         <group>
                             <field name="name" required="1" />
                         </group>
+                         <group>
+                             <field name="packing_type"/>
+                        </group>
                     </group>                    
                 </sheet>
                 <div class="oe_chatter">
@@ -425,6 +432,7 @@
         <field name="arch" type="xml" >
             <tree sample="1">
                 <field name="name"/>
+                <field name="packing_type"/>
             </tree>
         </field>
     </record>

@@ -5,19 +5,19 @@
         id="international_main_menu"
         name="International"
         web_icon="jal_crm,static/description/international.png"
-        sequence="6"/>
+        sequence="3"/>
         
         <menuitem
         id="domestic_main_menu"
         name="Domestic"
         web_icon="jal_crm,static/description/domestic.png"
-        sequence="7"/>
+        sequence="4"/>
         
         <menuitem
         id="trading_main_menu"
         name="Trading"
         web_icon="jal_crm,static/description/trading.png"
-        sequence="8"/>
+        sequence="5"/>
 
     <!-- International -->
         <menuitem
@@ -115,11 +115,14 @@
                 parent="jal_crm.international_configuration_main_menu"
                 action="action_sale_inspection_mst"
                 sequence="7"/>
+
+            <menuitem id="jal_crm.international_sale_inspection_mst_menu"
+                active="False"/>
                 
 
         <menuitem
             id="international_packing_list_main_menu"
-            name="Packing List"
+            name="Packing Master"
             parent="jal_crm.international_main_menu"
             sequence="6"/>
 
@@ -129,6 +132,9 @@
                 parent="jal_crm.international_packing_list_main_menu"
                 action="action_packing_mst"
                 sequence="1"/>
+
+            <menuitem id="jal_crm.international_packing_mst_menu"
+                active="False"/>
 
             <menuitem
                 id="international_capacity_mst_menu"
@@ -191,7 +197,7 @@
                 name="Name"
                 parent="jal_crm.international_packing_list_main_menu"
                 action="action_name_mst"
-                sequence="9"/>
+                sequence="1"/>
 
     <!-- Domestic -->
         <menuitem
@@ -289,6 +295,9 @@
                 parent="jal_crm.domestic_configuration_main_menu"
                 action="action_sale_inspection_mst"
                 sequence="7"/>
+
+
+            
 
         <menuitem
             id="domestic_packing_list_main_menu"
@@ -570,5 +579,31 @@
 
     <menuitem id="calendar.mail_menu_calendar"
         active="False"/>
+
+    <menuitem
+        id="transaction.sale_main"
+        name="Sales"
+        web_icon="transaction,static/description/img/sale.png" 
+        sequence="6"/>
+
+    <menuitem id="transaction.purchase_main" 
+        name="Purchase" 
+        web_icon="transaction,static/description/img/purchase.png"
+        sequence="7"/>
+
+    <menuitem id="transaction.gen_purchase_main"
+        name="General Purchase" 
+        web_icon="transaction,static/description/img/gen.png"
+        sequence="8"/>
+
+    <menuitem id="master.master_main_menu"
+        name="Master" 
+        web_icon="master,static/description/img/master.png"
+        sequence="10"/>
+
+    <menuitem id="mail.menu_root_discuss"
+        name="Discuss" 
+        web_icon="mail,static/description/icon.png"
+        sequence="1"/>
 
 </odoo>

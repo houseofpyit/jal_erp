@@ -38,6 +38,8 @@ class BankMaster(models.Model):
     bank_ac_name = fields.Char("Bank A/C Name")
     bank_ac_no = fields.Char("Bank A/C No")
     bank_branch_ifsc = fields.Char("Bank Branch IFSC")
+    branch = fields.Char("Branch")
+    swift_code = fields.Char("Swift Code")
 
 class SaleTermConditions(models.Model):
     _name = "sale.term.conditions"
