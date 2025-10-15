@@ -12,6 +12,18 @@
                     <label for="is_packing"/>
                 </span>
             </div>
+            <xpath expr="//field[@name='sale_ok']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//label[@for='sale_ok']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='purchase_ok']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//label[@for='purchase_ok']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
             <xpath expr="//button[@name='action_open_label_layout']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>

@@ -13,4 +13,10 @@
         <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
+    <record model="ir.rule" id="jal_material_requisition_company_rule">
+        <field name="name">Material Requisition multi company</field>
+        <field name="model_id" ref="model_jal_material_requisition"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
 </odoo>

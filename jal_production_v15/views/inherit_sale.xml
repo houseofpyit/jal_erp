@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sale_order_form_view_inherit_production" model="ir.ui.view">
+        <field name="name">sale.order.form.view.inherit.production</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='price_unit']" position="after">
+                <field name="grade_id" width="150px" options="{'no_open': True, 'no_create': True}" attrs="{'column_invisible': [('parent.business_type', '!=', 'international')]}"/>
+                <field name="mesh_id" width="150px" options="{'no_open': True, 'no_create': True}" attrs="{'column_invisible': [('parent.business_type', '!=', 'international')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='price_unit']" position="after">
+                <field name="grade_id" width="150px" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('parent.business_type', '!=', 'international')]}"/>
+                <field name="mesh_id" width="150px" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('parent.business_type', '!=', 'international')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

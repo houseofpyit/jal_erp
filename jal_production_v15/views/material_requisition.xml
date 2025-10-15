@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model='ir.ui.view' id='jal_material_requisition_form'>
+        <field name='name'>jal.material.requisition.form</field>
+        <field name='model'>jal.material.requisition</field>
+        <field name='arch' type='xml'>
+            <form>
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name='company_id' invisible="1"/>
+                            <field name='from_location_id' options="{'no_create': True}" readonly="1" force_save="1"/>
+                            <field name='to_location_id' options="{'no_create': True}" readonly="1" force_save="1"/>
+                        </group>
+                        <group>
+                            <field name="date" readonly="1" />
+                            <field name='user_id' force_save="1" readonly="1" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Products">
+                            <field name="line_ids" >
+                                <tree editable="bottom">
+                                    <field name="product_id" required="1" options="{'no_create': True}" />
+                                    <field name="demand_qty" />
+                                    <field name="uom_id" readonly="1" force_save="1"/>
+                                    <field name="available_qty" groups="jal_production_v15.res_group_material_requisition_admin"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    
+
+    <record model='ir.ui.view' id='jal_material_requisition_tree'>
+        <field name='name'>jal.material.requisition.tree</field>
+        <field name='model'>jal.material.requisition</field>
+        <field name='arch' type='xml'>
+            <tree>
+                <field name='name'/>
+                <field name="from_location_id" />
+                <field name="to_location_id" />
+                <field name="user_id" />
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_jal_material_requisition_filter" model="ir.ui.view">
+        <field name="name">jal.material.requisition.filter</field>
+        <field name="model">jal.material.requisition</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Search" filter_domain="['|','|',('name', 'ilike', self),('from_location_id', 'ilike', self),('to_location_id', 'ilike', self)]"/>
+                <field name="from_location_id"/>
+                <field name="to_location_id" />
+                <separator/>
+                    <filter string="Date" name="date" date="date"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="From Location" name="group_by_from_location_idd" domain="[]" context="{'group_by': 'from_location_id'}"/>
+                    <filter string="To Location" name="group_to_location_id" domain="[]" context="{'group_by': 'to_location_id'}"/>
+                    <filter string="Date" name="groupby_state" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter string="Stage" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="action_jal_material_requisition" model="ir.actions.act_window">
+        <field name="name">Material Requisition</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">jal.material.requisition</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

@@ -8,7 +8,7 @@
     'maintainer': "",
     'website': "",
     'category': 'Tools',
-    'depends': ['base','stock'],
+    'depends': ['base','stock','jal_crm'],
     'data': [
         'data/sequence.xml',
         'security/security_group.xml',
@@ -20,6 +20,11 @@
         'views/shift_mst.xml',
         'views/inherit_product.xml',
         'views/quality_parameter_mst.xml',
+        'views/inherit_product_attribute.xml',
+        'views/material_requisition.xml',
+        'views/inherit_sale.xml',
+        'views/inherit_user.xml',
+        'views/inherit_stock.xml',
         'views/master_menu.xml',
 
     ],

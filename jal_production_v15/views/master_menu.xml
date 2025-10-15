@@ -14,22 +14,47 @@
             parent="jal_production_v15.production_main_menu"
             groups="jal_production_v15.res_group_production_user,jal_production_v15.res_group_production_admin"
             sequence="1"/>
+            
+        <menuitem
+            id="por_config_mst_main"
+            name="Configuration"
+            parent="jal_production_v15.production_main_menu"
+            sequence="2"/>
 
+            <menuitem
+                id="pro_shift_mst_main"
+                name="Shift"
+                action="action_shift_mst"
+                parent="jal_production_v15.por_config_mst_main"
+                sequence="1"/>
+            
+    <menuitem
+        id="quality_main_menu"
+        name="Quality"
+        web_icon="jal_production_v15,static/description/quality.png"
+        sequence="11"/>
+            
         <menuitem
             id="jal_quality_main"
             name="Quality"
             action="action_jal_quality"
-            parent="jal_production_v15.production_main_menu"
+            parent="jal_production_v15.quality_main_menu"
             groups="jal_production_v15.res_group_quality_user,jal_production_v15.res_group_quality_admin"
             sequence="2"/>
 
         <menuitem
-            id="shift_mst_main"
-            name="Shift"
-            action="action_shift_mst"
-            parent="jal_production_v15.production_main_menu"
-            sequence="3"/>
+            id="qua_config_mst_main"
+            name="Configuration"
+            parent="jal_production_v15.quality_main_menu"
+            sequence="2"/>
 
+            <menuitem
+                id="qua_shift_mst_main"
+                name="Shift"
+                action="action_shift_mst"
+                parent="jal_production_v15.qua_config_mst_main"
+                sequence="1"/>
+            
     <menuitem
         id="jal_product_attribute_menu"
         name="Product Attribute" 
@@ -44,4 +69,20 @@
         parent="stock.menu_product_in_config_stock"
         sequence="8"/>
 
+    <menuitem 
+        id="main_menu_material_requisite" 
+        name="Material Requisition" 
+        sequence="21"/>
+quality
+    <menuitem 
+        action="action_jal_material_requisition" 
+        id="menu_jal_material_requisition" 
+        name="Material Requisition" 
+        parent="main_menu_material_requisite"
+        groups="jal_production_v15.res_group_material_requisition_user,jal_production_v15.res_group_material_requisition_admin"
+        sequence="1"/>
+
 </odoo>
+
+
+    

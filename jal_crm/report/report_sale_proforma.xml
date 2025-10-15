@@ -208,27 +208,36 @@
                                     <t t-set="tot_pcs" t-value="tot_pcs + item.product_uom_qty" />
                                     <t t-set="tot_amt" t-value="tot_amt + item.price_unit" />
                                     <t t-set="tot_final_amt" t-value="tot_final_amt + item.price_subtotal" />
+
+                                    <t t-set="tot_weight" t-value="(item.product_uom_qty * item.product_uom.ratio)/item.drum_cap_id.weight" />
                                     <tr>
                                         <td style="text-align: center;border-right: 1px solid black;">
                                             <span><span t-esc="srl"></span></span>
                                         </td>
                                         <td style="text-align: left;border-right: 1px solid black;">
-                                            <span><span t-esc="item.product_tmpl_id.name"></span></span>
+                                            <span><span t-esc="item.product_tmpl_id.name"></span></span><br/>
+                                            <t t-if="item.product_tmpl_id.hsn_id">
+                                                <span><span t-esc="item.product_tmpl_id.hsn_id.name"></span></span><br/>
+                                            </t>
+                                            <t t-if="item.grade_id">
+                                                <span><span t-esc="item.grade_id.name"></span></span><br/>
+                                            </t>
+                                            <span><span t-esc="item.mesh_id.name"></span></span>
                                         </td>
                                         <td style="text-align: left;border-right: 1px solid black;">
                                             <span ><span t-esc="item.packing_name"></span></span>
                                         </td>
                                         <td style="text-align: right;border-right: 1px solid black;">
-                                            <!-- <span ><span t-esc="item.product_uom_qty"></span></span> -->
+                                            <span t-esc="'%.0f' % tot_weight"/> <b><span t-esc="dict(item.fields_get(allfields=['packing_type'])['packing_type']['selection'])[item.packing_type]"/></b>
                                         </td>
                                         <td style="text-align: center;border-right: 1px solid black;">
-                                            <span style="padding-right:2px;" t-esc="item.product_uom_qty"/><span t-esc="item.product_uom.name"/>
+                                            <span style="padding-right:2px;" t-esc="item.product_uom_qty"/> <span t-esc="item.product_uom.name"/>
                                         </td>
                                         <td style="text-align: right;border-right: 1px solid black;">
-                                            <span ><span t-esc="'%.2f'% (item.price_unit)"></span></span>
+                                            <span ><span t-esc="'%.2f'% (item.price_unit)"></span></span> <span t-esc="o.currency_id.name"/>
                                         </td>
                                         <td style="text-align: right;">
-                                            <span ><span t-esc="'%.2f'% (item.price_subtotal)"></span></span>
+                                            <span ><span t-esc="'%.2f'% (item.price_subtotal)"></span></span> <span t-esc="o.currency_id.name"/>
                                         </td>
                                     </tr>
                                 </t>
@@ -253,10 +262,10 @@
                                     <t t-esc="tot_pcs" />
                                 </td> -->
                                 <td style="border:1px solid black;border-left:none;border-right:none;text-align:right;border-right: 1px solid black;">
-                                    <t t-esc="'%.2f'% (tot_amt)" />
+                                    <t t-esc="'%.2f'% (tot_amt)" /> <span t-esc="o.currency_id.name"/>
                                 </td>
                                 <td style="border:1px solid black;border-left:none;border-right:none;text-align:right;">
-                                    <t t-esc="'%.2f'% (tot_final_amt)" />
+                                    <t t-esc="'%.2f'% (tot_final_amt)" /> <span t-esc="o.currency_id.name"/>
                                 </td>
                             </tr>
                         </table>

@@ -3,3 +3,8 @@ from . import quality
 from . import shift_mst
 from . import inherit_product
 from . import quality_parameter_mst
+from . import inherit_product_attribute
+from . import material_requisition
+from . import inherit_sale
+from . import inherit_user
+from . import inherit_stock

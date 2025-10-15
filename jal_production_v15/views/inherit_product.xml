@@ -15,9 +15,16 @@
                     <field name="is_finished_goods"/>
                     <label for="is_finished_goods"/>
                 </span>
+                <span class="d-inline-block">
+                    <field name="is_spares"/>
+                    <label for="is_spares"/>
+                </span>
             </div>
             <xpath expr="//page[@name='inventory']" position="after">
-                <page name="quality_parameter" string="Quality Parameter" attrs="{'invisible': [('is_finished_goods', '!=', True)]}">
+                <page name="quality_parameter" string="Quality Parameter" >
+                    <group>
+                        <field name="is_quality_required" />
+                    </group>
                     <field name="quality_para_ids" >
                         <tree editable="bottom">
                             <field name="item_attribute" options="{'no_quick_create': True}"/>

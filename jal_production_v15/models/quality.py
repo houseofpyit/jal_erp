@@ -15,32 +15,38 @@ class JalQuality(models.Model):
     #         domain.append(('id', 'not in', production_ids))
     #     return domain
     
-    name = fields.Char(copy=False, index=True, default=lambda self: _('New'))
+    name = fields.Char(copy=False, index=True, default=lambda self: _('New'),tracking=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
     date = fields.Date(copy=False,string="Date",default=fields.Date.context_today)
     packing_line_ids = fields.One2many('packing.quality.line', 'mst_id')
     finish_line_ids = fields.One2many('finish.quality.line', 'mst_id')
-    production_id = fields.Many2one('jal.production',string="Production",copy=False)
+    production_id = fields.Many2one('jal.production',string="Production",copy=False,tracking=True)
     # ,domain=lambda self: self._get_production_id_domain()
-    shift_id = fields.Many2one('shift.mst',string="Shift")
-    state = fields.Selection([('draft', 'Draft'),('quality_check', 'Quality Check'),('done', 'Done')], default='draft')
-    product_id = fields.Many2one('product.product')
+    shift_id = fields.Many2one('shift.mst',string="Shift",tracking=True)
+    state = fields.Selection([('draft', 'Draft'),('complete', 'Complete')], default='draft',tracking=True)
+    grade_id = fields.Many2one('product.attribute.value',string="Grade",domain="[('attribute_id.attribute_type','=','grade')]",tracking=True)
+    mesh_id = fields.Many2one('product.attribute.value',string="Mesh",domain="[('attribute_id.attribute_type','=','mesh')]",tracking=True)
+    bucket_id = fields.Many2one('product.attribute.value',string="Bucket",domain="[('attribute_id.attribute_type','=','bucket')]",tracking=True)
+    no_of_drum = fields.Integer(string="No of Drum",tracking=True)
+    approx_weight = fields.Float(string="Approx Weight",tracking=True)
+    product_tmpl_id = fields.Many2one('product.template', string='Product',tracking=True)
+    user_id = fields.Many2one('res.users',string="User",default=lambda self: self.env.user.id)
     quality_para_ids = fields.One2many('quality.parameter.line','mst_id',string="Quality Parameter Line")
 
 
     @api.onchange('production_id')
     def _onchange_production_id(self):
         self.shift_id = self.production_id.shift_id.id
-        self.product_id = self.production_id.product_id.id
+        self.product_tmpl_id = self.production_id.product_tmpl_id.id
 
-    @api.onchange('product_id')
-    def _onchange_product_id(self):
+    @api.onchange('product_tmpl_id')
+    def _onchange_product_tmpl_id(self):
         line_list = []
-        for line in self.product_id.quality_para_ids:
+        for line in self.product_tmpl_id.quality_para_ids:
             line_list.append((0,0,{
                'item_attribute': line.item_attribute.id,
                'required_value':line.required_value.id,
-               'remarks':line.remarks,
+               'parameter_remarks':line.remarks,
             }))
 
         self.quality_para_ids = [(5, 0, 0)] + line_list
@@ -97,5 +103,8 @@ class QualityParameterLine(models.Model):
     item_attribute = fields.Many2one('jal.product.attribute',string="Product Attribute",required=True)
     required_value = fields.Many2one('quality.value',string="Required Value")
     tollerance_range = fields.Char(string="Tollerance Range")
+    parameter_remarks = fields.Char(string="Parameter Remarks")
     remarks = fields.Char(string="Remarks")
     attachment_ids = fields.Many2many('ir.attachment', string='Attachments')
+    result_value = fields.Float(string="Result Value")
+    is_mg_app = fields.Boolean(string="Manager Approve?")

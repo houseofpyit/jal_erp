@@ -23,13 +23,19 @@
                     </div>
                     <group>
                         <group>
-                            <field name="date" readonly="1" />
                             <field name='company_id' invisible="1"/>
-                            <field name='production_id' options="{'no_create': True}" required="1"/>
-                            <field name='product_id' options="{'no_create': True}" domain="[('is_finished_goods', '=', True)]" required="1"/>
+                            <field name='production_id' domain="[('state', '=','draft')]" options="{'no_create': True}" required="1" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name='product_tmpl_id' options="{'no_create': True}" domain="[('is_finished_goods', '=', True)]" required="1" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="grade_id" options="{'no_create': True,'no_open': True}" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="mesh_id" options="{'no_create': True,'no_open': True}" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="bucket_id" options="{'no_create': True,'no_open': True}" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="no_of_drum" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="approx_weight" attrs="{'readonly': [('state','!=','draft')]}"/>
                         </group>
                         <group>
-                            <field name='shift_id' options="{'no_quick_create': True}" />
+                            <field name="date" force_save="1" readonly="1" />
+                            <field name='user_id' force_save="1" readonly="1" />
+                            <field name='shift_id' force_save="1" readonly="1" />
                         </group>
                     </group>
                     <notebook>
@@ -52,13 +58,16 @@
                             </field>
                         </page> -->
                         <page name="quality_parameter" string="Quality Parameter">
-                            <field name="quality_para_ids" >
+                            <field name="quality_para_ids" attrs="{'readonly': [('state','!=','draft')]}">
                                 <tree editable="bottom">
-                                    <field name="item_attribute" options="{'no_create': True}"/>
-                                    <field name="required_value" options="{'no_create': True}"/>
+                                    <field name="item_attribute" readonly="1" force_save="1" />
+                                    <field name="required_value" readonly="1" force_save="1"/>
                                     <field name="tollerance_range" invisible="1"/>
+                                    <field name="is_mg_app" invisible="1"/>
+                                    <field name="parameter_remarks" readonly="1" force_save="1"/>
+                                    <field name="result_value" />
                                     <field name="remarks"/>
-                                    <field name="attachment_ids" widget="many2many_binary" invisible="1"/>
+                                    <field name="attachment_ids" widget="many2many_binary" invisible="0"/>
                                 </tree>
                             </field>
                         </page>
@@ -80,7 +89,10 @@
                 <field name='name'/>
                 <field name="date" />
                 <field name="production_id" />
-                <field name="product_id" />
+                <field name="product_tmpl_id" />
+                <field name="grade_id" />
+                <field name="mesh_id" />
+                <field name="bucket_id" />
                 <field name="shift_id" />
                 <field name="state" widget="badge" />
             </tree>
@@ -92,15 +104,18 @@
         <field name="model">jal.quality</field>
         <field name="arch" type="xml">
             <search>
-                <field name="name" string="Search" filter_domain="['|','|','|',('name', 'ilike', self),('production_id', 'ilike', self),('product_id', 'ilike', self),('shift_id', 'ilike', self)]"/>
+                <field name="name" string="Search" filter_domain="['|','|','|','|','|','|',('name', 'ilike', self),('production_id', 'ilike', self),('product_tmpl_id', 'ilike', self),('shift_id', 'ilike', self),('grade_id', 'ilike', self),('mesh_id', 'ilike', self),('bucket_id', 'ilike', self)]"/>
                 <field name="production_id"/>
-                <field name="product_id" />
+                <field name="product_tmpl_id" />
+                <field name="grade_id" />
+                <field name="mesh_id" />
+                <field name="bucket_id" />
                 <field name="shift_id" />
                 <separator/>
                     <filter string="Date" name="date" date="date"/>
                 <separator/>
                 <group expand="0" string="Group By">
-                    <filter string="Product" name="group_by_product_id" domain="[]" context="{'group_by': 'product_id'}"/>
+                    <filter string="Product" name="group_by_product_tmpl_id" domain="[]" context="{'group_by': 'product_tmpl_id'}"/>
                     <filter string="Shift" name="group_shift_id" domain="[]" context="{'group_by': 'shift_id'}"/>
                     <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
                 </group>

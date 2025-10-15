@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="stock_picking_form_view_inherit_production" model="ir.ui.view">
+        <field name="name">stock.picking.form.view.inherit.production</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="production_id" invisible="0"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="stock_location_form_view_inherit_production" model="ir.ui.view">
+        <field name="name">stock.location.form.view.inherit.production</field>
+        <field name="model">stock.location</field>
+        <field name="inherit_id" ref="stock.view_location_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='return_location']" position="after">
+                <field name="main_store_location" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
