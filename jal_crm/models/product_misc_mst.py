@@ -37,6 +37,9 @@ class PouchNameMst(models.Model):
     _order = 'id desc'
     
     name = fields.Char(string='Name',tracking=True)
+    pouch_type = fields.Selection([
+        ("bottle", "Bottle"),  
+        ("pouch", "Pouch")],string="Pouch Type")
 
 class brandingMst(models.Model):
     _name = 'branding.mst'
@@ -96,3 +99,8 @@ class NameMst(models.Model):
     _order = 'id desc'
     
     name = fields.Char(string='Name',tracking=True)
+    packing_type = fields.Selection([
+        ("drum", "Drum"), 
+        ("bucket", "Bucket"),
+        ("usa_bucket", "USA-Bucket"), 
+        ("pouch", "Pouch")],string="Packing Type")

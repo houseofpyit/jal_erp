@@ -5,7 +5,7 @@
         id="production_main_menu"
         name="Production"
         web_icon="jal_production_v15,static/description/production.png"
-        sequence="10"/>
+        sequence="9"/>
         
         <menuitem
             id="jal_production_main"

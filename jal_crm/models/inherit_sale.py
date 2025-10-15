@@ -35,10 +35,17 @@ class inheritedSaleOrder(models.Model):
    freight = fields.Char(string="Total Freight",tracking=True)
    insurance = fields.Char(string="Total Insurance",tracking=True)
    fob_rates = fields.Char(string="FOB Rates",tracking=True)
-   inspection_id = fields.Many2one('sale.inspection.mst',string="Pre-Shipment Inspection",tracking=True)
+   inspection = fields.Selection([
+        ("yes", "Yes"),  
+        ("no", "no")],string="Pre-Shipment Inspection",tracking=True)
    lading_type = fields.Selection([('house_bl','House BL'),
                               ('master_bl','Master BL')],string="Bill of Lading Type",tracking=True)
    purchase_req_count = fields.Integer(string="Purchase Requisition Count", copy=False)
+   display_name_on_pi = fields.Selection([
+        ("product_name", "Product Name"),  
+        ("shipping_name", "Shipping Name")],default="product_name",string="Display Name On PI",tracking=True)
+   buyer_notify_id = fields.Many2one('res.partner',string="Buyer & Notify",tracking=True)
+   buyer_ref_details = fields.Text(string="Buyer Reference Details",tracking=True)
 
    # @api.onchange('team_id')
    # def _onchange_team_id(self):
@@ -114,7 +121,7 @@ class inheritedSaleOrder(models.Model):
 class inheritedSaleOrderLine(models.Model):
    _inherit = "sale.order.line"
 
-   shipping_id = fields.Many2one('product.shipping.mst',string="Product Label")
+   shipping_id = fields.Many2one('product.shipping.mst',string="Shipping Name")
    drum_cap_id = fields.Many2one('capacity.mst',string="Capacity Per Drum",domain="[('packaging_type','=','drum')]")
    bucket_cap_id = fields.Many2one('capacity.mst',string="Capacity Per Bucket",domain="[('packaging_type','=','bucket')]")
    box_cap_id = fields.Many2one('capacity.mst',string="Capacity Per Box",domain="[('packaging_type','=','box')]")
@@ -136,15 +143,33 @@ class inheritedSaleOrderLine(models.Model):
    is_des = fields.Boolean(string="Has Description", compute="_compute_packing_name", store=True)
    name = fields.Text(string='Description',required=False)
    product_tmpl_id = fields.Many2one('product.template', string='Product Template', domain=[('sale_ok', '=', True)])
+   pouch_type = fields.Selection([
+      ("pouch", "Pouch"), 
+      ("bottle", "Bottle")],string="Pouch Type")
    
    @api.onchange('product_tmpl_id')
    def _onchange_product_tmpl_id(self):
       self.product_uom = self.product_tmpl_id.uom_id.id
-      
+
+   @api.onchange('packing_type')
+   def _onchange_packing_type(self):
+      self.drum_cap_id = False
+      self.bucket_cap_id = False
+      self.box_cap_id = False
+      self.pouch_id = False
+      self.name_id = False
+      self.lid_id = False
+      self.branding_id = False
+      self.box_id = False
+      self.drum_color_id = False
+      self.scoops_id = False
+      self.outer_id = False
+
+         
    @api.depends(
     'packing_type', 'name_id', 'drum_cap_id', 'bucket_cap_id', 'box_cap_id',
     'branding_id', 'lid_id', 'drum_color_id', 'box_id', 'pouch_id',
-    'scoops_id', 'outer_id'
+    'scoops_id', 'outer_id', 'pouch_type'
    )
    def _compute_packing_name(self):
       for rec in self:
@@ -228,6 +253,16 @@ class inheritedSaleOrderLine(models.Model):
                if rec.box_cap_id:
                   cap = rec.box_cap_id
                   desc += f"<li>Capacity per Pouch: {cap.weight} {cap.uom_id.name} Net per Pouch</li>"
+
+               if rec.pouch_type:
+                  desc += f"<li>Pouch Type: {rec.pouch_type}</li>"
+
+               if rec.pouch_id:
+                  desc += f"<li>Pouch Name: {rec.pouch_id.name}</li>"
+
+               if rec.box_id:
+                  desc += f"<li>Box Colour: {rec.box_id.name}</li>"
+                  
 
                if rec.branding_id:
                   desc += f"<li>Branding: {rec.branding_id.name}</li>"

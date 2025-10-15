@@ -136,10 +136,12 @@
                         <group>
                             <field name="name" required="1"/>
                             <field name="bank_ac_name" />
+                            <field name="branch" />
                         </group>    
                         <group>
                             <field name="bank_ac_no" />
                             <field name="bank_branch_ifsc" />
+                            <field name="swift_code" />
                         </group>  
                     </group>                  
                 </sheet>
@@ -159,6 +161,8 @@
                 <field name="bank_ac_name" />
                 <field name="bank_ac_no" />
                 <field name="bank_branch_ifsc" />
+                <field name="branch" />
+                <field name="swift_code" />
             </tree>
         </field>
     </record>
