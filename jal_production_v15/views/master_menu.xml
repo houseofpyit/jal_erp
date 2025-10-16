@@ -71,9 +71,10 @@
 
     <menuitem 
         id="main_menu_material_requisite" 
-        name="Material Requisition" 
+        name="Material Requisition"
+        web_icon="jal_production_v15,static/description/materia.png" 
         sequence="21"/>
-quality
+
     <menuitem 
         action="action_jal_material_requisition" 
         id="menu_jal_material_requisition" 

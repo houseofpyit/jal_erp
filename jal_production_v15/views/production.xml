@@ -8,7 +8,7 @@
             <form>
                 <header>
                     <!-- <button string="Create Quality" name="create_quality_btn" type="object" class="btn-primary" attrs="{'invisible': [('quality_count' ,'!=', 0),('state' ,'!=', 'draft')]}" /> -->
-                    <button string="Complete" name="action_complete_btn" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'draft')]}" groups="jal_production_v15.res_group_production_admin"/>
+                    <button string="Complete" name="action_complete_btn" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'draft')]}" groups="jal_production_v15.res_group_production_admin" confirm="Are you sure you want to complete this production?"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>

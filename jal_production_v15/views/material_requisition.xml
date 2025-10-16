@@ -28,12 +28,12 @@
                     </group>
                     <notebook>
                         <page string="Products">
-                            <field name="line_ids" >
+                            <field name="line_ids" attrs="{'readonly': [('state','!=','draft')]}">
                                 <tree editable="bottom">
                                     <field name="product_id" required="1" options="{'no_create': True}" />
-                                    <field name="demand_qty" />
-                                    <field name="uom_id" readonly="1" force_save="1"/>
-                                    <field name="available_qty" groups="jal_production_v15.res_group_material_requisition_admin"/>
+                                    <field name="demand_qty" width="150px"/>
+                                    <field name="available_qty" groups="jal_production_v15.res_group_material_requisition_admin" width="150px"/>
+                                    <field name="uom_id" readonly="1" force_save="1" width="150px"/>
                                 </tree>
                             </field>
                         </page>
