@@ -27,7 +27,7 @@
                             <field name="quality_count" invisible="1"/>
                             <field name='company_id' invisible="1"/>
                             <field name='product_tmpl_id' options="{'no_create': True}" domain="[('is_finished_goods', '=', True)]" required="1" attrs="{'readonly': [('state','!=','draft')]}"/>
-                            <field name='shift_id' options="{'no_quick_create': True}" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name='shift_id' options="{'no_quick_create': True}" attrs="{'readonly': [('state','!=','draft')]}" required="1"/>
                         </group>
                         <group>
                             <field name="date" readonly="1" />
@@ -35,18 +35,6 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Finished Goods">
-                            <field name="finished_line_ids" attrs="{'readonly': [('state','!=','draft')]}">
-                                <tree editable="bottom">
-                                    <field name="grade_id" options="{'no_create': True,'no_open': True}" />
-                                    <field name="mesh_id" options="{'no_create': True,'no_open': True}" />
-                                    <field name="bucket_id" options="{'no_create': True,'no_open': True}" />
-                                    <field name="product_id" options="{'no_quick_create': True}" />
-                                    <field name="qty" />
-                                    <field name="uom_id" readonly="1" force_save="1"/>
-                                </tree>
-                            </field>
-                        </page>
                         <page string="Raw Materials">
                             <field name="line_ids" attrs="{'readonly': [('state','!=','draft')]}">
                                 <tree editable="bottom">
@@ -66,6 +54,18 @@
                                     <field name="qty" attrs="{'readonly': [('parent.state','!=','draft')]}"/>
                                     <field name="uom_id" readonly="1" force_save="1"/>
                                     <field name="product_tracking" invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Finished Goods">
+                            <field name="finished_line_ids" attrs="{'readonly': [('state','!=','draft')]}">
+                                <tree editable="bottom">
+                                    <field name="grade_id" options="{'no_create': True,'no_open': True}" />
+                                    <field name="mesh_id" options="{'no_create': True,'no_open': True}" />
+                                    <field name="bucket_id" options="{'no_create': True,'no_open': True}" />
+                                    <field name="product_id" options="{'no_quick_create': True}" />
+                                    <field name="qty" />
+                                    <field name="uom_id" readonly="1" force_save="1"/>
                                 </tree>
                             </field>
                         </page>

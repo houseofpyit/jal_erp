@@ -219,8 +219,8 @@
                                         <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:13px;text-align:center;">SHIPPING</th>
                                     </t>
                                 <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:13px;text-align:center;">PACKING DESCRIPTION</th>
-                                <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:13px;text-align:center;">TOTAL PACKING</th>
-                                <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:13px;text-align:center;">QUANTITY UNITS</th>
+                                <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:13px;text-align:center;">PACKING</th>
+                                <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:13px;text-align:center;">QTY UNIT</th>
                                 <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:13px;text-align:center;">UNIT PRICE</th>
                                 <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:13px;text-align:center;">TOTAL PRICE</th>
                             </tr>
@@ -250,14 +250,16 @@
                                                  <span><span t-esc="item.shipping_id.name"></span></span><br/>
                                              </t>
                                             <t t-if="item.product_tmpl_id.hsn_id">
-                                                <span><span t-esc="item.product_tmpl_id.hsn_id.name"></span></span><br/>
+                                                <span>Hsn - <span t-esc="item.product_tmpl_id.hsn_id.name"></span></span><br/>
                                             </t>
                                             <t t-if="item.grade_id">
-                                                <span><span t-esc="item.grade_id.name"></span></span><br/>
+                                                <span>Grade - <span t-esc="item.grade_id.name"></span></span><br/>
                                             </t>
-                                            <span><span t-esc="item.mesh_id.name"></span></span>
+                                            <t t-if="item.mesh_id">
+                                                <span>Mesh - <span t-esc="item.mesh_id.name"></span></span>
+                                            </t>
                                         </td>
-                                        <td style="text-align: left; border-right: 1px solid black; padding: 0;">
+                                        <td style="text-align: left; border-right: 1px solid black; padding: 0;padding-left:3px;">
                                             <span t-esc="item.packing_name"></span>
                                             <t t-if="item.name">
                                                 <span style="font-weight: bold;"> Loading Description: </span><br/>

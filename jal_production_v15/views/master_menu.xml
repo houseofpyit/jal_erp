@@ -54,6 +54,13 @@
                 action="action_shift_mst"
                 parent="jal_production_v15.qua_config_mst_main"
                 sequence="1"/>
+
+            <menuitem
+                id="qua_dryer_mst_main"
+                name="Dryer"
+                action="action_dryer_mst"
+                parent="jal_production_v15.qua_config_mst_main"
+                sequence="2"/>
             
     <menuitem
         id="jal_product_attribute_menu"

@@ -36,6 +36,7 @@
                             <field name="date" force_save="1" readonly="1" />
                             <field name='user_id' force_save="1" readonly="1" />
                             <field name='shift_id' force_save="1" readonly="1" />
+                            <field name='dryer_id' options="{'no_quick_create': True}" attrs="{'readonly': [('state','!=','draft')]}" />
                         </group>
                     </group>
                     <notebook>
@@ -104,19 +105,21 @@
         <field name="model">jal.quality</field>
         <field name="arch" type="xml">
             <search>
-                <field name="name" string="Search" filter_domain="['|','|','|','|','|','|',('name', 'ilike', self),('production_id', 'ilike', self),('product_tmpl_id', 'ilike', self),('shift_id', 'ilike', self),('grade_id', 'ilike', self),('mesh_id', 'ilike', self),('bucket_id', 'ilike', self)]"/>
+                <field name="name" string="Search" filter_domain="['|','|','|','|','|','|','|',('name', 'ilike', self),('production_id', 'ilike', self),('product_tmpl_id', 'ilike', self),('shift_id', 'ilike', self),('grade_id', 'ilike', self),('mesh_id', 'ilike', self),('bucket_id', 'ilike', self),('dryer_id', 'ilike', self)]"/>
                 <field name="production_id"/>
                 <field name="product_tmpl_id" />
                 <field name="grade_id" />
                 <field name="mesh_id" />
                 <field name="bucket_id" />
                 <field name="shift_id" />
+                <field name="dryer_id" />
                 <separator/>
                     <filter string="Date" name="date" date="date"/>
                 <separator/>
                 <group expand="0" string="Group By">
                     <filter string="Product" name="group_by_product_tmpl_id" domain="[]" context="{'group_by': 'product_tmpl_id'}"/>
                     <filter string="Shift" name="group_shift_id" domain="[]" context="{'group_by': 'shift_id'}"/>
+                    <filter string="Dryer" name="group_dryer_id" domain="[]" context="{'group_by': 'dryer_id'}"/>
                     <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
                 </group>
             </search>

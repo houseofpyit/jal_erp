@@ -8,3 +8,4 @@ from . import material_requisition
 from . import inherit_sale
 from . import inherit_user
 from . import inherit_stock
+from . import dryer_mst

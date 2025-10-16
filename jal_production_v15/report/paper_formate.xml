@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="multi_barcode_gen_paper_format_form" model="report.paperformat">
+        <field name="name">Multi Barcode</field>
+        <field name="format">custom</field>
+        <field name="page_height">25</field>
+        <field name="page_width">79</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">1</field>
+        <field name="margin_bottom">0</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="header_spacing">1</field>
+        <field name="dpi">90</field>
+    </record>
+    
+    <record id="action_quality_barcode_report" model="ir.actions.report">
+        <field name="name">Print</field>
+        <field name="model">jal.quality</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">jal_production_v15.quality_barcode_report</field>
+        <field name="report_file">jal_production_v15.quality_barcode_report</field>
+        <field name="paperformat_id" ref="jal_production_v15.multi_barcode_gen_paper_format_form" />
+        <field name="print_report_name">' %s' % (object.name)</field>
+        <field name="binding_model_id" ref="jal_production_v15.model_jal_quality"/>
+        <field name="binding_type">report</field>
+    </record>   
+   
+</odoo>

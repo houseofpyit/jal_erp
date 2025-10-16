@@ -23,6 +23,7 @@ class JalQuality(models.Model):
     production_id = fields.Many2one('jal.production',string="Production",copy=False,tracking=True)
     # ,domain=lambda self: self._get_production_id_domain()
     shift_id = fields.Many2one('shift.mst',string="Shift",tracking=True)
+    dryer_id = fields.Many2one('dryer.mst',string="Dryer",tracking=True)
     state = fields.Selection([('draft', 'Draft'),('complete', 'Complete')], default='draft',tracking=True)
     grade_id = fields.Many2one('product.attribute.value',string="Grade",domain="[('attribute_id.attribute_type','=','grade')]",tracking=True)
     mesh_id = fields.Many2one('product.attribute.value',string="Mesh",domain="[('attribute_id.attribute_type','=','mesh')]",tracking=True)
@@ -58,6 +59,21 @@ class JalQuality(models.Model):
             result['name'] = self.env['ir.sequence'].next_by_code('jal.quality.seq') or _('New')
         
         return result
+    
+    def get_barcode_data(self):
+        line_list = []
+        for _ in range(self.no_of_drum):
+            line_list.append({
+                'product_name': self.product_tmpl_id.name,
+                'production_name': self.production_id.name,
+                'name': self.name,
+                'grade_name': self.grade_id.name,
+                'mesh_name': self.mesh_id.name,
+                'dryer_name': self.dryer_id.name,
+                'bucket_name': self.bucket_id.name,
+            })
+
+        return line_list
 
 class PackingQualityLine(models.Model):
     _name = 'packing.quality.line'

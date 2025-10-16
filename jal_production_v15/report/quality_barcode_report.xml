@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="quality_barcode_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="barcodes" t-value="o.get_barcode_data()"/>
+                <t t-set="total" t-value="len(barcodes)"/>
+                <t t-foreach="range(0, total, 2)" t-as="i">
+                    <t t-set="is_last" t-value="i + 2 &gt;= total"/>
+                    <div t-attf-style="##{not is_last and 'page-break-after: always;' or ''}">
+                        <table class="table table-sm" style="width:100%; border-collapse: collapse;">
+                            <tr>
+                                <t t-if="i &lt; total">
+                                    <td style="text-align: center; width:47%; padding: 2mm;">
+
+                                        <!-- <span t-esc="barcodes[i]['name']" t-options="{'widget': 'barcode', 'img_style': 'width:50%; height:15%'}"></span><br/> -->
+
+                                        <strong style="font-size: 10px;">
+                                            <t t-esc="barcodes[i]['product_name']"/>
+                                        </strong><br/>
+
+                                        <span style="font-size: 8px;">
+                                            <b>Production:</b> <t t-esc="barcodes[i]['production_name']"/>
+                                        </span><br/>
+
+                                        <span style="font-size: 8px;">
+                                            <b>Quality:</b> <t t-esc="barcodes[i]['name']"/>
+                                        </span><br/>
+
+                                        <span style="font-size: 8px;">
+                                            <b>Mesh:</b> <t t-esc="barcodes[i]['mesh_name']"/>
+                                        </span><br/>
+                                        
+                                        <span style="font-size: 8px;">
+                                            <b>Bucket:</b> <t t-esc="barcodes[i]['bucket_name']"/>
+                                        </span><br/>
+
+                                        <span style="font-size: 8px;">
+                                            <b>Dryer:</b> <t t-esc="barcodes[i]['dryer_name']"/>
+                                        </span>
+
+                                    </td>
+                                </t>
+
+                                <!-- SPACE BETWEEN COLUMNS -->
+                                <td style="width:6%;"></td>
+
+                                <!-- RIGHT COLUMN -->
+                                <t t-if="i + 1 &lt; total">
+                                    <td style="text-align: center; width:47%; padding: 2mm;">
+
+                                        <!-- <span t-esc="barcodes[i+1]['name']" t-options="{'widget': 'barcode', 'img_style': 'width:50%; height:15%'}"></span><br/> -->
+
+                                        <strong style="font-size: 10px;">
+                                            <t t-esc="barcodes[i+1]['product_name']"/>
+                                        </strong><br/>
+
+                                        <span style="font-size: 8px;">
+                                            <b>Production:</b> <t t-esc="barcodes[i+1]['production_name']"/>
+                                        </span><br/>
+
+                                        <span style="font-size: 8px;">
+                                            <b>Quality:</b> <t t-esc="barcodes[i+1]['name']"/>
+                                        </span><br/>
+
+                                        <span style="font-size: 8px;">
+                                            <b>Mesh:</b> <t t-esc="barcodes[i+1]['mesh_name']"/>
+                                        </span><br/>
+
+                                        
+                                        <span style="font-size: 8px;">
+                                            <b>Bucket:</b> <t t-esc="barcodes[i+1]['bucket_name']"/>
+                                        </span><br/>
+                                        
+                                        <span style="font-size: 8px;">
+                                            <b>Dryer:</b> <t t-esc="barcodes[i+1]['dryer_name']"/>
+                                        </span>
+                                    </td>
+                                </t>
+
+                                <!-- IF NO RIGHT COLUMN, ADD EMPTY CELL -->
+                                <t t-if="i + 1 &gt;= total">
+                                    <td style="width:47%; padding: 2mm;"></td>
+                                </t>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
