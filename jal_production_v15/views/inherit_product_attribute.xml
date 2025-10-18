@@ -15,6 +15,9 @@
             <xpath expr="//field[@name='create_variant']" position="after">
                 <field name="attribute_type"/>
             </xpath>
+            <xpath expr="//field[@name='value_ids']//field[@name='name']" position="after">
+                <field name="amount" attrs="{'column_invisible': [('parent.attribute_type', '!=', 'bucket')]}"/>
+            </xpath>
         </field>
     </record>
 

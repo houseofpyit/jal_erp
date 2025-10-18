@@ -9,10 +9,12 @@
             <xpath expr="//tree/field[@name='price_unit']" position="after">
                 <field name="grade_id" width="150px" options="{'no_open': True, 'no_create': True}" attrs="{'column_invisible': [('parent.business_type', '!=', 'international')]}"/>
                 <field name="mesh_id" width="150px" options="{'no_open': True, 'no_create': True}" attrs="{'column_invisible': [('parent.business_type', '!=', 'international')]}"/>
+                <field name="bucket" width="150px" attrs="{'column_invisible': [('parent.business_type', '!=', 'international')]}"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/form/group/group/field[@name='price_unit']" position="after">
                 <field name="grade_id" width="150px" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('parent.business_type', '!=', 'international')]}"/>
                 <field name="mesh_id" width="150px" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('parent.business_type', '!=', 'international')]}"/>
+                <field name="bucket" width="150px" attrs="{'invisible': [('parent.business_type', '!=', 'international')]}"/>
             </xpath>
         </field>
     </record>

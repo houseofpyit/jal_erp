@@ -32,6 +32,7 @@ class JalQuality(models.Model):
     approx_weight = fields.Float(string="Approx Weight",tracking=True)
     product_tmpl_id = fields.Many2one('product.template', string='Product',tracking=True)
     user_id = fields.Many2one('res.users',string="User",default=lambda self: self.env.user.id)
+    shift_time_id = fields.Many2one('shift.time.line',string="Shift Time",tracking=True)
     quality_para_ids = fields.One2many('quality.parameter.line','mst_id',string="Quality Parameter Line")
 
 

@@ -11,7 +11,18 @@
                         <group>
                             <field name="name" required="1" />
                         </group>
-                    </group>                    
+                    </group> 
+                    <notebook>
+                        <page string="Time Details">
+                            <field name="line_ids" >
+                                <tree editable="bottom">
+                                    <field name="name" />
+                                    <field name="start_time" widget="float_time"/>
+                                    <field name="end_time" widget="float_time"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>                   
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_ids"/>

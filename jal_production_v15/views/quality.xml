@@ -37,6 +37,7 @@
                             <field name='user_id' force_save="1" readonly="1" />
                             <field name='shift_id' force_save="1" readonly="1" />
                             <field name='dryer_id' options="{'no_quick_create': True}" attrs="{'readonly': [('state','!=','draft')]}" />
+                            <field name='shift_time_id' domain="[('mst_id', '=', shift_id)]" options="{'no_create': True,'no_create': True}" attrs="{'readonly': [('state','!=','draft')]}" />
                         </group>
                     </group>
                     <notebook>

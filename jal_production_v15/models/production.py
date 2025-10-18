@@ -16,11 +16,11 @@ class JalProduction(models.Model):
     line_ids = fields.One2many('jal.production.line', 'mst_id')
     packing_line_ids = fields.One2many('jal.packing.production.line', 'mst_id')
     finished_line_ids = fields.One2many('jal.finished.production.line', 'mst_id')
-    state = fields.Selection([('draft', 'Draft'),('complete', 'Complete')], default='draft',tracking=True)
+    state = fields.Selection([('draft', 'Draft'),('running', 'Running'),('complete', 'Complete')], default='draft',tracking=True)
     product_tmpl_id = fields.Many2one('product.template', string='Product',tracking=True)
-    quality_count = fields.Integer(string="Quality Count", compute="_compute_quality_count", store=True)
     electricity_exp = fields.Float(string="Electricity(KWH)",tracking=True)
     user_id = fields.Many2one('res.users',string="User",default=lambda self: self.env.user.id)
+    employee_id = fields.Many2one('hr.employee', string='Shift Incharge',tracking=True)
 
     def name_get(self):
         result = []
@@ -31,31 +31,31 @@ class JalProduction(models.Model):
                 name = i.name
             result.append((i.id, name))
         return result
+    
+    def action_running_btn(self):
+        self.state = 'running'
 
-    @api.depends('quality_count') 
-    def _compute_quality_count(self):
-        print("-------------quality_count--------------")
-        for i in self:
-            i.quality_count = self.env['jal.quality'].sudo().search_count([('production_id', '=', i.id)])
-
-    def action_view_quality(self):
+    def action_get_quality_btn(self):
         quality_rec = self.env['jal.quality'].search([('production_id', '=', self.id)])
-        return {
-            'type': 'ir.actions.act_window',
-            'name': 'Quality',
-            'view_mode': 'form',
-            'res_model': 'jal.quality',
-            'res_id': quality_rec.id,
-            'context': {'create': False}
-            }
-
-    def create_quality_btn(self):
-        quality_rec = self.env['jal.quality'].create({
-                                            'shift_id': self.shift_id.id,
-                                            'production_id': self.id,
-                                            })
+        if not quality_rec:
+            raise ValidationError(_("No Quality record found for Production: %s") % (self.name or ""))
+        
+        line_list = []
         if quality_rec:
-            self.state = 'inprogres'
+            domain = [
+                ('product_template_attribute_value_ids.product_attribute_value_id', '=', quality_rec.grade_id.id),
+                ('product_template_attribute_value_ids.product_attribute_value_id', '=', quality_rec.mesh_id.id),
+                ('product_template_attribute_value_ids.product_attribute_value_id', '=', quality_rec.bucket_id.id),
+            ]
+
+            products = self.env['product.product'].search(domain)
+            line_list.append((0,0,{
+               'grade_id': quality_rec.grade_id.id,
+               'mesh_id':quality_rec.mesh_id.id,
+               'bucket_id':quality_rec.bucket_id.id,
+               'product_id':products.id if products else False,
+            }))
+        self.finished_line_ids = line_list
 
     def action_complete_btn(self):
         self._create_stock_picking_receipts()
@@ -90,12 +90,15 @@ class JalProduction(models.Model):
                 'name': line.product_id.display_name,
                 'product_id': line.product_id.id,
                 'product_uom_qty': line.qty,
+                'demand_bucket': line.bucket_qty,
+                'done_bucket': line.bucket_qty,
                 'product_uom': line.uom_id.id,
                 'location_id': src_location.id,
                 'location_dest_id': main_location.id,
                 'move_line_ids': [(0, 0, {
                     'product_id': line.product_id.id,
                     'qty_done': line.qty,
+                    'done_bucket': line.bucket_qty,
                     'product_uom_id': line.uom_id.id,
                     'location_id': src_location.id,
                     'location_dest_id': main_location.id,
@@ -173,36 +176,40 @@ class JalFinishedProductionLine(models.Model):
     product_id = fields.Many2one('product.product',required=True)
     uom_id = fields.Many2one('uom.uom',string="Unit")
     qty = fields.Float(string="Quantity")
+    bucket_qty = fields.Integer(string="Bucket Quantity")
     grade_id = fields.Many2one('product.attribute.value',string="Grade",domain="[('attribute_id.attribute_type','=','grade')]",tracking=True)
     mesh_id = fields.Many2one('product.attribute.value',string="Mesh",domain="[('attribute_id.attribute_type','=','mesh')]",tracking=True)
     bucket_id = fields.Many2one('product.attribute.value',string="Bucket",domain="[('attribute_id.attribute_type','=','bucket')]",tracking=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
+
+    @api.onchange('bucket_qty')
+    def _onchange_bucket_qty(self):
+        if self.bucket_qty > 0:
+            if self.bucket_id.amount > 0:
+                self.qty = self.bucket_qty * self.bucket_id.amount
+        else:
+            self.qty = 0
 
     @api.onchange('product_id')
     def onchange_product_id(self):
         for rec in self:
             if rec.product_id:
                 rec.uom_id = rec.product_id.uom_po_id.id
-
                 
     @api.onchange('grade_id', 'mesh_id', 'bucket_id')
     def _onchange_product_attributes(self):
-        domain = []
-        attribute_values = []
+        if not (self.grade_id and self.mesh_id and self.bucket_id):
+            self.product_id = False
+            return {'domain': {'product_id': []}}
 
-        if self.grade_id:
-            attribute_values.append(self.grade_id.id)
-        if self.mesh_id:
-            attribute_values.append(self.mesh_id.id)
-        if self.bucket_id:
-            attribute_values.append(self.bucket_id.id)
+        self.product_id = False
 
-        if attribute_values:
-            products = self.env['product.product'].search([
-                ('product_template_attribute_value_ids.product_attribute_value_id', 'in', attribute_values)
-            ])
+        domain = [
+            ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.grade_id.id),
+            ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.mesh_id.id),
+            ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.bucket_id.id),
+        ]
 
-            domain = [('id', 'in', products.ids)]
+        products = self.env['product.product'].search(domain)
 
-        print("----------domain-----", domain)
-        return {'domain': {'product_id': domain}}
+        return {'domain': {'product_id': [('id', 'in', products.ids)]}}

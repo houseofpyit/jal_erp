@@ -7,16 +7,12 @@
         <field name='arch' type='xml'>
             <form>
                 <header>
-                    <!-- <button string="Create Quality" name="create_quality_btn" type="object" class="btn-primary" attrs="{'invisible': [('quality_count' ,'!=', 0),('state' ,'!=', 'draft')]}" /> -->
-                    <button string="Complete" name="action_complete_btn" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'draft')]}" groups="jal_production_v15.res_group_production_admin" confirm="Are you sure you want to complete this production?"/>
+                    <button string="Running" name="action_running_btn" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'draft')]}"  confirm=""/>
+                    <button string="Complete" name="action_complete_btn" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'running')]}" groups="jal_production_v15.res_group_production_admin" confirm="Are you sure you want to complete this production?"/>
+                    <button string="Get Quality" name="action_get_quality_btn" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'running')]}" groups="jal_production_v15.res_group_production_admin" confirm=""/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box">
-                    <!-- <button name="action_view_quality" type="object" class="oe_stat_button" icon="" attrs="{'invisible': [('quality_count', '=', 0)]}">
-                        <field name="quality_count" widget="statinfo" string="Quality"/>
-                    </button> -->
-                    </div>
                     <div class="oe_title">
                         <h1>
                             <field name="name" readonly="1"/>
@@ -24,19 +20,19 @@
                     </div>
                     <group>
                         <group>
-                            <field name="quality_count" invisible="1"/>
                             <field name='company_id' invisible="1"/>
-                            <field name='product_tmpl_id' options="{'no_create': True}" domain="[('is_finished_goods', '=', True)]" required="1" attrs="{'readonly': [('state','!=','draft')]}"/>
-                            <field name='shift_id' options="{'no_quick_create': True}" attrs="{'readonly': [('state','!=','draft')]}" required="1"/>
+                            <field name='product_tmpl_id' options="{'no_create': True}" domain="[('is_finished_goods', '=', True)]" required="1" attrs="{'readonly': [('state','=','complete')]}"/>
+                            <field name='shift_id' options="{'no_quick_create': True}" attrs="{'readonly': [('state','=','complete')]}" required="1"/>
                         </group>
                         <group>
                             <field name="date" readonly="1" />
                             <field name='user_id' force_save="1" readonly="1" />
+                            <field name='employee_id' options="{'no_quick_create': True}" attrs="{'readonly': [('state','=','complete')]}"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Raw Materials">
-                            <field name="line_ids" attrs="{'readonly': [('state','!=','draft')]}">
+                            <field name="line_ids" attrs="{'readonly': [('state','=','complete')]}">
                                 <tree editable="bottom">
                                     <field name="product_id" required="1" options="{'no_quick_create': True}" domain="[('is_raw_material', '=', True)]"/>
                                     <field name="lot_ids" widget="many2many_tags" options="{'no_create': True}" attrs="{'readonly': [('product_tracking', '=', 'none')], 'required': [('product_tracking', '!=', 'none')]}"/>
@@ -47,7 +43,7 @@
                             </field>
                         </page>
                         <page string="Packing Materials">
-                            <field name="packing_line_ids" attrs="{'readonly': [('state','!=','draft')]}">
+                            <field name="packing_line_ids" attrs="{'readonly': [('state','=','complete')]}">
                                 <tree editable="bottom">
                                     <field name="product_id" required="1" options="{'no_quick_create': True}" domain="[('is_packing', '=', True)]"/>
                                     <field name="lot_ids" widget="many2many_tags" options="{'no_create': True}" attrs="{'readonly': [('product_tracking', '=', 'none')], 'required': [('product_tracking', '!=', 'none')]}"/>
@@ -58,12 +54,13 @@
                             </field>
                         </page>
                         <page string="Finished Goods">
-                            <field name="finished_line_ids" attrs="{'readonly': [('state','!=','draft')]}">
+                            <field name="finished_line_ids" attrs="{'readonly': [('state','=','complete')]}">
                                 <tree editable="bottom">
                                     <field name="grade_id" options="{'no_create': True,'no_open': True}" />
                                     <field name="mesh_id" options="{'no_create': True,'no_open': True}" />
                                     <field name="bucket_id" options="{'no_create': True,'no_open': True}" />
                                     <field name="product_id" options="{'no_quick_create': True}" />
+                                    <field name="bucket_qty" />
                                     <field name="qty" />
                                     <field name="uom_id" readonly="1" force_save="1"/>
                                 </tree>
@@ -71,7 +68,7 @@
                         </page>
                         <page string="Overhead">
                             <group>
-                                <field name="electricity_exp" attrs="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="electricity_exp" attrs="{'readonly': [('state','=','complete')]}"/>
                             </group>
                         </page>
                     </notebook>
@@ -92,6 +89,7 @@
                 <field name='name'/>
                 <field name="product_tmpl_id" />
                 <field name="shift_id" />
+                <field name="employee_id" />
                 <field name="state" />
             </tree>
         </field>
@@ -102,15 +100,17 @@
         <field name="model">jal.production</field>
         <field name="arch" type="xml">
             <search>
-                <field name="name" string="Search" filter_domain="['|','|',('name', 'ilike', self),('product_tmpl_id', 'ilike', self),('shift_id', 'ilike', self)]"/>
+                <field name="name" string="Search" filter_domain="['|','|','|',('name', 'ilike', self),('product_tmpl_id', 'ilike', self),('shift_id', 'ilike', self),('employee_id', 'ilike', self)]"/>
                 <field name="product_tmpl_id"/>
                 <field name="shift_id" />
+                <field name="employee_id" />
                 <separator/>
                     <filter string="Date" name="date" date="date"/>
                 <separator/>
                 <group expand="0" string="Group By">
                     <filter string="Product" name="group_by_product_tmpl_id" domain="[]" context="{'group_by': 'product_tmpl_id'}"/>
                     <filter string="Shift" name="group_shift_id" domain="[]" context="{'group_by': 'shift_id'}"/>
+                    <filter string="Shift Incharge" name="group_employee_id" domain="[]" context="{'group_by': 'employee_id'}"/>
                     <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
                 </group>
             </search>
