@@ -177,9 +177,9 @@ class JalFinishedProductionLine(models.Model):
     uom_id = fields.Many2one('uom.uom',string="Unit")
     qty = fields.Float(string="Quantity")
     bucket_qty = fields.Integer(string="Bucket Quantity")
-    grade_id = fields.Many2one('product.attribute.value',string="Grade",domain="[('attribute_id.attribute_type','=','grade')]",tracking=True)
-    mesh_id = fields.Many2one('product.attribute.value',string="Mesh",domain="[('attribute_id.attribute_type','=','mesh')]",tracking=True)
-    bucket_id = fields.Many2one('product.attribute.value',string="Bucket",domain="[('attribute_id.attribute_type','=','bucket')]",tracking=True)
+    grade_id = fields.Many2one('product.attribute.value',string="Grade",domain="[('attribute_id.attribute_type','=','grade')]")
+    mesh_id = fields.Many2one('product.attribute.value',string="Mesh",domain="[('attribute_id.attribute_type','=','mesh')]")
+    bucket_id = fields.Many2one('product.attribute.value',string="Bucket",domain="[('attribute_id.attribute_type','=','bucket')]")
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
 
     @api.onchange('bucket_qty')
