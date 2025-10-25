@@ -13,6 +13,7 @@
         'data/sequence.xml',
         'security/ir.model.access.csv',
         'security/record_rule.xml',
+        'security/security_group.xml',
 
         'report/paper_formate.xml',
         'report/report_sale_domestic.xml',

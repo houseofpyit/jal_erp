@@ -5,18 +5,21 @@
         id="international_main_menu"
         name="International"
         web_icon="jal_crm,static/description/international.png"
+        groups="jal_crm.res_group_international"
         sequence="3"/>
         
         <menuitem
         id="domestic_main_menu"
         name="Domestic"
         web_icon="jal_crm,static/description/domestic.png"
+        groups="jal_crm.res_group_domestic"
         sequence="4"/>
         
         <menuitem
         id="trading_main_menu"
         name="Trading"
         web_icon="jal_crm,static/description/trading.png"
+        groups="jal_crm.res_group_trading"
         sequence="5"/>
 
     <!-- International -->

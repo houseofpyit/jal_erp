@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_group_international" model="res.groups">
+        <field name="name">International</field>
+    </record>
+
+    <record id="res_group_domestic" model="res.groups">
+        <field name="name">Domestic</field>
+    </record>
+
+    <record id="res_group_trading" model="res.groups">
+        <field name="name">Trading</field>
+    </record>
+
+</odoo>

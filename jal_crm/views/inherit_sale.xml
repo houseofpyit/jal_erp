@@ -89,16 +89,16 @@
                 <field name="incoterm_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="buyer_notify_id"  options="{'no_quick_create': True}"/>
+                <field name="buyer_notify_id"  options="{'no_quick_create': True}" attrs="{'readonly': [('state', '=', 'sale')]}"/>
             </xpath>
             <xpath expr="//field[@name='payment_term_id']" position="after">
                 <field name="terms_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
                 <field name="country_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
                 <field name="port_id" domain="[('country_id', '=', country_id)]" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
                 <field name="palletized_type" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
-                <field name="business_type" invisible="0"/>
-                <field name="display_name_on_pi" />
-                <field name="buyer_ref_details" />
+                <field name="business_type" invisible="0" />
+                <field name="display_name_on_pi" attrs="{'readonly': [('state', '=', 'sale')]}"/>
+                <field name="buyer_ref_details" attrs="{'readonly': [('state', '=', 'sale')]}"/>
             </xpath>
             <xpath expr="//tree/field[@name='product_template_id']" position="before">
                 <field name="shipping_id" width="150px" attrs="{'column_invisible': [('parent.business_type', '!=', 'international')]}"/>

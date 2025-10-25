@@ -105,7 +105,7 @@ class InheritProductProduct(models.Model):
     
 
     @api.depends_context('company')
-    def _compute_on_hand_bucket_total(self):
+    def _compute_bucket_on_hand_total(self):
         Quant = self.env['stock.quant'].sudo()
         # group by product for efficiency
         dom = [
@@ -114,7 +114,7 @@ class InheritProductProduct(models.Model):
             ('company_id', '=', self.env.company.id),
         ]
         groups = Quant.read_group(dom, ['on_hand_bucket:sum'], ['product_id'])
-        mapped = {g['product_id'][0]: g['bucket_on_hand_sum'] for g in groups}
+        mapped = {g['product_id'][0]: g['on_hand_bucket'] for g in groups}
         for prod in self:
             prod.bucket_qty_hand_total = mapped.get(prod.id, 0.0)
 
