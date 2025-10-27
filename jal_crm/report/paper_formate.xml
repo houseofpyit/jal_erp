@@ -48,5 +48,11 @@
         <field name="binding_model_id" ref="sale.model_sale_order"/>
         <field name="binding_type">report</field>
     </record>   
+
+    <record id="sale.action_report_saleorder" model="ir.actions.report">
+        <field name="binding_model_id" ref="model_sale_order"/>
+        <field name="binding_model_id" ref=""/>
+        <field name="binding_type">report</field>
+    </record>
    
 </odoo>

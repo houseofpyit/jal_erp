@@ -137,6 +137,7 @@
                             <field name="name" required="1"/>
                             <field name="bank_ac_name" />
                             <field name="branch" />
+                            <field name="currency_id" options="{'no_create': True}" />
                         </group>    
                         <group>
                             <field name="bank_ac_no" />
@@ -160,6 +161,7 @@
                 <field name="name" />
                 <field name="bank_ac_name" />
                 <field name="bank_ac_no" />
+                <field name="currency_id" />
                 <field name="bank_branch_ifsc" />
                 <field name="branch" />
                 <field name="swift_code" />

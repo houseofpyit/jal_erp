@@ -117,10 +117,10 @@
             </xpath>
             <xpath expr="//field[@name='order_line']/form/group/group/field[@name='analytic_tag_ids']" position="after">
                 <field name="packing_type" attrs="{'invisible': [('parent.business_type', '!=', 'international')],'required': [('parent.business_type', '=', 'international'),('display_type', '=', False)]}"/>
+                <field name="name_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': ['|',('packing_type', '=', 'pouch'),('packing_type', '=', False)]}"/>
                 <field name="drum_cap_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', '!=', 'drum')]}"/>
                 <field name="bucket_cap_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', 'not in', ('bucket','usa_bucket'))]}"/>
                 <field name="box_cap_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', '!=', 'pouch')]}"/>
-                <field name="name_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': ['|',('packing_type', '=', 'pouch'),('packing_type', '=', False)]}"/>
                 <field name="branding_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': ['|',('packing_type', '=', 'pouch'),('packing_type', '=', False)]}"/>
                 <field name="lid_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', 'not in', ('bucket','usa_bucket'))]}"/>
                 <field name="drum_color_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', 'not in', ('bucket','usa_bucket'))]}"/>

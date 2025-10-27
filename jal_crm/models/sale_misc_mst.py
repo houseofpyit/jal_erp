@@ -40,6 +40,7 @@ class BankMaster(models.Model):
     bank_branch_ifsc = fields.Char("Bank Branch IFSC")
     branch = fields.Char("Branch")
     swift_code = fields.Char("Swift Code")
+    currency_id = fields.Many2one('res.currency', string="Currency")
 
 class SaleTermConditions(models.Model):
     _name = "sale.term.conditions"

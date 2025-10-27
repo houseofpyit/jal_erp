@@ -51,6 +51,11 @@ class inheritedSaleOrder(models.Model):
    # def _onchange_team_id(self):
    #    self.business_type = self.team_id.business_type
 
+   def default_get(self, fields):
+      res = super(inheritedSaleOrder, self).default_get(fields)
+      if self.env.context.get('default_business_type',False) == 'international':
+         res['currency_id'] = self.env.ref('base.EUR').id
+      return res
 
    def amount_to_text(self, amount, currency='INR'):
       word = num2words(amount, lang='en_IN').upper()

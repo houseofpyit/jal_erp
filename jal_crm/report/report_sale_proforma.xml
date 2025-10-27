@@ -59,25 +59,29 @@
                                     <span>A/C No. :</span><br/>
                                     <span>RTGS/MICR Code : </span><br/>
                                     <span>Branch :</span><br/>
-                                    <span>SWIFT Code : </span>
+                                    <span>SWIFT Code : </span><br/>
+                                    <span>Currency : </span>
                                 </td>
                                 <td width="35%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
                                     <span style="padding-top:0px;" t-esc="o.bank_id.name" /><br/>
                                     <span style="padding-top:0px;" t-esc="o.bank_id.bank_ac_name" /><br/>
                                     <span style="padding-top:0px;" t-esc="o.bank_id.bank_ac_no" /><br/>
-                                    <span style="padding-top:0px;" t-esc="o.bank_id.bank_branch_ifsc"/>
+                                    <span style="padding-top:0px;" t-esc="o.bank_id.bank_branch_ifsc"/><br/>
+                                    <span style="padding-top:0px;" t-esc="o.bank_id.currency_id.name"/>
                                 </td>
                                 <td width="15%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
                                     <span>Name (Correspondent Bank) :</span><br/>
                                     <span>Currency :</span><br/>
                                     <span>Swift Code: </span><br/>
-                                    <span>Account Number : </span>
+                                    <span>Account Number : </span><br/>
+                                    <span>Currency : </span>
                                 </td>
                                 <td width="35%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
                                     <span t-esc="o.bank_id.name" /><br/>
                                     <span t-esc="o.bank_id.bank_ac_name" /><br/>
                                     <span t-esc="o.bank_id.bank_ac_no" /><br/>
-                                    <span t-esc="o.bank_id.bank_branch_ifsc"/>
+                                    <span t-esc="o.bank_id.bank_branch_ifsc"/><br/>
+                                    <span t-esc="o.bank_id.currency_id.name"/>
                                 </td>
                             </tr>
                             <tr>

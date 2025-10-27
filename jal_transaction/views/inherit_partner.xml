@@ -10,6 +10,40 @@
                 <field name="team_id" options="{'no_open': True, 'no_create': True}"/>
                 <field name="business_type" />
             </xpath>
+            <xpath expr="//field[@name='party_group_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='commission_rate']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='transport_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='agent_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='party_code']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='rates']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='tcs_applicable']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='tds_applicable']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='rates']" position="before">
+                <page name="account" string="Account" autofocus="autofocus">
+                    <group>
+                        <group>
+                            <field name="tcs_applicable"/>
+                            <field name="tds_applicable"/>
+                        </group>   
+                    </group>
+                </page>
+            </xpath>
         </field>
     </record>
 
