@@ -9,15 +9,16 @@ class inheriteStockPicking(models.Model):
     def action_confirm(self):
         res = super(inheriteStockPicking,self).action_confirm()
         for line in self.move_lines:
-            stock_move = self.env['stock.move.line'].search([('picking_id', '=', line.picking_id.id)])
+            stock_move = self.env['stock.move.line'].search([('picking_id', '=', line.picking_id.id),('product_id', '=', line.product_id.id)])
             stock_move.write({'done_bucket': line.done_bucket})
         return res
     
 class InheritStockMove(models.Model):
     _inherit = "stock.move"
 
-    demand_bucket = fields.Float(string="Demand Bucket")
-    done_bucket = fields.Float(string="Done Bucket")
+    demand_bucket = fields.Float(string="Demand (Bucket/Bags/Pouch)")
+    done_bucket = fields.Float(string="Done (Bucket/Bags/Pouch)")
+    uom_handling_type = fields.Selection(related='product_id.uom_handling_type',string="UoM Handling Type",store=False)
 
     def _action_done(self, cancel_backorder=False):
         res = super()._action_done(cancel_backorder=cancel_backorder)
@@ -87,12 +88,13 @@ class InheritStockMove(models.Model):
 class InheritStockMoveLine(models.Model):
     _inherit = "stock.move.line"
 
-    done_bucket = fields.Float(string="Done Bucket")
+    done_bucket = fields.Float(string="Done (Bucket/Bags/Pouch)")
+    uom_handling_type = fields.Selection(related='product_id.uom_handling_type',string="UoM Handling Type",store=False)
 
 class InheritStockQuant(models.Model):
     _inherit = "stock.quant"
 
-    on_hand_bucket = fields.Float(string="On Hand Bucket")
+    on_hand_bucket = fields.Float(string="On Hand (Bucket/Bags/Pouch)")
 
 class inheriteStockLocation(models.Model):
     _inherit = "stock.location"

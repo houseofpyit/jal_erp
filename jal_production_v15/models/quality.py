@@ -34,6 +34,19 @@ class JalQuality(models.Model):
     user_id = fields.Many2one('res.users',string="User",default=lambda self: self.env.user.id)
     shift_time_id = fields.Many2one('shift.time.line',string="Shift Time",tracking=True)
     quality_para_ids = fields.One2many('quality.parameter.line','mst_id',string="Quality Parameter Line")
+    quality_grade_ids = fields.One2many('quality.grade.line','mst_id',string="Quality Grade Line")
+
+    @api.onchange('production_id', 'date')
+    def _onchange_shift_time_id(self):
+        self.shift_time_id = False
+        if not self.production_id or not self.date:
+            return {'domain': {'shift_time_id': []}}
+
+        quality_recs = self.env['jal.quality'].search([('production_id', '=', self.production_id.id),('date', '=', self.date)])
+
+        shift_ids = quality_recs.mapped('shift_time_id.id')
+
+        return {'domain': {'shift_time_id': [('id', 'not in', shift_ids)]}}
 
 
     @api.onchange('production_id')
@@ -63,16 +76,17 @@ class JalQuality(models.Model):
     
     def get_barcode_data(self):
         line_list = []
-        for _ in range(self.no_of_drum):
-            line_list.append({
-                'product_name': self.product_tmpl_id.name,
-                'production_name': self.production_id.name,
-                'name': self.name,
-                'grade_name': self.grade_id.name,
-                'mesh_name': self.mesh_id.name,
-                'dryer_name': self.dryer_id.name,
-                'bucket_name': self.bucket_id.name,
-            })
+        for line in self.quality_grade_ids:
+            for _ in range(line.no_of_drum):
+                line_list.append({
+                    'product_name': self.product_tmpl_id.name,
+                    'production_name': self.production_id.name,
+                    'name': self.name,
+                    'grade_name': line.grade_id.name,
+                    'mesh_name': line.mesh_id.name,
+                    'dryer_name': self.dryer_id.name,
+                    'bucket_name': line.bucket_id.name,
+                })
 
         return line_list
 
@@ -125,3 +139,15 @@ class QualityParameterLine(models.Model):
     attachment_ids = fields.Many2many('ir.attachment', string='Attachments')
     result_value = fields.Float(string="Result Value")
     is_mg_app = fields.Boolean(string="Manager Approve?")
+
+class QualityGradeLine(models.Model):
+    _name = "quality.grade.line"
+    _description = "Quality Grade Parameter"
+
+    mst_id = fields.Many2one('jal.quality',string="Mst",ondelete='cascade') 
+
+    grade_id = fields.Many2one('product.attribute.value',string="Grade",domain="[('attribute_id.attribute_type','=','grade')]")
+    mesh_id = fields.Many2one('product.attribute.value',string="Mesh",domain="[('attribute_id.attribute_type','=','mesh')]")
+    bucket_id = fields.Many2one('product.attribute.value',string="Bucket",domain="[('attribute_id.attribute_type','=','bucket')]")
+    no_of_drum = fields.Integer(string="No of Drum")
+    weight = fields.Float(string="Weight")

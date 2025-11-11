@@ -10,6 +10,7 @@ access_jal_quality_admin,jal_quality_admin,model_jal_quality,jal_production_v15.
 access_packing_quality_line,packing_quality_line,model_packing_quality_line,,1,1,1,1
 access_finish_quality_line,finish_quality_line,model_finish_quality_line,,1,1,1,1
 access_quality_parameter_line,quality_parameter_line,model_quality_parameter_line,,1,1,1,1
+access_quality_grade_line,quality_grade_line,model_quality_grade_line,,1,1,1,1
 
 access_shift_mst,shift_mst,model_shift_mst,,1,1,1,1
 access_shift_time_line,shift_time_line,model_shift_time_line,,1,1,1,1

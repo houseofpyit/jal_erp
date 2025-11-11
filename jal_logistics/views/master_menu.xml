@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem
+        id="logistics_main_menu"
+        name="Logistics"
+        sequence="141"/>
+
+        <menuitem
+            id="jal_logistics_main_menu"
+            name="Logistics"
+            parent="jal_logistics.logistics_main_menu"
+            action="action_jal_logistics"
+            sequence="1"/>
+
+        <menuitem
+            id="logistics_configuration_main_menu"
+            name="Configuration"
+            parent="jal_logistics.logistics_main_menu"
+            sequence="2"/>
+
+            <menuitem
+                id="booking_agent_mst_menu"
+                name="Booking Agent"
+                parent="jal_logistics.logistics_configuration_main_menu"
+                action="action_booking_agent_mst"
+                sequence="1"/>
+
+            <menuitem
+                id="transport_agent_mst_menu"
+                name="Transport Agent"
+                parent="jal_logistics.logistics_configuration_main_menu"
+                action="action_transport_agent_mst"
+                sequence="2"/>
+
+            <menuitem
+                id="cha_mst_menu"
+                name="CHA"
+                parent="jal_logistics.logistics_configuration_main_menu"
+                action="action_cha_mst"
+                sequence="3"/>
+                
+            <menuitem
+                id="shipping_line_mst_menu"
+                name="Shipping Line"
+                parent="jal_logistics.logistics_configuration_main_menu"
+                action="action_shipping_line_mst"
+                sequence="4"/>
+
+            <menuitem
+                id="inspection_mst_menu"
+                name="Inspection"
+                parent="jal_logistics.logistics_configuration_main_menu"
+                action="action_inspection_mst"
+                sequence="5"/>
+            
+            <menuitem
+                id="epcg_liscenec_mst_menu"
+                name="EPCG Liscence"
+                parent="jal_logistics.logistics_configuration_main_menu"
+                action="action_epcg_liscence_mst"
+                sequence="6"/>
+
+            <menuitem
+                id="advanced_liscenec_mst_menu"
+                name="Advanced Liscence"
+                parent="jal_logistics.logistics_configuration_main_menu"
+                action="action_advanced_liscence_mst"
+                sequence="7"/>
+
+            <menuitem
+                id="pallet_size_mst_menu"
+                name="Pallet Size"
+                parent="jal_logistics.logistics_configuration_main_menu"
+                action="action_pallet_size_mst"
+                sequence="8"/>
+           
+           
+</odoo>

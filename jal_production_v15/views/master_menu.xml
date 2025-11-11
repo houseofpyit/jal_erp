@@ -64,7 +64,7 @@
             
     <menuitem
         id="jal_product_attribute_menu"
-        name="Product Attribute" 
+        name="Quality Product Attribute" 
         action="action_jal_product_attribute"
         parent="stock.menu_product_in_config_stock"
         sequence="7"/>
@@ -89,6 +89,198 @@
         parent="main_menu_material_requisite"
         groups="jal_production_v15.res_group_material_requisition_user,jal_production_v15.res_group_material_requisition_admin"
         sequence="1"/>
+
+    <!-- International -->
+        <menuitem
+            id="jal_crm.international_capacity_mst_menu"
+            name="Capacity Per Drum"
+            parent="jal_crm.international_packing_list_main_menu"
+            action="action_capacity_product_attribute_value"
+            sequence="2"/>
+
+        <menuitem
+            id="jal_crm.international_pouch_name_menu"
+            name="Pouch Name"
+            parent="jal_crm.international_packing_list_main_menu"
+            action="action_pouch_product_attribute_value"
+            sequence="3"/>
+
+        <menuitem
+            id="jal_crm.international_branding_menu"
+            name="Branding"
+            parent="jal_crm.international_packing_list_main_menu"
+            action="action_branding_product_attribute_value"
+            sequence="4"/>
+
+        <menuitem
+            id="jal_crm.international_lid_color_menu"
+            name="Lid Color"
+            parent="jal_crm.international_packing_list_main_menu"
+            action="action_lid_color_product_attribute_value"
+            sequence="5"/>
+
+        <menuitem
+            id="jal_crm.international_drum_color_menu"
+            name="Drum Color"
+            parent="jal_crm.international_packing_list_main_menu"
+            action="action_drum_color_product_attribute_value"
+            sequence="6"/>
+
+        <menuitem
+            id="jal_crm.international_scoops_menu"
+            name="Scoops"
+            parent="jal_crm.international_packing_list_main_menu"
+            action="action_scoops_product_attribute_value"
+            sequence="7"/>
+
+        <menuitem
+            id="jal_crm.international_outer_cartoons_menu"
+            name="Outer Cartoons"
+            parent="jal_crm.international_packing_list_main_menu"
+            action="action_outer_cartoons_product_attribute_value"
+            sequence="7"/>
+
+        <menuitem
+            id="jal_crm.international_box_color_mst_menu"
+            name="Box Color"
+            parent="jal_crm.international_packing_list_main_menu"
+            action="action_box_color_product_attribute_value"
+            sequence="8"/>
+
+        <menuitem
+            id="jal_crm.international_name_mst_menu"
+            name="Name"
+            parent="jal_crm.international_packing_list_main_menu"
+            action="action_packing_name_product_attribute_value"
+            sequence="1"/>
+
+        <!-- Domestic -->
+        <menuitem
+            id="jal_crm.domestic_capacity_mst_menu"
+            name="Capacity Per Drum"
+            parent="jal_crm.domestic_packing_list_main_menu"
+            action="action_capacity_product_attribute_value"
+            sequence="2"/>
+
+        <menuitem
+            id="jal_crm.domestic_pouch_name_menu"
+            name="Pouch Name"
+            parent="jal_crm.domestic_packing_list_main_menu"
+            action="action_pouch_product_attribute_value"
+            sequence="3"/>
+
+        <menuitem
+            id="jal_crm.domestic_branding_menu"
+            name="Branding"
+            parent="jal_crm.domestic_packing_list_main_menu"
+            action="action_branding_product_attribute_value"
+            sequence="4"/>
+
+        <menuitem
+            id="jal_crm.domestic_lid_color_menu"
+            name="Lid Color"
+            parent="jal_crm.domestic_packing_list_main_menu"
+            action="action_lid_color_product_attribute_value"
+            sequence="5"/>
+
+        <menuitem
+            id="jal_crm.domestic_drum_color_menu"
+            name="Drum Color"
+            parent="jal_crm.domestic_packing_list_main_menu"
+            action="action_drum_color_product_attribute_value"
+            sequence="6"/>
+
+        <menuitem
+            id="jal_crm.domestic_scoops_menu"
+            name="Scoops"
+            parent="jal_crm.domestic_packing_list_main_menu"
+            action="action_scoops_product_attribute_value"
+            sequence="7"/>
+
+        <menuitem
+            id="jal_crm.domestic_outer_cartoons_menu"
+            name="Outer Cartoons"
+            parent="jal_crm.domestic_packing_list_main_menu"
+            action="action_outer_cartoons_product_attribute_value"
+            sequence="7"/>
+
+        <menuitem
+            id="jal_crm.domestic_box_color_mst_menu"
+            name="Box Color"
+            parent="jal_crm.domestic_packing_list_main_menu"
+            action="action_box_color_product_attribute_value"
+            sequence="8"/>
+
+        <menuitem
+            id="jal_crm.domestic_name_mst_menu"
+            name="Name"
+            parent="jal_crm.domestic_packing_list_main_menu"
+            action="action_packing_name_product_attribute_value"
+            sequence="1"/>
+
+        <!-- Domestic -->
+        <menuitem
+            id="jal_crm.trading_capacity_mst_menu"
+            name="Capacity Per Drum"
+            parent="jal_crm.trading_packing_list_main_menu"
+            action="action_capacity_product_attribute_value"
+            sequence="2"/>
+
+        <menuitem
+            id="jal_crm.trading_pouch_name_menu"
+            name="Pouch Name"
+            parent="jal_crm.trading_packing_list_main_menu"
+            action="action_pouch_product_attribute_value"
+            sequence="3"/>
+
+        <menuitem
+            id="jal_crm.trading_branding_menu"
+            name="Branding"
+            parent="jal_crm.trading_packing_list_main_menu"
+            action="action_branding_product_attribute_value"
+            sequence="4"/>
+
+        <menuitem
+            id="jal_crm.trading_lid_color_menu"
+            name="Lid Color"
+            parent="jal_crm.trading_packing_list_main_menu"
+            action="action_lid_color_product_attribute_value"
+            sequence="5"/>
+
+        <menuitem
+            id="jal_crm.trading_drum_color_menu"
+            name="Drum Color"
+            parent="jal_crm.trading_packing_list_main_menu"
+            action="action_drum_color_product_attribute_value"
+            sequence="6"/>
+
+        <menuitem
+            id="jal_crm.trading_scoops_menu"
+            name="Scoops"
+            parent="jal_crm.trading_packing_list_main_menu"
+            action="action_scoops_product_attribute_value"
+            sequence="7"/>
+
+        <menuitem
+            id="jal_crm.trading_outer_cartoons_menu"
+            name="Outer Cartoons"
+            parent="jal_crm.trading_packing_list_main_menu"
+            action="action_outer_cartoons_product_attribute_value"
+            sequence="7"/>
+
+        <menuitem
+            id="jal_crm.trading_box_color_mst_menu"
+            name="Box Color"
+            parent="jal_crm.trading_packing_list_main_menu"
+            action="action_box_color_product_attribute_value"
+            sequence="8"/>
+
+        <menuitem
+            id="jal_crm.trading_name_mst_menu"
+            name="Name"
+            parent="jal_crm.trading_packing_list_main_menu"
+            action="action_packing_name_product_attribute_value"
+            sequence="1"/>
 
 </odoo>
 

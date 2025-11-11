@@ -4,21 +4,21 @@
     <menuitem
         id="jal_crm.contacts_international_main"
         name="Contacts"
-        action="master.action_party_mst"
+        action="action_party_mst_international"
         parent="jal_crm.international_main_menu"
         sequence="4"/>
 
     <menuitem
         id="jal_crm.contacts_domestic_main"
         name="Contacts"
-        action="master.action_party_mst"
+        action="action_party_mst_domestic"
         parent="jal_crm.domestic_main_menu"
         sequence="4"/>
 
     <menuitem
         id="jal_crm.contacts_trading_main"
         name="Contacts"
-        action="master.action_party_mst"
+        action="action_party_mst_trading"
         parent="jal_crm.trading_main_menu"
         sequence="4"/>
 

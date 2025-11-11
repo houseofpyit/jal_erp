@@ -36,6 +36,9 @@
                     </field>
                 </page>
             </xpath>
+            <xpath expr="//field[@name='product_variant_id']" position="after">
+                    <field name="uom_handling_type"/>
+            </xpath>
         </field>
     </record>
 
@@ -51,7 +54,7 @@
                             <field name="bucket_qty_hand_total" widget="statinfo" nolabel="1" class="mr4"/>
                             <field name="uom_name"/>
                         </span>
-                        <span class="o_stat_text">On Hand Bucket</span>
+                        <span class="o_stat_text">On Hand (Bucket/Bags/Pouch)</span>
                     </div>
                 </button>
             </xpath>

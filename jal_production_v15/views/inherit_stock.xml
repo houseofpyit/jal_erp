@@ -7,11 +7,12 @@
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='origin']" position="after">
-                <field name="production_id" invisible="0"/>
+                <field name="production_id" invisible="1"/>
             </xpath>
-            <xpath expr="//page[@name='operations']/field[@name='move_ids_without_package']/tree/field[@name='product_uom_qty']" position="after">
-                <field name="demand_bucket" attrs="{'readonly': [('state','!=','draft')]}"/>
-                <field name="done_bucket" attrs="{'readonly': [('state','!=','draft')]}"/>
+            <xpath expr="//page[@name='operations']/field[@name='move_ids_without_package']/tree/field[@name='product_uom']" position="before">
+                <field name="demand_bucket" attrs="{'readonly': ['|',('state','!=','draft'),('uom_handling_type', '!=', 'multi')]}"/>
+                <field name="done_bucket" attrs="{'readonly': ['|','|',('is_quantity_done_editable', '=', False),('state','!=','draft'),('uom_handling_type', '!=', 'multi')], 'column_invisible':[('parent.state', '=', 'draft')]}"/>
+                <field name="uom_handling_type" invisible="1"/>
             </xpath>
         </field>
     </record>
@@ -23,7 +24,8 @@
         <field name="arch" type="xml">
             <xpath expr="//tree/field[@name='qty_done']" position="after">
                 <!-- <field name="demand_bucket"/> -->
-                <field name="done_bucket"/>
+                <field name="done_bucket" attrs="{'readonly': [('uom_handling_type', '!=', 'multi')]}"/>
+                <field name="uom_handling_type" invisible="1"/>
             </xpath>
         </field>
     </record>
@@ -34,7 +36,8 @@
         <field name="inherit_id" ref="stock.view_stock_move_line_operation_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='qty_done']" position="after">
-                <field name="done_bucket"/>
+                <field name="done_bucket" attrs="{'readonly': [('uom_handling_type', '!=', 'multi')]}"/>
+                <field name="uom_handling_type" invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='qty_done']" position="attributes">
                 <attribute name="string" >Done Quantity</attribute>

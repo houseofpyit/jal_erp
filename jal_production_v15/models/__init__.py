@@ -9,3 +9,4 @@ from . import inherit_sale
 from . import inherit_user
 from . import inherit_stock
 from . import dryer_mst
+from . import inherit_purchase

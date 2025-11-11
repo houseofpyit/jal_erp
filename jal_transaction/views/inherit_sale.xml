@@ -9,6 +9,9 @@
             <xpath expr="//page/group[@name='note_group']/group" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
+            <xpath expr="//button[@name='action_genrate']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
             <xpath expr="//page/group[@name='note_group']/group" position="replace">
                 <group colspan="4">
                     <field name="note" class="oe-bordered-editor" nolabel="1" placeholder="Terms and conditions..."/>

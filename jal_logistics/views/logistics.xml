@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model='ir.ui.view' id='jal_logistics_form'>
+        <field name='name'>jal.logistics.form</field>
+        <field name='model'>jal.logistics</field>
+        <field name='arch' type='xml'>
+            <form>
+                <!-- <header>
+                    <button string="Running" name="action_running_btn" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'draft')]}"  confirm=""/>
+                    <button string="Complete" name="action_complete_btn" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'running')]}" groups="jal_logistics_v15.res_group_logistics_admin" confirm="Are you sure you want to complete this logistics?"/>
+                    <button string="Get Quality" name="action_get_quality_btn" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'running')]}" groups="jal_logistics_v15.res_group_logistics_admin" confirm=""/>
+                    <field name="state" widget="statusbar"/>
+                </header> -->
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name='company_id' invisible="1"/>
+                            <field name='sale_id' required="1" options="{'no_create': True}" domain="[('state', '=', 'sale')]"/>
+                            <!-- <field name='product_tmpl_id' options="{'no_create': True}" domain="[('is_finished_goods', '=', True)]" required="1" attrs="{'readonly': [('state','=','complete')]}"/>
+                            <field name='shift_id' options="{'no_quick_create': True}" attrs="{'readonly': [('state','=','complete')]}" required="1"/> -->
+                        </group>
+                        <group>
+                            <field name="date" readonly="1" />
+                            <field name='user_id' force_save="1" readonly="1" />
+                            <!-- <field name='employee_id' options="{'no_quick_create': True}" attrs="{'readonly': [('state','=','complete')]}"/> -->
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Pre-Shipment" name="pre_shipment">
+                            <group>
+                                <group string="Logistics">
+                                    <field name="booking_id" options="{'no_quick_create': True}"/>
+                                    <field name="transport_id" options="{'no_quick_create': True}"/>
+                                    <field name="cha_id" options="{'no_quick_create': True}"/>
+                                    <field name="shipping_id" options="{'no_quick_create': True}"/>
+                                    <field name="hbl_type" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="booking_date" />
+                                    <field name="booking_received" />
+                                </group>
+                                <group string="Booking Details">
+                                    <field name="total_containers" />
+                                    <field name="shipping_line_id" options="{'no_quick_create': True}"/>
+                                    <field name="freight_per_container" />
+                                    <field name="vessel_date" />
+                                    <field name="container_stuffing_date" />
+                                    <field name="port_id" options="{'no_quick_create': True}"/>
+                                </group>
+                                
+                                <group string="Planning Details">
+                                    <field name="loading_planner" />
+                                    <field name="planning_index" />
+                                    <field name="remarks" />
+                                </group>
+                                <group string="Loading Inspection">
+                                    <field name="loading_type" widget="radio" options="{'horizontal': true}" />
+                                    <field name="inspection_id"  options="{'no_quick_create': True}" attrs="{'invisible': [('loading_type', '!=', 'Yes')]}"/>
+                                    <field name="inspection_type" widget="radio" options="{'horizontal': true}" attrs="{'invisible': [('loading_type', '!=', 'Yes')]}"/>
+                                    <field name="inspection_name" attrs="{'invisible': [('loading_type', '!=', 'Yes')]}"/>
+                                    <field name="inspection_date" attrs="{'invisible': [('loading_type', '!=', 'Yes')]}"/>
+                                    <field name="inspection_remarks" attrs="{'invisible': [('loading_type', '!=', 'Yes')]}"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Dispatch" name="dispatch">
+                            <group>
+                                <group>
+                                    <field name="attachment_batch_ids" widget="many2many_binary"/>
+                                    <field name="attachment_branding_ids" widget="many2many_binary"/>
+                                    <field name="attachment_packing_ids" widget="many2many_binary"/>
+                                </group>
+                                <group>
+                                    <field name="attachment_container_ids" widget="many2many_binary"/>
+                                    <field name="attachment_lr_ids" widget="many2many_binary"/>
+                                </group>
+                            </group>
+                            <field name="dispatch_line_ids" >
+                                <tree editable="" >
+                                    <field name = "container_no" width="150px"/>
+                                    <field name = "seal_no" width="150px"/>
+                                    <field name = "itek_seal_no" width="150px"/>
+                                    <field name = "container_size" width="150px"/>
+                                    <field name = "total_drums" width="150px"/>
+                                    <field name = "lr_no" width="150px"/>
+                                    <field name = "truck_no" width="150px"/>
+                                    <field name = "transport_id" options="{'no_quick_create': True}" width="150px"/>
+                                    <field name = "load_kg" width="150px"/>
+                                    <field name = "tare_wt" width="150px"/>
+                                    <field name = "total_gross" width="150px"/>
+                                    <field name = "total_gross" width="150px"/>
+                                </tree>
+                                <form>
+                                    <sheet>
+                                        <group>
+                                            <group>
+                                                <field name = "container_no" />
+                                                <field name = "seal_no" />
+                                                <field name = "itek_seal_no" />
+                                                <field name = "container_size" />
+                                                <field name = "total_drums" />
+                                                <field name = "lr_no" />
+                                            </group>
+                                            <group>
+                                                <field name = "truck_no" />
+                                                <field name = "transport_id" options="{'no_quick_create': True}"/>
+                                                <field name = "load_kg" />
+                                                <field name = "tare_wt" />
+                                                <field name = "total_gross" />
+                                                <field name = "total_gross" />
+                                            </group>
+                                        </group>
+                                        <field name="line_ids" >
+                                            <tree editable="bottom" >
+                                                <field name = "sale_line_id" options="{'no_create': True}" domain="[('order_id', '=', sale_id)]" context="{'show_packing_name': True}"/>
+                                                <field name = "sale_id" invisible="1"/>
+                                                <field name = "qty" />
+                                            </tree>
+                                        </field>
+                                        <group>
+                                            <group>
+                                                <field name="palletized_type" widget="radio" options="{'horizontal': true}"/>
+                                            </group>
+                                        </group>
+                                        <group attrs="{'invisible': [('palletized_type', '!=', 'yes')]}">
+                                            <field name="palletized_line1_ids" nolabel="1">
+                                                <tree editable="bottom" >
+                                                    <field name = "pallet_id" options="{'no_quick_create': True}"/>
+                                                    <field name = "bucket_qty" sum="Bucket Qty"/>
+                                                    <field name = "sale_id" invisible="1"/>
+                                                    <field name = "sale_line_id" options="{'no_create': True}" domain="[('order_id', '=', sale_id)]" context="{'show_packing_name': True}"/>
+                                                </tree>
+                                            </field>
+                                            <field name="palletized_line2_ids" nolabel="1">
+                                                <tree editable="bottom" >
+                                                    <field name = "pallet_id" />
+                                                    <field name = "bucket_qty" sum="Bucket Qty"/>
+                                                    <field name = "sale_id" invisible="1"/>
+                                                    <field name = "sale_line_id" options="{'no_create': True}" domain="[('order_id', '=', sale_id)]" context="{'show_packing_name': True}"/>
+                                                </tree>
+                                            </field>
+                                        </group>
+                                        <group attrs="{'invisible': [('palletized_type', '!=', 'no')]}">
+                                            <field name="palletized_line_ids" nolabel="1">
+                                                <tree editable="" >
+                                                    <field name = "sale_line_id" options="{'no_create': True}" context="{'show_packing_name': True}"/>
+                                                </tree>
+                                                <form>
+                                                    <sheet>
+                                                        <group>
+                                                            <group>
+                                                                <field name = "sale_line_id" options="{'no_create': True}" context="{'show_packing_name': True}"/>
+                                                            </group>
+                                                        </group>
+                                                        <field name="line_ids" >
+                                                            <tree editable="bottom" >
+                                                                <field name = "name" />
+                                                                <field name = "qty" sum="Qty"/>
+                                                            </tree>
+                                                        </field>
+                                                    </sheet>
+                                                </form>
+                                            </field>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Documentation" name="documentation_details">
+                            <group>
+                                <group>
+                                    <field name="epcg_liscence_used" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="epcg_liscence_number" attrs="{'required': [('epcg_liscence_used', '=', 'yes')]}" options="{'no_quick_create': True}"/>
+                                    <field name="epcg_liscence_date" />
+                                    <field name="advanced_liscence_used" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="advanced_liscence_number" attrs="{'required': [('advanced_liscence_used', '=', 'yes')]}" options="{'no_quick_create': True}"/>
+                                    <field name="advanced_liscence_date" />
+                                    <field name="rodtep_claimed" widget="radio" options="{'horizontal': true}"/>
+                                </group>
+                                <group>
+                                    <field name="rodtep_amount" attrs="{'required': [('rodtep_claimed', '=', 'yes')]}"/>
+                                    <field name="duty_drawback_claimed" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="duty_drawback_amount" attrs="{'required': [('duty_drawback_claimed', '=', 'yes')]}"/>
+                                    <field name="lut_shipment" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="lut_no" attrs="{'required': [('lut_shipment', '=', 'yes')]}"/>
+                                    <field name="gst_claimed" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="gst_value" attrs="{'required': [('gst_claimed', '=', 'yes')]}"/>
+                                </group>
+                                <group name="shipement_details" string="Shipement Details">
+                                    <field name="invoice_number"/>
+                                    <field name="date"/>
+                                    <label for="total_cif_value" string="Total CIF Value"/>
+                                    <div class="o_address_format">
+                                        <field name="total_cif_value" placeholder="Total CIF Value...." class="o_address_city" width="85%"/>
+                                        <field name="cif_currency_id" placeholder="CIF Currency..." class="o_address_state" width="20%" options="{'no_quick_create': True}"/>
+                                    </div>
+                                    <label for="total_fob_value" string="Total FOB Value"/>
+                                    <div class="o_address_format">
+                                        <field name="total_fob_value" placeholder="Total FOB Value...." class="o_address_city" width="85%"/>
+                                        <field name="fob_currency_id" placeholder="FOB Currency..." class="o_address_state" width="20%" options="{'no_quick_create': True}"/>
+                                    </div>
+                                    <label for="total_freight_value" string="Total Freight Value"/>
+                                    <div class="o_address_format">
+                                        <field name="total_freight_value" placeholder="Total Freight Value...." class="o_address_city" width="85%"/>
+                                        <field name="freight_currency_id" placeholder="Freight Currency..." class="o_address_state" width="20%" options="{'no_quick_create': True}"/>
+                                    </div>
+                                    <label for="total_insurance_value" string="Total Insurance Value"/>
+                                    <div class="o_address_format">
+                                        <field name="total_insurance_value" placeholder="Total Insurance Value...." class="o_address_city" width="85%"/>
+                                        <field name="insurance_currency_id" placeholder="Insurance Currency..." class="o_address_state" width="20%" options="{'no_quick_create': True}"/>
+                                    </div>
+                                    <label for="total_net_wt_qty" string="Total Net Weight Quantity"/>
+                                    <div class="o_address_format">
+                                        <field name="total_net_wt_qty" placeholder="Total Net Quantity...." class="o_address_city" width="85%"/>
+                                        <field name="net_wt_uom_id" class="o_address_state" width="20%" options="{'no_quick_create': True}"/>
+                                    </div>
+                                    <label for="total_gross_wt_qty" string="Total Gross Weight Quantity"/>
+                                    <div class="o_address_format">
+                                        <field name="total_gross_wt_qty" placeholder="Total Gross Weight Quantity...." class="o_address_city" width="85%"/>
+                                        <field name="gross_wt_uom_id" class="o_address_state" width="20%" options="{'no_quick_create': True}"/>
+                                    </div>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record model='ir.ui.view' id='jal_logistics_tree'>
+        <field name='name'>jal.logistics.tree</field>
+        <field name='model'>jal.logistics</field>
+        <field name='arch' type='xml'>
+            <tree>
+                <field name='name'/>
+                <field name="date" />
+                <field name='sale_id' required="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- <record id="jal_logistics_kanban" model="ir.ui.view">
+        <field name="name">jal.logistics.kanban</field>
+        <field name="model">jal.logistics</field>
+        <field name="arch" type="xml">
+            <kanban class="o_sale_bill_kanban" sample="1"> 
+                <field name="name" />
+                <field name="date"/>
+                <field name='sale_id' />
+                <templates> 
+                    <t t-name="kanban-box">
+                        
+                    </t>
+                </templates> 
+            </kanban>
+        </field>
+    </record> -->
+
+    <!-- <record id="view_jal_logistics_filter" model="ir.ui.view">
+        <field name="name">jal.logistics.filter</field>
+        <field name="model">jal.logistics</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Search" filter_domain="['|','|','|',('name', 'ilike', self),('product_tmpl_id', 'ilike', self),('shift_id', 'ilike', self),('employee_id', 'ilike', self)]"/>
+                <field name="product_tmpl_id"/>
+                <field name="shift_id" />
+                <field name="employee_id" />
+                <separator/>
+                    <filter string="Date" name="date" date="date"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Product" name="group_by_product_tmpl_id" domain="[]" context="{'group_by': 'product_tmpl_id'}"/>
+                    <filter string="Shift" name="group_shift_id" domain="[]" context="{'group_by': 'shift_id'}"/>
+                    <filter string="Shift Incharge" name="group_employee_id" domain="[]" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record> -->
+
+
+    <record id="action_jal_logistics" model="ir.actions.act_window">
+        <field name="name">Logistics</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">jal.logistics</field>
+        <!-- <field name="context">{"search_default_filter_draft":1,"search_default_filter_request":1}</field> -->
+        <field name="view_mode">tree,form,kanban</field>
+    </record>
+
+</odoo>

@@ -11,6 +11,7 @@
     'depends': ['base','stock','jal_crm','hr'],
     'data': [
         'data/sequence.xml',
+        'data/attribute_value.xml',
         'security/security_group.xml',
         'security/ir.model.access.csv',
         'security/record_rule.xml',
@@ -26,6 +27,7 @@
         'views/inherit_product_attribute.xml',
         'views/material_requisition.xml',
         'views/inherit_sale.xml',
+        'views/inherit_purchase.xml',
         'views/inherit_user.xml',
         'views/inherit_stock.xml',
         'views/dryer_mst.xml',

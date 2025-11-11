@@ -1,0 +1,24 @@
+{
+    'name': "Jal Logistics",
+    'version': "15.0",
+    'summary': """ Jal Logistics """,
+    'description': """ Jal Logistics """,
+    'author': "",
+    'company': "",
+    'maintainer': "",
+    'website': "",
+    'category': 'Tools',
+    'depends': ['base','mail','jal_crm'],
+    'data': [
+        'data/sequence.xml',
+        'security/ir.model.access.csv',
+
+        'views/logistics_misc_mst.xml',
+        'views/logistics.xml',
+        'views/master_menu.xml',
+
+    ],
+    'license': "AGPL-3",
+    'installable': True,
+    'application': False
+}

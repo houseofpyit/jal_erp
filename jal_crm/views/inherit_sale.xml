@@ -96,7 +96,7 @@
                 <field name="country_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
                 <field name="port_id" domain="[('country_id', '=', country_id)]" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
                 <field name="palletized_type" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
-                <field name="business_type" invisible="0" />
+                <field name="business_type" invisible="0" attrs="{'readonly': [('state', '=', 'sale')]}"/>
                 <field name="display_name_on_pi" attrs="{'readonly': [('state', '=', 'sale')]}"/>
                 <field name="buyer_ref_details" attrs="{'readonly': [('state', '=', 'sale')]}"/>
             </xpath>
@@ -117,18 +117,16 @@
             </xpath>
             <xpath expr="//field[@name='order_line']/form/group/group/field[@name='analytic_tag_ids']" position="after">
                 <field name="packing_type" attrs="{'invisible': [('parent.business_type', '!=', 'international')],'required': [('parent.business_type', '=', 'international'),('display_type', '=', False)]}"/>
-                <field name="name_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': ['|',('packing_type', '=', 'pouch'),('packing_type', '=', False)]}"/>
-                <field name="drum_cap_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', '!=', 'drum')]}"/>
-                <field name="bucket_cap_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', 'not in', ('bucket','usa_bucket'))]}"/>
-                <field name="box_cap_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', '!=', 'pouch')]}"/>
-                <field name="branding_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': ['|',('packing_type', '=', 'pouch'),('packing_type', '=', False)]}"/>
-                <field name="lid_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', 'not in', ('bucket','usa_bucket'))]}"/>
-                <field name="drum_color_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', 'not in', ('bucket','usa_bucket'))]}"/>
-                <field name="scoops_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', '!=', 'usa_bucket')]}"/>
-                <field name="outer_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', '!=', 'usa_bucket')]}"/>
-                <field name="pouch_type" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', '!=', 'pouch')]}"/>
-                <field name="pouch_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', '!=', 'pouch')]}" domain="[('pouch_type', '=', pouch_type)]"/>
-                <field name="box_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', '!=', 'pouch')]}"/>
+                <!-- <field name="name_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': ['|',('packing_type', '=', 'pouch'),('packing_type', '=', False)]}" context="{'show_attribute': False}"/>
+                <field name="bucket_cap_id" options="{'no_open': True, 'no_create': True}"  context="{'show_attribute': False}"/>
+                <field name="branding_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': ['|',('packing_type', '=', 'pouch'),('packing_type', '=', False)]}" context="{'show_attribute': False}"/>
+                <field name="lid_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', 'not in', ('bucket','usa_bucket'))]}" context="{'show_attribute': False}"/>
+                <field name="drum_color_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', 'not in', ('bucket','usa_bucket'))]}" context="{'show_attribute': False}"/>
+                <field name="scoops_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', '!=', 'usa_bucket')]}" context="{'show_attribute': False}"/>
+                <field name="outer_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', '!=', 'usa_bucket')]}" context="{'show_attribute': False}"/>
+                <field name="pouch_type" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', '!=', 'pouch')]}" context="{'show_attribute': False}"/>
+                <field name="pouch_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', '!=', 'pouch')]}" domain="[('pouch_type', '=', pouch_type)]" context="{'show_attribute': False}"/>
+                <field name="box_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', '!=', 'pouch')]}" context="{'show_attribute': False}"/> -->
             </xpath>
             <xpath expr="//field[@name='order_line']/form/field[@name='name']" position="after">
                 <label for="packing_name" attrs="{'invisible': ['|',('parent.business_type', '!=', 'international'),('display_type', '=', 'line_section')]}"/>
@@ -144,7 +142,7 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//tree/field[@name='name']" position="after">
-                <field name="packing_name" attrs="{'column_invisible': [('parent.business_type', '!=', 'international')]}"/>
+                <field name="packing_name" width="150px" attrs="{'column_invisible': [('parent.business_type', '!=', 'international')]}"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/form/label[@for='name']" position="attributes">
                 <attribute name="string">Loading Description</attribute>
@@ -160,7 +158,7 @@
                 <!-- <attribute name="width">150px</attribute>
                 <attribute name="invisible">0</attribute>
                 <attribute name="force_save">1</attribute> -->
-                <field name="product_tmpl_id" string="Product" options="{'no_quick_create': True}" readonly="0" context="{'partner_id': parent.partner_id, 'quantity': product_uom_qty, 'pricelist': parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id, 'default_list_price': price_unit, 'default_description_sale': name}" domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" />
+                <field name="product_tmpl_id" width="150px" string="Product" options="{'no_quick_create': True}" readonly="0" context="{'partner_id': parent.partner_id, 'quantity': product_uom_qty, 'pricelist': parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id, 'default_list_price': price_unit, 'default_description_sale': name}" domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" />
             </xpath>
             <xpath expr="//control/create[@name='add_note_control']" position="replace"/>
         </field>

@@ -28,6 +28,20 @@ class CapacityMst(models.Model):
     weight = fields.Float(string='Weight',tracking=True)
     uom_id = fields.Many2one('uom.uom',string='Unit',tracking=True)
     packaging_type = fields.Selection([("drum", "Drum"),("bucket", "Bucket"),("box", "Box"),],string="Packaging Type",tracking=True)
+    packing_name_id = fields.Many2one('name.mst',string='Packing Name',tracking=True)
+
+    @api.onchange('weight', 'uom_id', 'packing_name_id')
+    def _onchange_name(self):
+        for record in self:
+            name_parts = []
+            if record.packing_name_id:
+                name_parts.append(record.packing_name_id.name)
+            if record.weight:
+                name_parts.append(str(record.weight))
+            if record.uom_id:
+                name_parts.append(record.uom_id.name)
+
+            record.name = " ".join(name_parts) if name_parts else False
 
 
 class PouchNameMst(models.Model):

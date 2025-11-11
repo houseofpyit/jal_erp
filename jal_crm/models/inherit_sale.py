@@ -127,17 +127,17 @@ class inheritedSaleOrderLine(models.Model):
    _inherit = "sale.order.line"
 
    shipping_id = fields.Many2one('product.shipping.mst',string="Shipping Name")
-   drum_cap_id = fields.Many2one('capacity.mst',string="Capacity Per Drum",domain="[('packaging_type','=','drum')]")
-   bucket_cap_id = fields.Many2one('capacity.mst',string="Capacity Per Bucket",domain="[('packaging_type','=','bucket')]")
-   box_cap_id = fields.Many2one('capacity.mst',string="Capacity Per Box",domain="[('packaging_type','=','box')]")
-   pouch_id = fields.Many2one('pouch.name.mst',string="Pouch Name")
-   name_id = fields.Many2one('name.mst',string="Name")
-   lid_id = fields.Many2one('lid.color.mst',string="Lid Color")
-   branding_id = fields.Many2one('branding.mst',string="Branding")
-   box_id = fields.Many2one('box.color.mst',string="Box Color")
-   drum_color_id = fields.Many2one('drum.color.mst',string="Drum Color")
-   scoops_id = fields.Many2one('scoops.mst',string="Scoops")
-   outer_id = fields.Many2one('outer.cartoons.mst',string="Outer Cartoons")
+   # drum_cap_id = fields.Many2one('capacity.mst',string="Capacity Per Drum",domain="[('packaging_type','=','drum')]")
+   # bucket_cap_id = fields.Many2one('capacity.mst',string="Capacity",domain="[('packaging_type','=','bucket')]")
+   # box_cap_id = fields.Many2one('capacity.mst',string="Capacity Per Box",domain="[('packaging_type','=','box')]")
+   # pouch_id = fields.Many2one('pouch.name.mst',string="Pouch Name")
+   # name_id = fields.Many2one('name.mst',string="Name")
+   # lid_id = fields.Many2one('lid.color.mst',string="Lid Color")
+   # branding_id = fields.Many2one('branding.mst',string="Branding")
+   # box_id = fields.Many2one('box.color.mst',string="Box Color")
+   # drum_color_id = fields.Many2one('drum.color.mst',string="Drum Color")
+   # scoops_id = fields.Many2one('scoops.mst',string="Scoops")
+   # outer_id = fields.Many2one('outer.cartoons.mst',string="Outer Cartoons")
    packing_type = fields.Selection([("drum", "Drum"), ("bucket", "Bucket"),("usa_bucket", "USA-Bucket"), ("pouch", "Pouch")],string="Packing Type")
    packing_name = fields.Html(
       string="Packing Description",
@@ -155,124 +155,133 @@ class inheritedSaleOrderLine(models.Model):
    @api.onchange('product_tmpl_id')
    def _onchange_product_tmpl_id(self):
       self.product_uom = self.product_tmpl_id.uom_id.id
+      self.price_unit = self.product_tmpl_id.list_price
 
-   @api.onchange('packing_type')
-   def _onchange_packing_type(self):
-      self.drum_cap_id = False
-      self.bucket_cap_id = False
-      self.box_cap_id = False
-      self.pouch_id = False
-      self.name_id = False
-      self.lid_id = False
-      self.branding_id = False
-      self.box_id = False
-      self.drum_color_id = False
-      self.scoops_id = False
-      self.outer_id = False
+   #  @api.onchange('product_id')
+   #  def _onchange_product_id(self):
+   #      if self.product_id:
+   #          self.hsn_id = self.product_id.hsn_id.id
+   #          self.price_unit = self.product_id.list_price
+   #          if self.order_id.partner_id.disc:
+   #              self.disc_per = self.order_id.partner_id.disc
+
+   # @api.onchange('packing_type')
+   # def _onchange_packing_type(self):
+   #    self.drum_cap_id = False
+   #    self.bucket_cap_id = False
+   #    self.box_cap_id = False
+   #    self.pouch_id = False
+   #    self.name_id = False
+   #    self.lid_id = False
+   #    self.branding_id = False
+   #    self.box_id = False
+   #    self.drum_color_id = False
+   #    self.scoops_id = False
+   #    self.outer_id = False
 
          
-   @api.depends(
-    'packing_type', 'name_id', 'drum_cap_id', 'bucket_cap_id', 'box_cap_id',
-    'branding_id', 'lid_id', 'drum_color_id', 'box_id', 'pouch_id',
-    'scoops_id', 'outer_id', 'pouch_type'
-   )
-   def _compute_packing_name(self):
-      for rec in self:
-         desc = ""  # Final HTML string
+   # @api.depends(
+   #  'packing_type', 'name_id', 'drum_cap_id', 'bucket_cap_id', 'box_cap_id',
+   #  'branding_id', 'lid_id', 'drum_color_id', 'box_id', 'pouch_id',
+   #  'scoops_id', 'outer_id', 'pouch_type'
+   # )
+   # def _compute_packing_name(self):
+   #    for rec in self:
+   #       desc = ""  # Final HTML string
 
-         if rec.packing_type == "drum":
-               desc += "<b>Drum Packing</b><ul>"
+   #       if rec.packing_type == "drum":
+   #             desc += "<b>Drum Packing</b><ul>"
                
-               if rec.name_id:
-                  desc += f"<li>Name: {rec.name_id.name}</li>"
+   #             if rec.name_id:
+   #                desc += f"<li>Name: {rec.name_id.name}</li>"
 
-               if rec.drum_cap_id:
-                  cap = rec.drum_cap_id
-                  desc += f"<li>Capacity per Drum: {cap.weight} {cap.uom_id.name} Net per Drum</li>"
+   #             if rec.bucket_cap_id:
+   #                cap = rec.bucket_cap_id
+   #                desc += f"<li>Capacity per Drum: {cap.weight} {cap.uom_id.name} Net per Drum</li>"
 
-               if rec.branding_id:
-                  desc += f"<li>Branding: {rec.branding_id.name}</li>"
+   #             if rec.branding_id:
+   #                desc += f"<li>Branding: {rec.branding_id.name}</li>"
 
-               if rec.lid_id:
-                  desc += f"<li>Lid Colour: {rec.lid_id.name}</li>"
+   #             if rec.lid_id:
+   #                desc += f"<li>Lid Colour: {rec.lid_id.name}</li>"
 
-               if rec.drum_color_id:
-                  desc += f"<li>Drum Colour: {rec.drum_color_id.name}</li>"
+   #             if rec.drum_color_id:
+   #                desc += f"<li>Drum Colour: {rec.drum_color_id.name}</li>"
 
-               desc += "</ul>"
+   #             desc += "</ul>"
 
-         elif rec.packing_type == "bucket":
-               desc += "<b>Bucket Packing</b><ul>"
+   #       elif rec.packing_type == "bucket":
+   #             desc += "<b>Bucket Packing</b><ul>"
 
-               if rec.name_id:
-                  desc += f"<li>Name: {rec.name_id.name}</li>"
+   #             if rec.name_id:
+   #                desc += f"<li>Name: {rec.name_id.name}</li>"
 
-               if rec.bucket_cap_id:
-                  cap = rec.bucket_cap_id
-                  desc += f"<li>Capacity per Bucket: {cap.weight} {cap.uom_id.name} Net per Bucket</li>"
+   #             if rec.bucket_cap_id:
+   #                cap = rec.bucket_cap_id
+   #                desc += f"<li>Capacity per Bucket: {cap.weight} {cap.uom_id.name} Net per Bucket</li>"
 
-               if rec.branding_id:
-                  desc += f"<li>Branding: {rec.branding_id.name}</li>"
+   #             if rec.branding_id:
+   #                desc += f"<li>Branding: {rec.branding_id.name}</li>"
 
-               if rec.lid_id:
-                  desc += f"<li>Lid Colour: {rec.lid_id.name}</li>"
+   #             if rec.lid_id:
+   #                desc += f"<li>Lid Colour: {rec.lid_id.name}</li>"
 
-               if rec.drum_color_id:
-                  desc += f"<li>Drum Colour: {rec.drum_color_id.name}</li>"
+   #             if rec.drum_color_id:
+   #                desc += f"<li>Drum Colour: {rec.drum_color_id.name}</li>"
 
-               desc += "</ul>"
+   #             desc += "</ul>"
 
-         elif rec.packing_type == "usa_bucket":
-               desc += "<b>USA Bucket Packing</b><ul>"
+   #       elif rec.packing_type == "usa_bucket":
+   #             desc += "<b>USA Bucket Packing</b><ul>"
 
-               if rec.name_id:
-                  desc += f"<li>Name: {rec.name_id.name}</li>"
+   #             if rec.name_id:
+   #                desc += f"<li>Name: {rec.name_id.name}</li>"
 
-               if rec.bucket_cap_id:
-                  cap = rec.bucket_cap_id
-                  desc += f"<li>Capacity per USA Bucket: {cap.weight} {cap.uom_id.name} Net per USA Bucket</li>"
+   #             if rec.bucket_cap_id:
+   #                cap = rec.bucket_cap_id
+   #                desc += f"<li>Capacity per USA Bucket: {cap.weight} {cap.uom_id.name} Net per USA Bucket</li>"
 
-               if rec.branding_id:
-                  desc += f"<li>Branding: {rec.branding_id.name}</li>"
+   #             if rec.branding_id:
+   #                desc += f"<li>Branding: {rec.branding_id.name}</li>"
 
-               if rec.lid_id:
-                  desc += f"<li>Lid Colour: {rec.lid_id.name}</li>"
+   #             if rec.lid_id:
+   #                desc += f"<li>Lid Colour: {rec.lid_id.name}</li>"
 
-               if rec.drum_color_id:
-                  desc += f"<li>Drum Colour: {rec.drum_color_id.name}</li>"
+   #             if rec.drum_color_id:
+   #                desc += f"<li>Drum Colour: {rec.drum_color_id.name}</li>"
 
-               if rec.scoops_id:
-                  desc += f"<li>Scoops: {rec.scoops_id.name}</li>"
+   #             if rec.scoops_id:
+   #                desc += f"<li>Scoops: {rec.scoops_id.name}</li>"
 
-               if rec.outer_id:
-                  desc += f"<li>Outer Cartoons: {rec.outer_id.name}</li>"
+   #             if rec.outer_id:
+   #                desc += f"<li>Outer Cartoons: {rec.outer_id.name}</li>"
 
-               desc += "</ul>"
+   #             desc += "</ul>"
 
-         elif rec.packing_type == "pouch":
-               desc += "<b>Pouch Packing</b><ul>"
+   #       elif rec.packing_type == "pouch":
+   #             desc += "<b>Pouch Packing</b><ul>"
 
-               if rec.name_id:
-                  desc += f"<li>Name: {rec.name_id.name}</li>"
+   #             if rec.name_id:
+   #                desc += f"<li>Name: {rec.name_id.name}</li>"
 
-               if rec.box_cap_id:
-                  cap = rec.box_cap_id
-                  desc += f"<li>Capacity per Pouch: {cap.weight} {cap.uom_id.name} Net per Pouch</li>"
+   #             if rec.bucket_cap_id:
+   #                cap = rec.bucket_cap_id
+   #                desc += f"<li>Capacity per Pouch: {cap.weight} {cap.uom_id.name} Net per Pouch</li>"
 
-               if rec.pouch_type:
-                  desc += f"<li>Pouch Type: {rec.pouch_type}</li>"
+   #             if rec.pouch_type:
+   #                desc += f"<li>Pouch Type: {rec.pouch_type}</li>"
 
-               if rec.pouch_id:
-                  desc += f"<li>Pouch Name: {rec.pouch_id.name}</li>"
+   #             if rec.pouch_id:
+   #                desc += f"<li>Pouch Name: {rec.pouch_id.name}</li>"
 
-               if rec.box_id:
-                  desc += f"<li>Box Colour: {rec.box_id.name}</li>"
+   #             if rec.box_id:
+   #                desc += f"<li>Box Colour: {rec.box_id.name}</li>"
                   
 
-               if rec.branding_id:
-                  desc += f"<li>Branding: {rec.branding_id.name}</li>"
+   #             if rec.branding_id:
+   #                desc += f"<li>Branding: {rec.branding_id.name}</li>"
 
-               desc += "</ul>"
+   #             desc += "</ul>"
 
-         rec.packing_name = desc or ""
-         rec.is_des = bool(desc)
+   #       rec.packing_name = desc or ""
+   #       rec.is_des = bool(desc)

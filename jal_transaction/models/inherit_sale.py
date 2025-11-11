@@ -11,4 +11,14 @@ class inheritSaleOrderLine(models.Model):
             self.price_unit = self.product_template_id.list_price
             if self.order_id.partner_id.disc:
                 self.disc_per = self.order_id.partner_id.disc
+
+    # @api.onchange('product_tmpl_id')
+    # def _onchange_product_tmpl_id(self):
+    #     res = super(inheritSaleOrderLine, self)._onchange_product_tmpl_id()
+    #     if self.product_tmpl_id:
+    #         self.hsn_id = self.product_tmpl_id.hsn_id.id
+    #         self.price_unit = self.product_tmpl_id.list_price
+    #         if self.order_id.partner_id.disc:
+    #             self.disc_per = self.order_id.partner_id.disc
+    #     return res
                 

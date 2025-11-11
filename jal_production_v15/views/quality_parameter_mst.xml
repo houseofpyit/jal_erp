@@ -32,7 +32,7 @@
     </record>
 
     <record id="action_jal_product_attribute" model="ir.actions.act_window">
-        <field name="name">Product Attribute</field>
+        <field name="name">Quality Product Attribute</field>
         <field name="res_model">jal.product.attribute</field>
         <field name="view_mode">tree,form</field>
     </record>

@@ -313,7 +313,8 @@
                 name="Packing"
                 parent="jal_crm.domestic_packing_list_main_menu"
                 action="action_packing_mst"
-                sequence="1"/>
+                sequence="1"
+                active="False"/>
 
             <menuitem
                 id="domestic_capacity_mst_menu"
@@ -487,7 +488,8 @@
                 name="Packing"
                 parent="jal_crm.trading_packing_list_main_menu"
                 action="action_packing_mst"
-                sequence="1"/>
+                sequence="1"
+                active="False"/>
 
             <menuitem
                 id="trading_capacity_mst_menu"

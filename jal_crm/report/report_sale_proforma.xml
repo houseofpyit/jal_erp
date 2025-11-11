@@ -240,7 +240,12 @@
                                     <t t-set="tot_amt" t-value="tot_amt + item.price_unit" />
                                     <t t-set="tot_final_amt" t-value="tot_final_amt + item.price_subtotal" />
 
-                                    <t t-set="tot_weight" t-value="(item.product_uom_qty * item.product_uom.ratio)/item.drum_cap_id.weight" />
+                                    <t t-if="item.bucket_cap_id.weight">
+                                        <t t-set="tot_weight" t-value="(item.product_uom_qty * item.product_uom.ratio) / item.bucket_cap_id.weight" />
+                                    </t>
+                                    <t t-else="">
+                                        <t t-set="tot_weight" t-value="0.0" />
+                                    </t>
                                     <tr>
                                         <td style="text-align: center;border-right: 1px solid black;">
                                             <span><span t-esc="srl"></span></span>

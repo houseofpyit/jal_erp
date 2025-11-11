@@ -11,10 +11,14 @@ class inheritedProductTemplate(models.Model):
    is_quality_required = fields.Boolean('Quality Required or Not')
    is_spares = fields.Boolean('Spares')
    bucket_qty_hand_total = fields.Float(
-      string="On Hand Bucket",
+      string="On Hand (Bucket/Bags/Pouch)",
       digits='Product Unit of Measure',
       compute='_compute_template_bucket_qty',
-      help="Sum of variant on-hand Bucket for this template.",)
+      help="Sum of variant on-hand (Bucket/Bags/Pouch) for this template.",)
+   uom_handling_type = fields.Selection([
+        ('single', 'Single Unit Handling'),
+        ('multi', 'Multi Unit Handling'),
+    ], string="UOM Handling Type",default='single')
 
    def _compute_template_bucket_qty(self):
       for tmpl in self:
@@ -24,7 +28,7 @@ class inheritedProductTemplate(models.Model):
       """Smart button action to open related stock quants."""
       self.ensure_one()
       return {
-         'name': 'On Hand Bucket',
+         'name': 'On Hand (Bucket/Bags/Pouch)',
          'type': 'ir.actions.act_window',
          'res_model': 'stock.quant',
          'view_mode': 'tree,form',
@@ -80,7 +84,7 @@ class InheritProductProduct(models.Model):
     _inherit = 'product.product'
 
     bucket_qty_hand_total = fields.Float(
-        string="On Hand Bucket",
+        string="On Hand (Bucket/Bags/Pouch)",
         digits='Product Unit of Measure',
         compute='_compute_bucket_on_hand_total',
         help="Sum of bucket_on_hand from quants in internal locations (this company).",
@@ -123,7 +127,7 @@ class InheritProductProduct(models.Model):
         """Smart button action to open related stock quants."""
         self.ensure_one()
         return {
-            'name': 'On Hand Bucket',
+            'name': 'On Hand (Bucket/Bags/Pouch)',
             'type': 'ir.actions.act_window',
             'res_model': 'stock.quant',
             'view_mode': 'tree,form',

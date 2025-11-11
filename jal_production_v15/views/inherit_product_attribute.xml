@@ -17,8 +17,310 @@
             </xpath>
             <xpath expr="//field[@name='value_ids']//field[@name='name']" position="after">
                 <field name="amount" attrs="{'column_invisible': [('parent.attribute_type', '!=', 'bucket')]}"/>
+                <field name="weight" invisible="1"/>
+                <field name="uom_id" invisible="1"/>
+                <field name="packaging_type" invisible="1"/>
+                <field name="packing_name_ids" widget="many2many_tags" invisible="1"/>
+                <field name="pouch_type" invisible="1"/>
             </xpath>
         </field>
+    </record>
+
+    <record id="capacity_product_attribute_value_form" model="ir.ui.view">
+        <field name="name">capacity.product.attribute.value.form</field>
+        <field name="model">product.attribute.value</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="0" readonly="1" force_save="1" string="Name" />
+                        </group>
+                    </group>  
+                    <group>
+                        <group>  
+                            <field name="weight" />
+                            <field name="packing_name_ids" context="{'show_attribute': False}" widget="many2many_tags" options="{'no_open': True, 'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="uom_id" options="{'no_open': True, 'no_create': True}"/>
+                        </group>  
+                    </group>                
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="capacity_product_attribute_value_tree" model="ir.ui.view">
+        <field name="name">capacity.product.attribute.value.tree</field>
+        <field name="model">product.attribute.value</field>
+        <field name="arch" type="xml" >
+            <tree sample="1">
+                <field name="name" string="Name" />
+                <field name="weight"/>
+                <field name="packing_name_ids" widget="many2many_tags"/>
+                <field name="uom_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_capacity_product_attribute_value" model="ir.actions.act_window">
+        <field name="name">Capacity Per Drum</field>
+        <field name="res_model">product.attribute.value</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('attribute_id.attribute_type','=','bucket')]</field>
+        <field name="context">{'attribute_type': 'bucket','show_attribute': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+        <field name="view_ids" eval="[(5,0,0), 
+            (0,0,{'view_mode': 'tree', 'view_id': ref('capacity_product_attribute_value_tree')}), 
+            (0,0,{'view_mode': 'form', 'view_id': ref('capacity_product_attribute_value_form')})
+        ]"/>
+    </record>
+
+    <record id="pouch_product_attribute_value_form" model="ir.ui.view">
+        <field name="name">pouch.product.attribute.value.form</field>
+        <field name="model">product.attribute.value</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1" string="Name" />
+                        </group>
+                        <group>
+                            <field name="pouch_type" />
+                        </group>
+                    </group>                    
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="pouch_product_attribute_value_tree" model="ir.ui.view">
+        <field name="name">pouch.product.attribute.value.tree</field>
+        <field name="model">product.attribute.value</field>
+        <field name="arch" type="xml" >
+            <tree sample="1">
+                <field name="name" string="Name" />
+                 <field name="pouch_type" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_pouch_product_attribute_value" model="ir.actions.act_window">
+        <field name="name">Pouch Name</field>
+        <field name="res_model">product.attribute.value</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('attribute_id.attribute_type','=','pouch_name')]</field>
+        <field name="context">{'attribute_type': 'pouch_name','show_attribute': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+        <field name="view_ids" eval="[(5,0,0), 
+            (0,0,{'view_mode': 'tree', 'view_id': ref('pouch_product_attribute_value_tree')}), 
+            (0,0,{'view_mode': 'form', 'view_id': ref('pouch_product_attribute_value_form')})
+        ]"/>
+    </record>
+
+    <record id="branding_product_attribute_value_form" model="ir.ui.view">
+        <field name="name">branding.product.attribute.value.form</field>
+        <field name="model">product.attribute.value</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1" string="Name" />
+                        </group>
+                    </group>                    
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="branding_product_attribute_value_tree" model="ir.ui.view">
+        <field name="name">branding.product.attribute.value.tree</field>
+        <field name="model">product.attribute.value</field>
+        <field name="arch" type="xml" >
+            <tree sample="1">
+                <field name="name" string="Name" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_branding_product_attribute_value" model="ir.actions.act_window">
+        <field name="name">Branding</field>
+        <field name="res_model">product.attribute.value</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('attribute_id.attribute_type','=','branding')]</field>
+        <field name="context">{'attribute_type': 'branding','show_attribute': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+        <field name="view_ids" eval="[(5,0,0), 
+            (0,0,{'view_mode': 'tree', 'view_id': ref('branding_product_attribute_value_tree')}), 
+            (0,0,{'view_mode': 'form', 'view_id': ref('branding_product_attribute_value_form')})
+        ]"/>
+    </record>
+
+    <record id="lid_color_product_attribute_value_form" model="ir.ui.view">
+        <field name="name">branding.product.attribute.value.form</field>
+        <field name="model">product.attribute.value</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1" string="Name" />
+                        </group>
+                        <group>
+                            <field name="color" widget="color_picker"/>
+                        </group>
+                    </group>                    
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="lid_color_product_attribute_value_tree" model="ir.ui.view">
+        <field name="name">branding.product.attribute.value.tree</field>
+        <field name="model">product.attribute.value</field>
+        <field name="arch" type="xml" >
+            <tree sample="1">
+                <field name="name" string="Name" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_lid_color_product_attribute_value" model="ir.actions.act_window">
+        <field name="name">Lid Color</field>
+        <field name="res_model">product.attribute.value</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('attribute_id.attribute_type','=','lid_color')]</field>
+        <field name="context">{'attribute_type': 'lid_color','show_attribute': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+        <field name="view_ids" eval="[(5,0,0), 
+            (0,0,{'view_mode': 'tree', 'view_id': ref('lid_color_product_attribute_value_tree')}), 
+            (0,0,{'view_mode': 'form', 'view_id': ref('lid_color_product_attribute_value_form')})
+        ]"/>
+    </record>
+
+    <record id="action_drum_color_product_attribute_value" model="ir.actions.act_window">
+        <field name="name">Drum Color</field>
+        <field name="res_model">product.attribute.value</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('attribute_id.attribute_type','=','drum_color')]</field>
+        <field name="context">{'attribute_type': 'drum_color','show_attribute': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+        <field name="view_ids" eval="[(5,0,0), 
+            (0,0,{'view_mode': 'tree', 'view_id': ref('lid_color_product_attribute_value_tree')}), 
+            (0,0,{'view_mode': 'form', 'view_id': ref('lid_color_product_attribute_value_form')})
+        ]"/>
+    </record>
+
+    <record id="action_scoops_product_attribute_value" model="ir.actions.act_window">
+        <field name="name">Scoops</field>
+        <field name="res_model">product.attribute.value</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('attribute_id.attribute_type','=','scoops')]</field>
+        <field name="context">{'attribute_type': 'scoops','show_attribute': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+        <field name="view_ids" eval="[(5,0,0), 
+            (0,0,{'view_mode': 'tree', 'view_id': ref('branding_product_attribute_value_tree')}), 
+            (0,0,{'view_mode': 'form', 'view_id': ref('branding_product_attribute_value_form')})
+        ]"/>
+    </record>
+
+    <record id="action_outer_cartoons_product_attribute_value" model="ir.actions.act_window">
+        <field name="name">Outer Cartoons</field>
+        <field name="res_model">product.attribute.value</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('attribute_id.attribute_type','=','outer_cartoons')]</field>
+        <field name="context">{'attribute_type': 'outer_cartoons','show_attribute': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+        <field name="view_ids" eval="[(5,0,0), 
+            (0,0,{'view_mode': 'tree', 'view_id': ref('branding_product_attribute_value_tree')}), 
+            (0,0,{'view_mode': 'form', 'view_id': ref('branding_product_attribute_value_form')})
+        ]"/>
+    </record>
+
+    <record id="action_box_color_product_attribute_value" model="ir.actions.act_window">
+        <field name="name">Box Color</field>
+        <field name="res_model">product.attribute.value</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('attribute_id.attribute_type','=','drum_color')]</field>
+        <field name="context">{'attribute_type': 'drum_color','show_attribute': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+        <field name="view_ids" eval="[(5,0,0), 
+            (0,0,{'view_mode': 'tree', 'view_id': ref('lid_color_product_attribute_value_tree')}), 
+            (0,0,{'view_mode': 'form', 'view_id': ref('lid_color_product_attribute_value_form')})
+        ]"/>
+    </record>
+
+    <record id="packing_name_product_attribute_value_form" model="ir.ui.view">
+        <field name="name">packing.name.product.attribute.value.form</field>
+        <field name="model">product.attribute.value</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1" string="Name" />
+                        </group>
+                        <group>
+                            <field name="packing_type"/>
+                        </group>
+                    </group>                    
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="packing_name_product_attribute_value_tree" model="ir.ui.view">
+        <field name="name">packing.name.product.attribute.value.tree</field>
+        <field name="model">product.attribute.value</field>
+        <field name="arch" type="xml" >
+            <tree sample="1">
+                <field name="name" string="Name" />
+                <field name="packing_type" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_packing_name_product_attribute_value" model="ir.actions.act_window">
+        <field name="name">Name</field>
+        <field name="res_model">product.attribute.value</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('attribute_id.attribute_type','=','packing_name')]</field>
+        <field name="context">{'attribute_type': 'packing_name','show_attribute': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+        <field name="view_ids" eval="[(5,0,0), 
+            (0,0,{'view_mode': 'tree', 'view_id': ref('packing_name_product_attribute_value_tree')}), 
+            (0,0,{'view_mode': 'form', 'view_id': ref('packing_name_product_attribute_value_form')})
+        ]"/>
     </record>
 
 </odoo>

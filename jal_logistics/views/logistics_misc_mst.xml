@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+<!-- Booking Agent -->
+    <record id="booking_agent_mst_form" model="ir.ui.view">
+        <field name="name">booking.agent.mst.form</field>
+        <field name="model">booking.agent.mst</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1" />
+                        </group>
+                    </group>                    
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="booking_agent_mst_tree" model="ir.ui.view">
+        <field name="name">booking.agent.mst.tree</field>
+        <field name="model">booking.agent.mst</field>
+        <field name="arch" type="xml" >
+            <tree sample="1">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_booking_agent_mst" model="ir.actions.act_window">
+        <field name="name">Booking Agent</field>
+        <field name="res_model">booking.agent.mst</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+    </record>
+
+<!-- Transport Agent -->
+    <record id="transport_agent_mst_form" model="ir.ui.view">
+        <field name="name">transport.agent.mst.form</field>
+        <field name="model">transport.agent.mst</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1" />
+                        </group>
+                    </group>                    
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="transport_agent_mst_tree" model="ir.ui.view">
+        <field name="name">transport.agent.mst.tree</field>
+        <field name="model">transport.agent.mst</field>
+        <field name="arch" type="xml" >
+            <tree sample="1">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_transport_agent_mst" model="ir.actions.act_window">
+        <field name="name">Transport Agent</field>
+        <field name="res_model">transport.agent.mst</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+    </record>
+
+<!-- CHA -->
+    <record id="cha_mst_form" model="ir.ui.view">
+        <field name="name">cha.mst.form</field>
+        <field name="model">cha.mst</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1" />
+                        </group>
+                    </group>                    
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="cha_mst_tree" model="ir.ui.view">
+        <field name="name">cha.mst.tree</field>
+        <field name="model">cha.mst</field>
+        <field name="arch" type="xml" >
+            <tree sample="1">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_cha_mst" model="ir.actions.act_window">
+        <field name="name">CHA</field>
+        <field name="res_model">cha.mst</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+    </record>
+
+<!-- Shipping Line -->
+    <record id="shipping_line_mst_form" model="ir.ui.view">
+        <field name="name">shipping.line.mst.form</field>
+        <field name="model">shipping.line.mst</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1" />
+                        </group>
+                    </group>                    
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="shipping_line_mst_tree" model="ir.ui.view">
+        <field name="name">shipping.line.mst.tree</field>
+        <field name="model">shipping.line.mst</field>
+        <field name="arch" type="xml" >
+            <tree sample="1">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_shipping_line_mst" model="ir.actions.act_window">
+        <field name="name">Shipping Line</field>
+        <field name="res_model">shipping.line.mst</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+    </record>
+
+<!-- Inspection -->
+    <record id="inspection_mst_form" model="ir.ui.view">
+        <field name="name">inspection.mst.form</field>
+        <field name="model">inspection.mst</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1" />
+                        </group>
+                    </group>                    
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="inspection_mst_tree" model="ir.ui.view">
+        <field name="name">inspection.mst.tree</field>
+        <field name="model">inspection.mst</field>
+        <field name="arch" type="xml" >
+            <tree sample="1">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_inspection_mst" model="ir.actions.act_window">
+        <field name="name">Inspection</field>
+        <field name="res_model">inspection.mst</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+    </record>
+
+<!-- EPCG Liscence -->
+<record id="epcg_liscence_mst_form" model="ir.ui.view">
+        <field name="name">epcg.liscence.form</field>
+        <field name="model">epcg.liscence.mst</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1" />
+                        </group>
+                         <group>
+                             <field name="date"/>
+                        </group>
+                    </group>                    
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="epcg_liscence_mst_tree" model="ir.ui.view">
+        <field name="name">epcg.liscence.tree</field>
+        <field name="model">epcg.liscence.mst</field>
+        <field name="arch" type="xml" >
+            <tree>
+                <field name="name"/>
+                <field name="date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_epcg_liscence_mst" model="ir.actions.act_window">
+        <field name="name">EPCG Liscence</field>
+        <field name="res_model">epcg.liscence.mst</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+    </record>
+
+<!-- Advanced Liscence -->
+<record id="advanced_liscence_mst_form" model="ir.ui.view">
+        <field name="name">advanced.liscence.form</field>
+        <field name="model">advanced.liscence.mst</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1" />
+                        </group>
+                         <group>
+                             <field name="date"/>
+                        </group>
+                    </group>                    
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="advanced_liscence_mst_tree" model="ir.ui.view">
+        <field name="name">advanced.liscence.tree</field>
+        <field name="model">advanced.liscence.mst</field>
+        <field name="arch" type="xml" >
+            <tree>
+                <field name="name"/>
+                <field name="date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_advanced_liscence_mst" model="ir.actions.act_window">
+        <field name="name">Advanced Liscence</field>
+        <field name="res_model">advanced.liscence.mst</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+    </record>
+
+<!-- Pallet Size -->
+<record id="pallet_size_mst_form" model="ir.ui.view">
+        <field name="name">pallet.size.mst.form</field>
+        <field name="model">pallet.size.mst</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1" />
+                        </group>
+                    </group>                    
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="pallet_size_mst_tree" model="ir.ui.view">
+        <field name="name">pallet.size.mst.tree</field>
+        <field name="model">pallet.size.mst</field>
+        <field name="arch" type="xml" >
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_pallet_size_mst" model="ir.actions.act_window">
+        <field name="name">Pallet Size</field>
+        <field name="res_model">pallet.size.mst</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+    </record>
+
+
+</odoo>

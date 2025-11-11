@@ -34,6 +34,12 @@
             <xpath expr="//field[@name='tds_applicable']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
+            <xpath expr="//field[@name='remarks']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='area_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
             <xpath expr="//page[@name='rates']" position="before">
                 <page name="account" string="Account" autofocus="autofocus">
                     <group>
@@ -44,6 +50,49 @@
                     </group>
                 </page>
             </xpath>
+        </field>
+    </record>
+
+    <record id="action_party_mst_international" model="ir.actions.act_window">
+        <field name="name">Party Master</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[('acc_type','=','SALE_PARTY')]</field>
+        <field name="context">{
+                'default_acc_type': 'SALE_PARTY',
+                'default_business_type':'international'
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Party Master</p>
+        </field>
+    </record>
+
+    <record id="action_party_mst_domestic" model="ir.actions.act_window">
+        <field name="name">Party Master</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[('acc_type','=','SALE_PARTY')]</field>
+        <field name="context">{
+                'default_acc_type': 'SALE_PARTY',
+                'default_business_type':'domestic'
+        }</field>        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Party Master</p>
+        </field>
+    </record>
+
+    <record id="action_party_mst_trading" model="ir.actions.act_window">
+        <field name="name">Party Master</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[('acc_type','=','SALE_PARTY')]</field>
+        <field name="context">{
+                'default_acc_type': 'SALE_PARTY',
+                'default_business_type':'trading'
+        }</field>        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Party Master</p>
         </field>
     </record>
 

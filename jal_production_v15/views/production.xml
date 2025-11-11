@@ -36,7 +36,7 @@
                                 <tree editable="bottom">
                                     <field name="product_id" required="1" options="{'no_quick_create': True}" domain="[('is_raw_material', '=', True)]"/>
                                     <field name="lot_ids" widget="many2many_tags" options="{'no_create': True}" attrs="{'readonly': [('product_tracking', '=', 'none')], 'required': [('product_tracking', '!=', 'none')]}"/>
-                                    <field name="qty" attrs="{'readonly': [('parent.state','!=','draft')]}"/>
+                                    <field name="qty"/>
                                     <field name="uom_id" readonly="1" force_save="1"/>
                                     <field name="product_tracking" invisible="1"/>
                                 </tree>
@@ -47,7 +47,7 @@
                                 <tree editable="bottom">
                                     <field name="product_id" required="1" options="{'no_quick_create': True}" domain="[('is_packing', '=', True)]"/>
                                     <field name="lot_ids" widget="many2many_tags" options="{'no_create': True}" attrs="{'readonly': [('product_tracking', '=', 'none')], 'required': [('product_tracking', '!=', 'none')]}"/>
-                                    <field name="qty" attrs="{'readonly': [('parent.state','!=','draft')]}"/>
+                                    <field name="qty"/>
                                     <field name="uom_id" readonly="1" force_save="1"/>
                                     <field name="product_tracking" invisible="1"/>
                                 </tree>
@@ -59,7 +59,8 @@
                                     <field name="grade_id" options="{'no_create': True,'no_open': True}" />
                                     <field name="mesh_id" options="{'no_create': True,'no_open': True}" />
                                     <field name="bucket_id" options="{'no_create': True,'no_open': True}" />
-                                    <field name="product_id" options="{'no_quick_create': True}" />
+                                    <field name="product_doamin_ids" widget="many2many_tags" invisible="1"/>
+                                    <field name="product_id" domain="[('id', 'in', product_doamin_ids)]" required="1" options="{'no_quick_create': True}" />
                                     <field name="bucket_qty" />
                                     <field name="qty" />
                                     <field name="uom_id" readonly="1" force_save="1"/>

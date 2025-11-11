@@ -36,29 +36,37 @@ class JalProduction(models.Model):
         self.state = 'running'
 
     def action_get_quality_btn(self):
-        quality_rec = self.env['jal.quality'].search([('production_id', '=', self.id)])
+        quality_rec = self.env['jal.quality'].search([('production_id', 'in', self.ids)])
         if not quality_rec:
             raise ValidationError(_("No Quality record found for Production: %s") % (self.name or ""))
         
         line_list = []
         if quality_rec:
-            domain = [
-                ('product_template_attribute_value_ids.product_attribute_value_id', '=', quality_rec.grade_id.id),
-                ('product_template_attribute_value_ids.product_attribute_value_id', '=', quality_rec.mesh_id.id),
-                ('product_template_attribute_value_ids.product_attribute_value_id', '=', quality_rec.bucket_id.id),
-            ]
+            for qual in quality_rec:
+                for line in qual.quality_grade_ids:
+                    domain = [
+                        ('product_template_attribute_value_ids.product_attribute_value_id', '=', line.grade_id.id),
+                        ('product_template_attribute_value_ids.product_attribute_value_id', '=', line.mesh_id.id),
+                        ('product_template_attribute_value_ids.product_attribute_value_id', '=', line.bucket_id.id),
+                    ]
 
-            products = self.env['product.product'].search(domain)
-            line_list.append((0,0,{
-               'grade_id': quality_rec.grade_id.id,
-               'mesh_id':quality_rec.mesh_id.id,
-               'bucket_id':quality_rec.bucket_id.id,
-               'product_id':products.id if products else False,
-            }))
-        self.finished_line_ids = line_list
+                    products = self.env['product.product'].search(domain)
+                    line_list.append((0,0,{
+                    'grade_id': line.grade_id.id,
+                    'mesh_id': line.mesh_id.id,
+                    'bucket_id': line.bucket_id.id,
+                    'bucket_qty': line.no_of_drum,
+                    'qty': line.weight,
+                    'product_id': products.id if len(products) == 0 else False,
+                    'product_doamin_ids': [(6, 0, products.ids)] if len(products) == 0 else [(6, 0, self.env['product.product'].search([]).ids)],
+                    'uom_id': products.uom_id.id if len(products) == 0 else False,
+                    }))
+                
+        self.finished_line_ids = [(5, 0, 0)] + line_list
 
     def action_complete_btn(self):
         self._create_stock_picking_receipts()
+        self._create_stock_picking_out()
         self.state = 'complete'
 
     def _create_stock_picking_receipts(self):
@@ -66,6 +74,11 @@ class JalProduction(models.Model):
             raise ValidationError("No finished products to receive!")
 
         for line in self.finished_line_ids:
+            if not line.product_id:
+                raise ValidationError(
+                     _("Please select a product for finished lines before proceeding.")
+                )
+            
             if line.qty <= 0:
                 raise ValidationError(
                     f"Quantity must be greater than 0 for product: {line.product_id.display_name}"
@@ -89,16 +102,16 @@ class JalProduction(models.Model):
             move_vals = {
                 'name': line.product_id.display_name,
                 'product_id': line.product_id.id,
-                'product_uom_qty': line.qty,
-                'demand_bucket': line.bucket_qty,
-                'done_bucket': line.bucket_qty,
+                'product_uom_qty': line.bucket_qty,
+                'demand_bucket': line.qty,
+                'done_bucket': line.qty,
                 'product_uom': line.uom_id.id,
                 'location_id': src_location.id,
                 'location_dest_id': main_location.id,
                 'move_line_ids': [(0, 0, {
                     'product_id': line.product_id.id,
-                    'qty_done': line.qty,
-                    'done_bucket': line.bucket_qty,
+                    'qty_done': line.bucket_qty,
+                    'done_bucket': line.qty,
                     'product_uom_id': line.uom_id.id,
                     'location_id': src_location.id,
                     'location_dest_id': main_location.id,
@@ -123,7 +136,100 @@ class JalProduction(models.Model):
         picking.action_set_quantities_to_reservation()
         picking.button_validate()
 
+    def _create_stock_picking_out(self):
+        StockQuant = self.env['stock.quant'].sudo()
+        StockLocation = self.env['stock.location'].sudo()
+        StockPickingType = self.env['stock.picking.type'].sudo()
+        StockPicking = self.env['stock.picking'].sudo()
+
+        main_location = StockLocation.search([('main_store_location', '=', True)], limit=1)
+        if not main_location:
+            raise ValidationError(_("Main Store Location not found!"))
+
+        des_location = StockLocation.search([('usage', '=', 'customer')], limit=1)
+        if not des_location:
+            raise ValidationError(_("No Vendor/Partner location found!"))
+
+        picking_type = StockPickingType.search([('code', '=', 'outgoing')], limit=1)
+        if not picking_type:
+            raise ValidationError(_("Outgoing Picking Type not found!"))
+
+        def _validate_lines(line_ids, line_type):
+            for line in line_ids:
+                if not line.product_id:
+                    raise ValidationError(_("Please select a product for %s lines before proceeding.") % line_type)
+                if line.qty <= 0:
+                    raise ValidationError(_("Quantity must be greater than 0 for product: %s") % line.product_id.display_name)
+
+                if line.product_id.tracking in ('lot', 'serial') and not line.lot_ids:
+                    raise ValidationError(_("Please select a lot/serial number for tracked product: %s") % line.product_id.display_name)
+
+                domain = [('product_id', '=', line.product_id.id), ('location_id', '=', main_location.id)]
+                if line.lot_ids:
+                    domain.append(('lot_id', 'in', line.lot_ids.ids))
+                stock_quants = StockQuant.search(domain)
+
+                available_qty = sum(stock_quants.mapped('available_quantity'))
+                if available_qty < line.qty:
+                    raise ValidationError(_("Insufficient stock for product %s. Available: %s, Required: %s") %
+                                        (line.product_id.display_name, available_qty, line.qty))
+
+        _validate_lines(self.line_ids, "Raw Materials")
+        _validate_lines(self.packing_line_ids, "Packing Materials")
+
+        move_list = []
+        def _prepare_moves(lines):
+            for line in lines:
+                product = line.product_id
+                required_qty = line.qty
+
+                quants_domain = [('product_id', '=', product.id), ('location_id', '=', main_location.id), ('quantity', '>', 0)]
+                if line.lot_ids:
+                    quants_domain.append(('lot_id', 'in', line.lot_ids.ids))
+
+                quants = StockQuant.search(quants_domain)
+                remaining = required_qty
+
+                for quant in quants:
+                    take_qty = min(quant.available_quantity, remaining)
+                    if take_qty <= 0:
+                        continue
+
+                    move_vals = {
+                        'product_id': line.product_id.id,
+                        'qty_done': take_qty,
+                        'product_uom_id': line.uom_id.id,
+                        'location_id': main_location.id,
+                        'location_dest_id': des_location.id,
+                    }
+
+                    if product.tracking in ('lot', 'serial') and quant.lot_id:
+                        move_vals['lot_id'] = quant.lot_id.id
+
+                    remaining -= take_qty
+                    if remaining <= 0:
+                        break
+
+                move_list.append((0, 0, move_vals))
+
+        _prepare_moves(self.line_ids)
+        _prepare_moves(self.packing_line_ids)
         
+        picking = StockPicking.create({
+            'location_id': main_location.id,
+            'location_dest_id': des_location.id,
+            'picking_type_id': picking_type.id,
+            'production_id': self.id,
+            'origin': f"{self.name} - Outgoing",
+            # 'move_ids_without_package': move_list,
+            'move_line_ids_without_package': move_list,
+            'scheduled_date': fields.Datetime.now(),
+        })
+
+        picking.action_confirm()
+        self.env.context = dict(self.env.context, skip_backorder=True)
+        picking.button_validate()
+
     @api.model
     def create(self, vals):
         result = super(JalProduction, self).create(vals)
@@ -138,7 +244,7 @@ class JalProductionLine(models.Model):
 
     mst_id = fields.Many2one('jal.production',string="Mst",ondelete='cascade')
     product_id = fields.Many2one('product.product',required=True)
-    lot_ids = fields.Many2many('stock.production.lot', string='Lot/Serial',domain="[('product_id', '=', product_id)]")
+    lot_ids = fields.Many2many('stock.production.lot', string='Lot/Serial',domain="[('product_id', '=', product_id),('product_qty', '>', 0)]")
     uom_id = fields.Many2one('uom.uom',string="Unit")
     qty = fields.Float(string = "Quantity",digits='BaseAmount')
     product_tracking = fields.Selection(related='product_id.tracking')
@@ -156,7 +262,7 @@ class JalPackingProductionLine(models.Model):
 
     mst_id = fields.Many2one('jal.production',string="Mst",ondelete='cascade')
     product_id = fields.Many2one('product.product',required=True)
-    lot_ids = fields.Many2many('stock.production.lot', string='Lot/Serial',domain="[('product_id', '=', product_id)]")
+    lot_ids = fields.Many2many('stock.production.lot', string='Lot/Serial',domain="[('product_id', '=', product_id),('product_qty', '>', 0)]")
     uom_id = fields.Many2one('uom.uom',string="Unit")
     qty = fields.Float(string = "Quantity",digits='BaseAmount')
     product_tracking = fields.Selection(related='product_id.tracking')
@@ -173,14 +279,15 @@ class JalFinishedProductionLine(models.Model):
     _description = "Finished Production Line"
 
     mst_id = fields.Many2one('jal.production',string="Mst",ondelete='cascade')
-    product_id = fields.Many2one('product.product',required=True)
+    product_id = fields.Many2one('product.product')
     uom_id = fields.Many2one('uom.uom',string="Unit")
-    qty = fields.Float(string="Quantity")
-    bucket_qty = fields.Integer(string="Bucket Quantity")
+    qty = fields.Float(string="Weight")
+    bucket_qty = fields.Integer(string="No of Drum")
     grade_id = fields.Many2one('product.attribute.value',string="Grade",domain="[('attribute_id.attribute_type','=','grade')]")
     mesh_id = fields.Many2one('product.attribute.value',string="Mesh",domain="[('attribute_id.attribute_type','=','mesh')]")
     bucket_id = fields.Many2one('product.attribute.value',string="Bucket",domain="[('attribute_id.attribute_type','=','bucket')]")
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
+    product_doamin_ids = fields.Many2many('product.product','product_doamin_ref_id')
 
     @api.onchange('bucket_qty')
     def _onchange_bucket_qty(self):
@@ -201,9 +308,6 @@ class JalFinishedProductionLine(models.Model):
         if not (self.grade_id and self.mesh_id and self.bucket_id):
             self.product_id = False
             return {'domain': {'product_id': []}}
-
-        self.product_id = False
-
         domain = [
             ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.grade_id.id),
             ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.mesh_id.id),
@@ -212,4 +316,13 @@ class JalFinishedProductionLine(models.Model):
 
         products = self.env['product.product'].search(domain)
 
-        return {'domain': {'product_id': [('id', 'in', products.ids)]}}
+        if products:
+            self.product_id = products[0].id
+            self.product_doamin_ids = [(6, 0, products.ids)]
+            return {'domain': {'product_id': [('id', 'in', products.ids)]}}
+        else:
+            self.product_id = False
+            all_products = self.env['product.product'].search([])
+            self.product_doamin_ids = [(6, 0, all_products.ids)]
+            return {'domain': {'product_id': [('id', 'in', all_products.ids)]}}
+
