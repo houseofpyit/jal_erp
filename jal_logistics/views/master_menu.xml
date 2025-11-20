@@ -4,6 +4,7 @@
     <menuitem
         id="logistics_main_menu"
         name="Logistics"
+        web_icon="jal_logistics,static/description/icon.png"
         sequence="141"/>
 
         <menuitem
