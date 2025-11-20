@@ -78,7 +78,7 @@
             <xpath expr="//page/group[@name='note_group']" position="before">
                 <group>
                     <group>
-                        <field name="conditions_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')]}"/>
+                        <field name="conditions_id" domain="[('module_type', '=', 'sale')]" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')]}"/>
                     </group>
                 </group>
             </xpath>
@@ -116,7 +116,7 @@
                 <field name="product_tmpl_id" string="Product" options="{'no_quick_create': True}" attrs="{'required': [('display_type', '=', False)]}" readonly="0" context="{'partner_id': parent.partner_id, 'quantity': product_uom_qty, 'pricelist': parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id, 'default_list_price': price_unit, 'default_description_sale': name}" domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" widget="product_configurator"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/form/group/group/field[@name='analytic_tag_ids']" position="after">
-                <field name="packing_type" attrs="{'invisible': [('parent.business_type', '!=', 'international')],'required': [('parent.business_type', '=', 'international'),('display_type', '=', False)]}"/>
+                <field name="packing_type" invisible="1" attrs="{'invisible': [('parent.business_type', '!=', 'international')],'required': [('parent.business_type', '=', 'international'),('display_type', '=', False)]}"/>
                 <!-- <field name="name_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': ['|',('packing_type', '=', 'pouch'),('packing_type', '=', False)]}" context="{'show_attribute': False}"/>
                 <field name="bucket_cap_id" options="{'no_open': True, 'no_create': True}"  context="{'show_attribute': False}"/>
                 <field name="branding_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': ['|',('packing_type', '=', 'pouch'),('packing_type', '=', False)]}" context="{'show_attribute': False}"/>

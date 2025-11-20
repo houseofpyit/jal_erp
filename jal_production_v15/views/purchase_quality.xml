@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="jal_purchase_quality_view_form" model="ir.ui.view">
+        <field name="name">jal.purchase.quality.view.form</field>
+        <field name="model">jal.purchase.quality</field>
+        <field name="arch" type="xml">
+            <form duplicate="false" create="0" >
+                <header>
+                    <field name="stage" widget='statusbar' statusbar_visible="draft,pass,fail"/>
+                    <button string="Pass" name="action_approve_button" type="object" class="oe_highlight oe_read_only" attrs="{'invisible': [('stage', '!=', 'draft')]}"/>
+                    <button string="Fail" name="action_reject_button" type="object" class="btn-danger oe_read_only" attrs="{'invisible': [('stage', '!=', 'draft')]}"/>
+                </header>
+                <sheet>
+                    <h1>
+                        <field name="name" readonly="1" force_save="1"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="product_id" readonly="1" force_save="1"/>
+                            <label for="qty" />
+                            <div class="o_address_format">
+                                <field name="qty" class="o_address_city" readonly="1" force_save="1"/>
+                                <field name="uom_id" class="o_address_city" readonly="1" force_save="1"/>
+                            </div>
+                            <field name="company_id" invisible="1" />
+                        </group>
+                        <group>
+                            <field name="date" readonly="0" force_save="1"/>
+                            <field name="send_date" invisible="1"/>
+                            <field name="purchase_id" invisible="0"/>
+                            <field name="picking_id" invisible="0"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="quality_parameter" string="Quality Parameter" >
+                            <field name="line_ids" attrs="{'readonly': [('stage', '!=', 'draft')]}" >
+                                <tree editable="bottom" create="0">
+                                    <field name="item_attribute" readonly="1" force_save="1" />
+                                    <field name="required_value" readonly="1" force_save="1"/>
+                                    <field name="parameter_remarks" readonly="1" force_save="1"/>
+                                    <field name="result_value" />
+                                    <field name="remarks"/>
+                                    <field name="attachment_ids" widget="many2many_binary" invisible="0"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- <record id="view_jal_purchase_quality_filter_main" model="ir.ui.view">
+        <field name="name">jal.purchase.quality.filter</field>
+        <field name="model">jal.purchase.quality</field>
+        <field name="arch" type="xml">
+            <search string="Quality Test Filter">
+                <field name="name" string="Search" filter_domain="['|','|','|','|','|', ('name', 'ilike', self),('product_id', 'ilike', self),('vendor_id', 'ilike', self),('ref_no', 'ilike', self),('date', 'ilike', self),('lot_id', 'ilike', self)]"/>
+                <field name="product_id"/>
+                <field name="vendor_id" />
+                <field name="ref_no" />
+                <field name="date" />
+                <field name="lot_id" />
+                <group expand="0" string="Group By">
+                    <filter domain="[('stage','=','draft')]" string="Draft" name="filter_draft"/>
+
+                    <separator/>
+                    
+                    <filter name="group_by_stage" string="Stage" domain="[]" context="{'group_by': 'stage'}"/>
+                    <filter name="group_by_product" string="Product" domain="[]" context="{'group_by': 'product_id'}"/>
+                    <filter name="group_by_vendor" string="Vendor" domain="[]" context="{'group_by': 'vendor_id'}"/>
+                    <filter name="group_by_ref" string="Reference No" domain="[]" context="{'group_by': 'ref_no'}"/>
+                    <filter name="group_by_date" string="Date" domain="[]" context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record> -->
+
+    <record id="jal_purchase_quality_view_tree" model="ir.ui.view">
+        <field name="name">jal.purchase.quality.view.tree</field>
+        <field name="model">jal.purchase.quality</field>
+        <field name="arch" type="xml">
+            <tree decoration-success="stage == 'pass'" decoration-danger="stage == 'fail'" create="0" >
+                <field name="name" />
+                <field name="date" />
+                <field name="product_id" />
+                <field name="qty" />
+                <field name="stage" decoration-success="stage == 'pass'" decoration-danger="stage == 'fail'" widget="badge" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_jal_purchase_quality" model="ir.actions.act_window">
+        <field name="name">Purchase Quality</field>
+        <field name="res_model">jal.purchase.quality</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_ids"
+            eval="[(5, 0, 0),
+                    (0, 0, {'view_mode': 'tree', 'view_id': ref('jal_purchase_quality_view_tree')}),
+                    (0, 0, {'view_mode': 'form', 'view_id': ref('jal_purchase_quality_view_form')})]"/>
+    </record>
+
+</odoo>

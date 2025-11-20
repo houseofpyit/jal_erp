@@ -10,6 +10,7 @@ class inheritedProductAttribute(models.Model):
                                       ('drum_color','Drum Color'),('scoops', 'Scoops'),('outer_cartoons', 'Outer Cartoons'),
                                       ('box_color', 'Box Color'),('packing_name', 'Packing Name')], string='Attribute Type')
    default_create = fields.Boolean(string="Default Create")
+   active = fields.Boolean(default=True, help="Set active to false to hide the Product Attribute without removing it.")
 
    def unlink(self):
       for i in self:

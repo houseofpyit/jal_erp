@@ -8,6 +8,8 @@ class inheritedProductTemplate(models.Model):
    is_raw_material = fields.Boolean('Raw Material')
    is_finished_goods = fields.Boolean('Finished Goods')
    quality_para_ids = fields.One2many('tempalte.quality.parameter','template_id',string="Quality Parameter")
+   rawmaterial_line_ids = fields.One2many('product.rawmaterial.line','template_id',string="Raw Mraterial")
+   packing_line_ids = fields.One2many('product.packing.line','template_id',string="Product Packing")
    is_quality_required = fields.Boolean('Quality Required or Not')
    is_spares = fields.Boolean('Spares')
    bucket_qty_hand_total = fields.Float(
@@ -150,4 +152,34 @@ class TemplateQualityParameter(models.Model):
     tollerance_range = fields.Char(string="Tollerance Range")
     remarks = fields.Char(string="Remarks")
     attachment_ids = fields.Many2many('ir.attachment', string='Attachments')
+
+class ProductRawMaterialLine(models.Model):
+    _name = 'product.rawmaterial.line'
+    _description = "Product Raw Material Line"
+
+    template_id = fields.Many2one('product.template',string="template",ondelete='cascade')
+    product_id = fields.Many2one('product.product')
+    uom_id = fields.Many2one('uom.uom',string="Unit")
+    qty = fields.Float(string = "Quantity",digits='BaseAmount')
+
+    @api.onchange('product_id')
+    def onchange_product_id(self):
+        for rec in self:
+            if rec.product_id:
+                rec.uom_id = rec.product_id.uom_po_id.id
+
+class ProductPackingLine(models.Model):
+    _name = 'product.packing.line'
+    _description = "Product Packing Line"
+
+    template_id = fields.Many2one('product.template',string="template",ondelete='cascade')
+    product_id = fields.Many2one('product.product')
+    uom_id = fields.Many2one('uom.uom',string="Unit")
+    qty = fields.Float(string = "Quantity")
+
+    @api.onchange('product_id')
+    def onchange_product_id(self):
+        for rec in self:
+            if rec.product_id:
+                rec.uom_id = rec.product_id.uom_po_id.id
 

@@ -66,6 +66,10 @@ class JalQuality(models.Model):
 
         self.quality_para_ids = [(5, 0, 0)] + line_list
 
+        
+    def action_complete_btn(self):
+        self.state = 'complete'
+
     @api.model
     def create(self, vals):
         result = super(JalQuality, self).create(vals)
@@ -85,7 +89,7 @@ class JalQuality(models.Model):
                     'grade_name': line.grade_id.name,
                     'mesh_name': line.mesh_id.name,
                     'dryer_name': self.dryer_id.name,
-                    'bucket_name': line.bucket_id.name,
+                    # 'bucket_name': line.bucket_id.name,
                 })
 
         return line_list
@@ -151,3 +155,36 @@ class QualityGradeLine(models.Model):
     bucket_id = fields.Many2one('product.attribute.value',string="Bucket",domain="[('attribute_id.attribute_type','=','bucket')]")
     no_of_drum = fields.Integer(string="No of Drum")
     weight = fields.Float(string="Weight")
+    product_id = fields.Many2one('product.product')
+    product_tmpl_id = fields.Many2one('product.template', string='Product Template')
+    uom_id = fields.Many2one('uom.uom',string="Unit")
+
+    @api.onchange('product_id','no_of_drum')
+    def onchange_product_id(self):
+        for rec in self:
+            if rec.product_id:
+                rec.uom_id = rec.product_id.uom_po_id.id
+
+                rec.weight = rec.no_of_drum * rec.product_id.drum_cap_id.weight
+
+    @api.onchange('grade_id', 'mesh_id', 'bucket_id')
+    def _onchange_product_attributes(self):
+        if not (self.grade_id and self.mesh_id):
+            self.product_id = False
+            return {'domain': {'product_id': []}}
+        domain = [
+            ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.grade_id.id),
+            ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.mesh_id.id),
+            # ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.bucket_id.id),
+            ('product_tmpl_id', '=', self.product_tmpl_id.id)
+        ]
+
+        products = self.env['product.product'].search(domain)
+
+        if products:
+            self.product_id = products[0].id
+            return {'domain': {'product_id': [('id', 'in', products.ids)]}}
+        else:
+            self.product_id = False
+            all_products = self.env['product.product'].search([])
+            return {'domain': {'product_id': [('id', 'in', all_products.ids)]}}

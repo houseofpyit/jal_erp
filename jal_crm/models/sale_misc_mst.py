@@ -50,7 +50,10 @@ class SaleTermConditions(models.Model):
     
     name = fields.Char(string='Name')
     note = fields.Html("Note")
-
+    module_type = fields.Selection([
+            ("sale", "Sale"),  
+            ("purchase", "Purchase")],string="Type")
+    
 class SaleinspectionMaster(models.Model):
     _name = "sale.inspection.mst"
     _description= "Sale Inspection Master"

@@ -58,11 +58,13 @@
                                 <tree editable="bottom">
                                     <field name="grade_id" options="{'no_create': True,'no_open': True}" />
                                     <field name="mesh_id" options="{'no_create': True,'no_open': True}" />
-                                    <field name="bucket_id" options="{'no_create': True,'no_open': True}" />
+                                    <!-- <field name="bucket_id" options="{'no_create': True,'no_open': True}" /> -->
                                     <field name="product_doamin_ids" widget="many2many_tags" invisible="1"/>
-                                    <field name="product_id" domain="[('id', 'in', product_doamin_ids)]" required="1" options="{'no_quick_create': True}" />
+                                    <field name="product_id" domain="[('id', 'in', product_doamin_ids),('is_finished_goods', '=', True)]" required="1" options="{'no_quick_create': True}" />
                                     <field name="bucket_qty" />
                                     <field name="qty" />
+                                    <field name="wastage_qty" />
+                                    <field name="wastage_weight" />    
                                     <field name="uom_id" readonly="1" force_save="1"/>
                                 </tree>
                             </field>
@@ -88,10 +90,11 @@
         <field name='arch' type='xml'>
             <tree>
                 <field name='name'/>
+                <field name='date'/>
                 <field name="product_tmpl_id" />
                 <field name="shift_id" />
                 <field name="employee_id" />
-                <field name="state" />
+                <field name="state" widget="badge"/>
             </tree>
         </field>
     </record>

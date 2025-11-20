@@ -108,32 +108,56 @@ class JalLogistics(models.Model):
     
     @api.onchange('epcg_liscence_used')
     def _onchange_epcg_liscence_used(self):
-      if self.epcg_liscence_used:
-          self.duty_drawback_claimed = 'no'
+        if self.epcg_liscence_used == 'yes':
+            self.duty_drawback_claimed = 'no'
+        else:
+            self.duty_drawback_claimed = ''
 
     @api.onchange('epcg_liscence_number')
     def _onchange_epcg_liscence_number(self):
-          self.epcg_liscence_date = self.epcg_liscence_number.date
+        self.epcg_liscence_date = self.epcg_liscence_number.date
 
 
     @api.onchange('advanced_liscence_used')
     def _onchange_advanced_liscence_used(self):
-      if self.advanced_liscence_used:
-          self.lut_shipment = 'no'
+        if self.advanced_liscence_used == 'yes':
+            self.lut_shipment = 'no'
+        else:
+            self.lut_shipment = ''
 
     @api.onchange('advanced_liscence_number')
     def _onchange_advanced_liscence_number(self):
-          self.advanced_liscence_date = self.advanced_liscence_number.date
+        self.advanced_liscence_date = self.advanced_liscence_number.date
 
     @api.onchange('lut_shipment')
     def _onchange_lut_shipment(self):
-      if self.lut_shipment:
-          self.gst_claimed = 'no'
+        if self.lut_shipment == 'yes':
+            if self.advanced_liscence_used == 'yes':
+                self.lut_shipment = 'no'
+                return {
+                    'warning': {
+                        'title': "Validation",
+                        'message': "You cannot set Lut Shipment to 'Yes' because Advance Liscence Used is already 'Yes'.",                    }
+                }
+
+            self.gst_claimed = 'no'
+        else:
+            self.gst_claimed = ''
 
     @api.onchange('gst_claimed')
     def _onchange_gst_claimed(self):
-      if self.gst_claimed:
-          self.lut_shipment = 'no'
+        if self.gst_claimed == 'yes':
+            self.lut_shipment = 'no'
+    
+    @api.onchange('duty_drawback_claimed')
+    def _onchange_duty_drawback_claimed(self):
+        if self.duty_drawback_claimed == 'yes' and self.epcg_liscence_used == 'yes':
+            self.duty_drawback_claimed = 'no'
+            return {
+                'warning': {
+                    'title': "Validation",
+                    'message': "You cannot set Duty Drawback Claimed to 'Yes' because EPCG Licence Used is already 'Yes'.",                    }
+            }
 
 class LogisticsDispatchLine(models.Model):
     _name = 'logistics.dispatch.line'
@@ -161,7 +185,11 @@ class LogisticsDispatchLine(models.Model):
     palletized_line1_ids = fields.One2many('palletized1.line','mst_id',string="Palletized Line 1")
     palletized_line2_ids = fields.One2many('palletized2.line','mst_id',string="Palletized Line 2")
     palletized_line_ids = fields.One2many('palletized.line','mst_id',string="Palletized Line")
+    truck_detention_line_ids = fields.One2many('truck.detention.line','mst_id',string="Truck Detention Line")
 
+    detention_type = fields.Selection([('yes', 'Yes'),('no', 'No'),], string='Detention Applicable')
+    detention_amount = fields.Float(string='Detention Amount')
+    reason_detention = fields.Text(string='Reason for Detention')
 
 class DispatchPackingLine(models.Model):
     _name = 'dispatch.packing.line'
@@ -222,3 +250,16 @@ class LayerLine(models.Model):
 
     name = fields.Char(string="Description")
     qty = fields.Float(string="Qty")
+
+class TruckDetentionLine(models.Model):
+    _name = 'truck.detention.line'
+    _description = 'Truck Detention Line'
+    _order = "id desc"
+
+    mst_id = fields.Many2one('logistics.dispatch.line',string="Mst",ondelete='cascade')
+
+    date = fields.Date(string="Truck Arrival Date")
+    time = fields.Float(string="Truck Arrival Time")
+    dep_date = fields.Date(string="Truck Departure Date")
+    dep_time = fields.Float(string="Truck Departure Time")
+    

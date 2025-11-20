@@ -17,18 +17,21 @@
         <field name="name">Capacity</field>
         <field name="attribute_type">bucket</field>
         <field name="default_create">True</field>
+        <field name="active">False</field>
     </record>
 
     <record id="product_attribute_pouch_name" model="product.attribute">
         <field name="name">Pouch Name</field>
         <field name="attribute_type">pouch_name</field>
         <field name="default_create">True</field>
+        <field name="active">False</field>
     </record>
 
     <record id="product_attribute_branding" model="product.attribute">
         <field name="name">Branding</field>
         <field name="attribute_type">branding</field>
         <field name="default_create">True</field>
+        <field name="active">False</field>
     </record>
 
     <record id="product_attribute_lid_color" model="product.attribute">
@@ -41,30 +44,35 @@
         <field name="name">Drum Color</field>
         <field name="attribute_type">drum_color</field>
         <field name="default_create">True</field>
+        <field name="active">False</field>
     </record>
 
     <record id="product_attribute_pouch_scoops" model="product.attribute">
         <field name="name">Scoops</field>
         <field name="attribute_type">scoops</field>
         <field name="default_create">True</field>
+        <field name="active">False</field>
     </record>
 
     <record id="product_attribute_outer_cartoons" model="product.attribute">
         <field name="name">Outer Cartoons</field>
         <field name="attribute_type">outer_cartoons</field>
         <field name="default_create">True</field>
+        <field name="active">False</field>
     </record>
 
     <record id="product_attribute_box_color" model="product.attribute">
         <field name="name">Box Color</field>
         <field name="attribute_type">box_color</field>
         <field name="default_create">True</field>
+        <field name="active">False</field>
     </record>
 
     <record id="product_attribute_packing_name" model="product.attribute">
         <field name="name">Packing Name</field>
         <field name="attribute_type">packing_name</field>
         <field name="default_create">True</field>
+        <field name="active">False</field>
     </record>
 
 </odoo>

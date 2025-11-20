@@ -35,6 +35,24 @@
                         </tree>
                     </field>
                 </page>
+                <page name="bom_det" string="Bill of Materials" attrs="{'invisible': [('is_finished_goods', '!=', True)]}">
+                    <separator string="Raw Material Products" colspan="4"/>
+                    <field name="rawmaterial_line_ids" >
+                        <tree editable="bottom">
+                            <field name="product_id" options="{'no_create': True}" domain="[('is_raw_material','=',True)]"/>
+                            <field name="qty" />
+                            <field name="uom_id" force_save="1" readonly="1"/>
+                        </tree>
+                    </field>
+                    <separator string="Packing Products" colspan="4"/>
+                    <field name="packing_line_ids" >
+                        <tree editable="bottom">
+                            <field name="product_id" options="{'no_create': True}" domain="[('is_packing','=',True)]"/>
+                            <field name="qty" />
+                            <field name="uom_id" force_save="1" readonly="1"/>
+                        </tree>
+                    </field>
+                </page>
             </xpath>
             <xpath expr="//field[@name='product_variant_id']" position="after">
                     <field name="uom_handling_type"/>
@@ -83,6 +101,17 @@
         <field name="inherit_id" ref="product.product_template_tree_view"/>
         <field name="arch" type="xml">
             <xpath expr="//tree/field[@name='list_price']" position="after">
+            <field name="bucket_qty_hand_total"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_product_tree_view_inherit_bucket" model="ir.ui.view">
+        <field name="name">product.product.tree.inherit.bucket</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='lst_price']" position="after">
             <field name="bucket_qty_hand_total"/>
             </xpath>
         </field>

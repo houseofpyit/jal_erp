@@ -11,6 +11,7 @@
     'depends': ['base','mail','jal_crm'],
     'data': [
         'data/sequence.xml',
+        'security/security_group.xml',
         'security/ir.model.access.csv',
 
         'views/logistics_misc_mst.xml',

@@ -40,6 +40,9 @@
             <xpath expr="//field[@name='area_id']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
+            <xpath expr="//field[@name='tan_no']" position="after">
+                <field name="msme_type" attrs="{'invisible': [('acc_type','!=','PURCHASE_PARTY')]}"/>
+            </xpath>
             <xpath expr="//page[@name='rates']" position="before">
                 <page name="account" string="Account" autofocus="autofocus">
                     <group>

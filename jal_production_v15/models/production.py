@@ -32,37 +32,69 @@ class JalProduction(models.Model):
             result.append((i.id, name))
         return result
     
+    @api.onchange('product_tmpl_id')
+    def _onchange_product_tmpl_id(self):
+        line_list = []
+        packing_line_list = []
+        for raw_line in self.product_tmpl_id.rawmaterial_line_ids:
+            line_list.append((0,0,{
+                'product_id': raw_line.product_id.id,
+                'uom_id': raw_line.uom_id.id,
+                }))
+        for pac_line in self.product_tmpl_id.packing_line_ids:
+            packing_line_list.append((0,0,{
+                'product_id': pac_line.product_id.id,
+                'uom_id': pac_line.uom_id.id,
+                }))
+            
+        self.line_ids = line_list
+        self.packing_line_ids = packing_line_list
+
+
     def action_running_btn(self):
         self.state = 'running'
 
     def action_get_quality_btn(self):
-        quality_rec = self.env['jal.quality'].search([('production_id', 'in', self.ids)])
+        quality_rec = self.env['jal.quality'].search([('production_id', 'in', self.ids),('state', '=', 'complete')])
         if not quality_rec:
             raise ValidationError(_("No Quality record found for Production: %s") % (self.name or ""))
-        
-        line_list = []
-        if quality_rec:
-            for qual in quality_rec:
-                for line in qual.quality_grade_ids:
-                    domain = [
-                        ('product_template_attribute_value_ids.product_attribute_value_id', '=', line.grade_id.id),
-                        ('product_template_attribute_value_ids.product_attribute_value_id', '=', line.mesh_id.id),
-                        ('product_template_attribute_value_ids.product_attribute_value_id', '=', line.bucket_id.id),
-                    ]
 
-                    products = self.env['product.product'].search(domain)
-                    line_list.append((0,0,{
-                    'grade_id': line.grade_id.id,
-                    'mesh_id': line.mesh_id.id,
-                    'bucket_id': line.bucket_id.id,
-                    'bucket_qty': line.no_of_drum,
-                    'qty': line.weight,
-                    'product_id': products.id if len(products) == 0 else False,
-                    'product_doamin_ids': [(6, 0, products.ids)] if len(products) == 0 else [(6, 0, self.env['product.product'].search([]).ids)],
-                    'uom_id': products.uom_id.id if len(products) == 0 else False,
-                    }))
+        merged = {}
+
+        for qual in quality_rec:
+            for line in qual.quality_grade_ids:
+
+                domain = [
+                    ('product_template_attribute_value_ids.product_attribute_value_id', '=', line.grade_id.id),
+                    ('product_template_attribute_value_ids.product_attribute_value_id', '=', line.mesh_id.id),
+                    # ('product_template_attribute_value_ids.product_attribute_value_id', '=', line.bucket_id.id),
+                ]
+                products = self.env['product.product'].search(domain)
                 
-        self.finished_line_ids = [(5, 0, 0)] + line_list
+                product_id = products.id if len(products) == 1 else False
+                domain_ids = products.ids if len(products) == 1 else self.env['product.product'].search([]).ids
+                uom_id = products.uom_id.id if len(products) == 1 else False
+
+                key = (line.grade_id.id, line.mesh_id.id, product_id)
+
+                if key not in merged:
+                    merged[key] = {
+                        'grade_id': line.grade_id.id,
+                        'mesh_id': line.mesh_id.id,
+                        # 'bucket_id': line.bucket_id.id,
+                        'bucket_qty': line.no_of_drum,
+                        'qty': line.weight,
+                        'product_id': line.product_id.id,
+                        'product_doamin_ids': [(6, 0, domain_ids)],
+                        'uom_id': line.uom_id.id,
+                    }
+                else:
+                    merged[key]['bucket_qty'] += line.no_of_drum
+                    merged[key]['qty'] += line.weight
+
+        final_lines = [(0, 0, vals) for vals in merged.values()]
+
+        self.finished_line_ids = [(5, 0, 0)] + final_lines
 
     def action_complete_btn(self):
         self._create_stock_picking_receipts()
@@ -81,7 +113,7 @@ class JalProduction(models.Model):
             
             if line.qty <= 0:
                 raise ValidationError(
-                    f"Quantity must be greater than 0 for product: {line.product_id.display_name}"
+                    f"Finished Goods in Quantity must be greater than 0 for product: {line.product_id.display_name}"
                 )
 
         main_location = self.env['stock.location'].sudo().search([('main_store_location', '=', True)], limit=1)
@@ -159,10 +191,10 @@ class JalProduction(models.Model):
                 if not line.product_id:
                     raise ValidationError(_("Please select a product for %s lines before proceeding.") % line_type)
                 if line.qty <= 0:
-                    raise ValidationError(_("Quantity must be greater than 0 for product: %s") % line.product_id.display_name)
+                    raise ValidationError(_(f"{line_type} in Quantity must be greater than 0 for product: %s") % line.product_id.display_name)
 
                 if line.product_id.tracking in ('lot', 'serial') and not line.lot_ids:
-                    raise ValidationError(_("Please select a lot/serial number for tracked product: %s") % line.product_id.display_name)
+                    raise ValidationError(_(f"{line_type} in Please select a lot/serial number for tracked product: %s") % line.product_id.display_name)
 
                 domain = [('product_id', '=', line.product_id.id), ('location_id', '=', main_location.id)]
                 if line.lot_ids:
@@ -283,6 +315,8 @@ class JalFinishedProductionLine(models.Model):
     uom_id = fields.Many2one('uom.uom',string="Unit")
     qty = fields.Float(string="Weight")
     bucket_qty = fields.Integer(string="No of Drum")
+    wastage_qty = fields.Integer(string="Wastage Qty")
+    wastage_weight = fields.Float(string="Wastage Weight")
     grade_id = fields.Many2one('product.attribute.value',string="Grade",domain="[('attribute_id.attribute_type','=','grade')]")
     mesh_id = fields.Many2one('product.attribute.value',string="Mesh",domain="[('attribute_id.attribute_type','=','mesh')]")
     bucket_id = fields.Many2one('product.attribute.value',string="Bucket",domain="[('attribute_id.attribute_type','=','bucket')]")
@@ -305,13 +339,13 @@ class JalFinishedProductionLine(models.Model):
                 
     @api.onchange('grade_id', 'mesh_id', 'bucket_id')
     def _onchange_product_attributes(self):
-        if not (self.grade_id and self.mesh_id and self.bucket_id):
+        if not (self.grade_id and self.mesh_id):
             self.product_id = False
             return {'domain': {'product_id': []}}
         domain = [
             ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.grade_id.id),
             ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.mesh_id.id),
-            ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.bucket_id.id),
+            # ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.bucket_id.id),
         ]
 
         products = self.env['product.product'].search(domain)

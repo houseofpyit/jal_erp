@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="master_product_template_form_view_inherit" model="ir.ui.view">
+        <field name="name">master.product.template.form.view.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="master.view_product_template_form_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='hsn_id']" position="attributes">
+                <attribute name="options">{'no_quick_create' : True}</attribute>   
+            </xpath>
+        </field>
+    </record>
+    
+
+</odoo>

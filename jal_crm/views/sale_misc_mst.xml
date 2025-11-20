@@ -190,6 +190,9 @@
                         <group>
                             <field name="name" required="1"/>
                         </group>    
+                        <group>
+                            <field name="module_type" required="1"/>
+                        </group>
                     </group> 
                     <group name="note_group" col="6" class="mt-2 mt-md-0">
                         <group colspan="4">
@@ -211,6 +214,7 @@
         <field name="arch" type="xml" >
             <tree sample="1">
                 <field name="name" />
+                <field name="module_type" />
             </tree>
         </field>
     </record>

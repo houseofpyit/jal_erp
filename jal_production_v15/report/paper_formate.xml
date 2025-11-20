@@ -26,5 +26,4 @@
         <field name="binding_model_id" ref="jal_production_v15.model_jal_quality"/>
         <field name="binding_type">report</field>
     </record>   
-   
 </odoo>

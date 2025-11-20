@@ -6,6 +6,11 @@
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button type="object" name="get_action_view_purchase_quality" class="oe_stat_button" icon="fa-list" attrs="{'invisible':[('purchase_quality_count','=', 0)]}" >
+                    <field name="purchase_quality_count" widget="statinfo" string="Quality Test"/>
+                </button>
+            </xpath>
             <xpath expr="//tree/field[@name='product_qty']" position="after">
                 <field name="bucket" width="150px" attrs="{'readonly': [('uom_handling_type', '!=', 'multi')]}"/>
                 <field name="uom_handling_type" invisible="1"/>

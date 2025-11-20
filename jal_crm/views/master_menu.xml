@@ -127,7 +127,8 @@
             id="international_packing_list_main_menu"
             name="Packing Master"
             parent="jal_crm.international_main_menu"
-            sequence="6"/>
+            sequence="6"
+            active="False"/>
 
             <menuitem
                 id="international_packing_mst_menu"
@@ -306,7 +307,8 @@
             id="domestic_packing_list_main_menu"
             name="Packing List"
             parent="jal_crm.domestic_main_menu"
-            sequence="6"/>
+            sequence="6"
+            active="False"/>
 
             <menuitem
                 id="domestic_packing_mst_menu"
@@ -481,7 +483,8 @@
             id="trading_packing_list_main_menu"
             name="Packing List"
             parent="jal_crm.trading_main_menu"
-            sequence="6"/>
+            sequence="6"
+            active="False"/>
 
             <menuitem
                 id="trading_packing_mst_menu"
@@ -610,5 +613,19 @@
         name="Discuss" 
         web_icon="mail,static/description/icon.png"
         sequence="1"/>
+
+    <menuitem
+        id="product_trading_capacity_mst_menu"
+        name="Capacity Per Drum"
+        parent="stock.menu_stock_inventory_control"
+        action="action_capacity_mst"
+        sequence="1"/>
+
+    <menuitem
+        id="product_branding_mst_menu"
+        name="Branding"
+        parent="stock.menu_stock_inventory_control"
+        action="action_branding_mst"
+        sequence="2"/>
 
 </odoo>

@@ -152,9 +152,8 @@
                                                 <form>
                                                     <sheet>
                                                         <group>
-                                                            <group>
-                                                                <field name = "sale_line_id" options="{'no_create': True}" context="{'show_packing_name': True}"/>
-                                                            </group>
+                                                            <field name = "sale_id" invisible="1"/>
+                                                            <field name = "sale_line_id" domain="[('order_id', '=', sale_id)]" options="{'no_create': True}" context="{'show_packing_name': True}"/>
                                                         </group>
                                                         <field name="line_ids" >
                                                             <tree editable="bottom" >
@@ -165,6 +164,21 @@
                                                     </sheet>
                                                 </form>
                                             </field>
+                                        </group>
+                                        <field name="truck_detention_line_ids">
+                                            <tree editable="bottom" >
+                                                <field name="date" width="130"/>
+                                                <field name="time" widget="float_time" width="120"/>
+                                                <field name="dep_date" width="130"/>
+                                                <field name="dep_time" widget="float_time" width="120"/>
+                                            </tree>
+                                        </field>
+                                        <group>
+                                            <group>
+                                                <field name="detention_type" widget="radio" options="{'horizontal': true}"/>
+                                                <field name="detention_amount" attrs="{'required': [('detention_type', '=', 'yes')]}"/>
+                                                <field name="reason_detention" attrs="{'required': [('detention_type', '=', 'yes')]}"/>
+                                            </group>
                                         </group>
                                     </sheet>
                                 </form>

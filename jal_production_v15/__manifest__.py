@@ -16,6 +16,8 @@
         'security/ir.model.access.csv',
         'security/record_rule.xml',
 
+        'wizards/production_exel_wiz.xml',
+
         'report/quality_barcode_report.xml',
         'report/paper_formate.xml',
 
@@ -31,6 +33,8 @@
         'views/inherit_user.xml',
         'views/inherit_stock.xml',
         'views/dryer_mst.xml',
+        'views/purchase_quality.xml',
+        'views/jal_mrp_production.xml',
         'views/master_menu.xml',
 
     ],

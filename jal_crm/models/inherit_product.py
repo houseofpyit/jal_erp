@@ -13,6 +13,7 @@ class inheritedProductTemplate(models.Model):
    team_id = fields.Many2one('crm.team',string="Sales Team",domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",tracking=True,default=_get_default_team)
    un_number = fields.Char(string="UN Number",tracking=True)
    is_packing = fields.Boolean('Packing',tracking=True)
+   drum_cap_id = fields.Many2one('capacity.mst',string="Capacity Per Drum")
 
    @api.onchange('team_id')
    def _onchange_team_id(self):

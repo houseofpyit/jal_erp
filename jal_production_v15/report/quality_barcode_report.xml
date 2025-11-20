@@ -31,9 +31,9 @@
                                             <b>Mesh:</b> <t t-esc="barcodes[i]['mesh_name']"/>
                                         </span><br/>
                                         
-                                        <span style="font-size: 8px;">
+                                        <!-- <span style="font-size: 8px;">
                                             <b>Bucket:</b> <t t-esc="barcodes[i]['bucket_name']"/>
-                                        </span><br/>
+                                        </span><br/> -->
 
                                         <span style="font-size: 8px;">
                                             <b>Dryer:</b> <t t-esc="barcodes[i]['dryer_name']"/>
@@ -68,9 +68,9 @@
                                         </span><br/>
 
                                         
-                                        <span style="font-size: 8px;">
+                                        <!-- <span style="font-size: 8px;">
                                             <b>Bucket:</b> <t t-esc="barcodes[i+1]['bucket_name']"/>
-                                        </span><br/>
+                                        </span><br/> -->
                                         
                                         <span style="font-size: 8px;">
                                             <b>Dryer:</b> <t t-esc="barcodes[i+1]['dryer_name']"/>

@@ -32,9 +32,9 @@ class inheritedSaleOrder(models.Model):
    po_no = fields.Char(string="PO",tracking=True)
    po_date = fields.Date(string="PO Date",tracking=True)
    reference = fields.Char(string="Reference",tracking=True)
-   freight = fields.Char(string="Total Freight",tracking=True)
-   insurance = fields.Char(string="Total Insurance",tracking=True)
-   fob_rates = fields.Char(string="FOB Rates",tracking=True)
+   freight = fields.Float(string="Total Freight (Amount)",tracking=True)
+   insurance = fields.Float(string="Total Insurance (Amount)",tracking=True)
+   fob_rates = fields.Float(string="FOB Rates (Amount)",tracking=True)
    inspection = fields.Selection([
         ("yes", "Yes"),  
         ("no", "no")],string="Pre-Shipment Inspection",tracking=True)
@@ -141,11 +141,10 @@ class inheritedSaleOrderLine(models.Model):
    packing_type = fields.Selection([("drum", "Drum"), ("bucket", "Bucket"),("usa_bucket", "USA-Bucket"), ("pouch", "Pouch")],string="Packing Type")
    packing_name = fields.Html(
       string="Packing Description",
-      compute="_compute_packing_name",
       store=True,
       sanitize=False,   # optional: set True if you want Odoo to sanitize HTML
    )
-   is_des = fields.Boolean(string="Has Description", compute="_compute_packing_name", store=True)
+   is_des = fields.Boolean(string="Has Description", store=True)
    name = fields.Text(string='Description',required=False)
    product_tmpl_id = fields.Many2one('product.template', string='Product Template', domain=[('sale_ok', '=', True)])
    pouch_type = fields.Selection([

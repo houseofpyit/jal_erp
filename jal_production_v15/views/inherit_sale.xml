@@ -6,33 +6,35 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//tree/field[@name='price_unit']" position="after">
-                <field name="grade_id" width="150px" options="{'no_open': True, 'no_create': True}" attrs="{'column_invisible': [('parent.business_type', '!=', 'international')]}"/>
-                <field name="mesh_id" width="150px" options="{'no_open': True, 'no_create': True}" attrs="{'column_invisible': [('parent.business_type', '!=', 'international')]}"/>
-            </xpath>
             <xpath expr="//tree/field[@name='product_uom_qty']" position="after">
                 <field name="bucket" width="150px" />
             </xpath>
             <xpath expr="//field[@name='order_line']/form/group/group/field[@name='price_unit']" position="before">
-                <field name="bucket" width="150px" attrs="{'readonly': [('uom_handling_type', '!=', 'multi')]}"/>
+                <field name="bucket" force_save="1" width="150px" attrs="{'readonly': [('uom_handling_type', '!=', 'multi')]}"/>
                 <field name="uom_handling_type" invisible="1"/>
             </xpath>
-            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='price_unit']" position="after">
-                <field name="grade_id" width="150px" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('parent.business_type', '!=', 'international')]}"/>
-                <field name="mesh_id" width="150px" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('parent.business_type', '!=', 'international')]}"/>
-            </xpath>
-            
         </field>
     </record>
-
-
+    
     <record id="sale_order_form_view_inherit_jal_crm" model="ir.ui.view">
         <field name="name">sale.order.form.view.inherit.jal.crm</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="jal_crm.sale_order_form_view_inherit"/>
         <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='product_tmpl_id']" position="after">
+                <field name="grade_id" width="150px" options="{'no_open': True, 'no_create': True}" attrs="{'column_invisible': [('parent.business_type', '!=', 'international')]}"/>
+                <field name="mesh_id" width="150px" options="{'no_open': True, 'no_create': True}" attrs="{'column_invisible': [('parent.business_type', '!=', 'international')]}"/>
+                    <field name="product_id" string="Final Product" domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}" attrs="{'readonly': [('product_updatable', '=', False)],'column_invisible': [('parent.business_type', '!=', 'international')]}" force_save="1" widget="many2one_barcode"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form/group/group/field[@name='product_tmpl_id']" position="after">
+                <field name="grade_id" width="150px" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('parent.business_type', '!=', 'international')]}"/>
+                <field name="mesh_id" width="150px" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('parent.business_type', '!=', 'international')]}"/>
+                <field name="lid_id" options="{'no_open': True, 'no_create': True}" context="{'show_attribute': False}"/>
+                <field name="product_id" readonly="1" force_save="1" string="Final Product" domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}" attrs="{'readonly': [('product_updatable', '=', False)],'invisible': [('parent.business_type', '!=', 'international')]}" widget="many2one_barcode"/>
+                <field name="branding_id" options="{'no_open': True, 'no_create': True}" />
+            </xpath>
             <xpath expr="//field[@name='order_line']/form/group/group/field[@name='packing_type']" position="after">
-                <field name="name_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': ['|',('packing_type', '=', 'pouch'),('packing_type', '=', False)]}" context="{'show_attribute': False}"/>
+                <!-- <field name="name_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': ['|',('packing_type', '=', 'pouch'),('packing_type', '=', False)]}" context="{'show_attribute': False}"/>
                 <field name="bucket_cap_id" options="{'no_open': True, 'no_create': True}"  context="{'show_attribute': False}"/>
                 <field name="branding_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': ['|',('packing_type', '=', 'pouch'),('packing_type', '=', False)]}" context="{'show_attribute': False}"/>
                 <field name="lid_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', 'not in', ('bucket','usa_bucket'))]}" context="{'show_attribute': False}"/>
@@ -41,8 +43,12 @@
                 <field name="outer_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', '!=', 'usa_bucket')]}" context="{'show_attribute': False}"/>
                 <field name="pouch_type" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', '!=', 'pouch')]}" context="{'show_attribute': False}"/>
                 <field name="pouch_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', '!=', 'pouch')]}" domain="[('pouch_type', '=', pouch_type)]" context="{'show_attribute': False}"/>
-                <field name="box_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', '!=', 'pouch')]}" context="{'show_attribute': False}"/>
+                <field name="box_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', '!=', 'pouch')]}" context="{'show_attribute': False}"/> -->
             </xpath>
+            <xpath expr=" //field[@name='order_line']/form/group/group//field[@name='product_tmpl_id']" position="attributes">
+                <attribute name="domain">[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id),('is_finished_goods', '=', True)]</attribute>
+            </xpath>
+
         </field>
     </record>
     

@@ -12,10 +12,15 @@
     'data': [
         # 'security/ir.model.access.csv',
 
+        'report/report_purchase_order.xml',
+        'report/paper_formate.xml',
+
         'views/inherit_sale.xml',
         'views/inherit_salebill.xml',
         'views/inherit_salebillreturn.xml',
         'views/inherit_partner.xml',
+        'views/inherit_master.xml',
+        'views/inherit_purchasebill.xml',
         'views/master_menu.xml',
 
     ],

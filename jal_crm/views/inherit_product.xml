@@ -37,6 +37,7 @@
                 <field name="team_id" options="{'no_open': True, 'no_create': True}"/>
                 <field name="business_type" />
                 <field name="un_number" />
+                <field name="drum_cap_id" options="{'no_open': True, 'no_create': True}"/>
             </xpath>
             <xpath expr="//field[@name='invoice_policy']" position="attributes">
                 <attribute name="invisible">1</attribute>

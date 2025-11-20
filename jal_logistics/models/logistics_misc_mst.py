@@ -50,6 +50,19 @@ class EPCGLiscence(models.Model):
     name = fields.Char(string='Liscence Number',tracking=True)
     date = fields.Date(string='Date',default=fields.Date.context_today,tracking=True)
 
+    @api.model
+    def create(self, vals):
+        name = vals.get('name')
+        date = vals.get('date')
+
+        if name and date:
+            existing = self.search([('name', '=', name),('date', '=', date)])
+
+            if existing:
+                raise ValidationError(f"A record with Licence Number '{name}' and Date '{date}' already exists.")
+        result = super(EPCGLiscence, self).create(vals)
+        return result    
+
 class AdvancedLiscence(models.Model):
     _name = 'advanced.liscence.mst'
     _description = 'Advanced Liscence'

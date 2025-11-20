@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hop_hop_purchasebill_form_view_inherit" model="ir.ui.view">
+        <field name="name">transaction.hop.purchasebill.form.view.inherit</field>
+        <field name="model">hop.purchasebill</field>
+        <field name="inherit_id" ref="transaction.purchasebill_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='purchase_bill_detail']" position="after">
+                <page name="attachment_det" string="Document Details">
+                    <group>
+                        <field name="attachment_ids" widget="many2many_binary"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

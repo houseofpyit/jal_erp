@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model='ir.ui.view' id='jal_mrp_production_form'>
+        <field name='name'>jal.mrp.production.form</field>
+        <field name='model'>jal.mrp.production</field>
+        <field name='arch' type='xml'>
+            <form>
+                <header>
+                    <!-- <button string="Running" name="action_running_btn" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'draft')]}"  confirm=""/>
+                    <button string="Complete" name="action_complete_btn" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'running')]}" groups="jal_mrp_production_v15.res_group_production_admin" confirm="Are you sure you want to complete this production?"/>
+                    <button string="Get Quality" name="action_get_quality_btn" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'running')]}" groups="jal_mrp_production_v15.res_group_production_admin" confirm=""/> -->
+                    <button string="Running" name="action_running_btn" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'draft')]}" confirm=""/>
+                    <button string="Done" name="action_done_btn" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'running')]}" confirm=""/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name='company_id' invisible="1"/>
+                            <field name='sale_id' force_save="1" readonly="1"/>
+                            <field name='product_id' force_save="1" readonly="1"/>
+                            <label for="qty" string="Quantity"/>
+                            <div class="o_row no-gutters d-flex">
+                                <field name="qty" class="oe_inline text-left" force_save="1" readonly="1"/>
+                                <field name="uom_id" force_save="1" readonly="1"/>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="date" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="bom_det_mo" string="Bill of Materials" >
+                            <separator string="Raw Material Products" colspan="4"/>
+                            <field name="line_ids" attrs="{'readonly': [('state','=','done')]}">
+                                <tree editable="bottom">
+                                    <field name="product_id" options="{'no_create': True}" domain="[('is_raw_material','=',True)]"/>
+                                    <field name="qty" />
+                                    <field name="uom_id" force_save="1" readonly="1"/>
+                                </tree>
+                            </field>
+                            <separator string="Packing Products" colspan="4"/>
+                            <field name="packing_line_ids" attrs="{'readonly': [('state','=','done')]}">
+                                <tree editable="bottom">
+                                    <field name="product_id" options="{'no_create': True}" domain="[('is_packing','=',True)]"/>
+                                    <field name="qty" />
+                                    <field name="uom_id" force_save="1" readonly="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    
+
+    <record model='ir.ui.view' id='jal_mrp_production_tree'>
+        <field name='name'>jal.mrp.production.tree</field>
+        <field name='model'>jal.mrp.production</field>
+        <field name='arch' type='xml'>
+            <tree>
+                <field name='name'/>
+                <field name='date'/>
+                <field name="sale_id" />
+                <field name="product_id" />
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_jal_mrp_production_filter" model="ir.ui.view">
+        <field name="name">jal.mrp.production.filter</field>
+        <field name="model">jal.mrp.production</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Search" filter_domain="['|','|',('name', 'ilike', self),('sale_id', 'ilike', self),('product_id', 'ilike', self)]"/>
+                <field name="sale_id"/>
+                <field name="product_id" />
+                <separator/>
+                    <filter string="Date" name="date" date="date"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Product" name="group_by_product_id" domain="[]" context="{'group_by': 'product_id'}"/>
+                    <filter string="Sale" name="group_sale_id" domain="[]" context="{'group_by': 'sale_id'}"/>
+                    <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="action_jal_mrp_production" model="ir.actions.act_window">
+        <field name="name">MO</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">jal.mrp.production</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

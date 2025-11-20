@@ -8,6 +8,7 @@
             <form>
                 <header>
                     <!-- <button string="Create PO" name="create_purchase_po" type="object" class="btn-primary" attrs="{'invisible': ['|',('state', '=', 'confirm'),('is_po_count' ,'!=', 0)]}" /> -->
+                    <button string="Complete" name="action_complete_btn" type="object" class="btn-primary" attrs="{'invisible': [('state', '=', 'complete')]}" confirm="Are you sure you want to complete this Quality?"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
@@ -75,11 +76,14 @@
                             <separator string="Productive Details" colspan="4"/>
                             <field name="quality_grade_ids" attrs="{'readonly': [('state','!=','draft')]}">
                                 <tree editable="bottom">
+                                    <field name="product_tmpl_id" options="{'no_quick_create': True}" domain="[('is_finished_goods', '=', True)]"/>
                                     <field name="grade_id" options="{'no_create': True,'no_open': True}" />
                                     <field name="mesh_id" options="{'no_create': True,'no_open': True}" />
-                                    <field name="bucket_id" options="{'no_create': True,'no_open': True}" />
+                                    <!-- <field name="bucket_id" options="{'no_create': True,'no_open': True}" /> -->
+                                    <field name="product_id" options="{'no_quick_create': True}" />
                                     <field name="no_of_drum" width="150px"/>
                                     <field name="weight" />
+                                    <field name="uom_id" readonly="1" force_save="1"/>
                                 </tree>
                             </field>
                         </page>
@@ -106,6 +110,8 @@
                 <field name="mesh_id" />
                 <field name="bucket_id" /> -->
                 <field name="shift_id" />
+                <field name="shift_time_id" />
+                <field name="dryer_id" />
                 <field name="state" widget="badge" />
             </tree>
         </field>
@@ -116,12 +122,9 @@
         <field name="model">jal.quality</field>
         <field name="arch" type="xml">
             <search>
-                <field name="name" string="Search" filter_domain="['|','|','|','|','|','|','|',('name', 'ilike', self),('production_id', 'ilike', self),('product_tmpl_id', 'ilike', self),('shift_id', 'ilike', self),('grade_id', 'ilike', self),('mesh_id', 'ilike', self),('bucket_id', 'ilike', self),('dryer_id', 'ilike', self)]"/>
+                <field name="name" string="Search" filter_domain="['|','|','|','|',('name', 'ilike', self),('production_id', 'ilike', self),('product_tmpl_id', 'ilike', self),('shift_id', 'ilike', self),('dryer_id', 'ilike', self)]"/>
                 <field name="production_id"/>
                 <field name="product_tmpl_id" />
-                <field name="grade_id" />
-                <field name="mesh_id" />
-                <field name="bucket_id" />
                 <field name="shift_id" />
                 <field name="dryer_id" />
                 <separator/>
@@ -132,6 +135,7 @@
                     <filter string="Shift" name="group_shift_id" domain="[]" context="{'group_by': 'shift_id'}"/>
                     <filter string="Dryer" name="group_dryer_id" domain="[]" context="{'group_by': 'dryer_id'}"/>
                     <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
+                    <filter string="State" name="groupby_state" domain="[]" context="{'group_by': 'state'}"/>
                 </group>
             </search>
         </field>

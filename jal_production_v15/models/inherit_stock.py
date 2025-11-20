@@ -1,11 +1,22 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
+from datetime import date,datetime
 
 class inheriteStockPicking(models.Model):
     _inherit = "stock.picking"
 
     production_id = fields.Many2one('jal.production',string="Production")
+    send_quality = fields.Boolean(string="Send For Quality")
+    purchase_quality_count = fields.Integer("Purchase Quality count")
+    
+    def button_validate(self):
+        for line in self.move_lines:
+            if self.picking_type_code == 'incoming' and line.quality_result == 'wt_for_qt':
+                raise ValidationError(f"Product '{line.product_id.display_name}' is still waiting for quality test. Please complete the quality check before confirming.")
 
+        res = super(inheriteStockPicking,self).button_validate()
+        return res
+    
     def action_confirm(self):
         res = super(inheriteStockPicking,self).action_confirm()
         for line in self.move_lines:
@@ -13,12 +24,59 @@ class inheriteStockPicking(models.Model):
             stock_move.write({'done_bucket': line.done_bucket})
         return res
     
+    def _compute_hide_pickign_type(self):
+        res = super(inheriteStockPicking,self)._compute_hide_pickign_type()
+        for pic in self:
+            pic.purchase_quality_count = self.env['jal.purchase.quality'].sudo().search_count([('picking_id', '=', pic.id)]) or 0
+        return res
+    
+    def get_action_view_purchase_quality(self):
+        self.ensure_one()
+        actions = self.env["ir.actions.actions"]._for_xml_id('jal_production_v15.action_jal_purchase_quality')
+        quality_rec = self.env['jal.purchase.quality'].sudo().search([('picking_id', '=', self.id)])
+        if quality_rec and len(quality_rec) > 1:
+            actions['domain'] = [('id', 'in', quality_rec.ids)]
+        elif len(quality_rec) == 1:
+            res = self.env.ref('jal_production_v15.jal_purchase_quality_view_form', False)
+            form_view = [(res and res.id or False, 'form')]
+            actions['views'] = form_view + [(state, view) for state, view in actions.get('views', []) if view != 'form']
+            actions['res_id'] = quality_rec.id
+        return actions
+        
+    def create_purchase_quality(self):
+        for line in self.move_lines:
+            line_list = []
+            if line.product_id.is_quality_required and line.quality_result == 'wt_for_qt':
+                for par in line.product_id.quality_para_ids:
+                    line_list.append((0,0,{
+                    'item_attribute': par.item_attribute.id,
+                    'required_value':par.required_value.id,
+                    'parameter_remarks':par.remarks,
+                    }))
+
+                quality = self.env['jal.purchase.quality'].sudo().create({
+                        'product_id': line.product_id.id,
+                        'purchase_id': self.purchase_id.id,
+                        'picking_id': self.id,
+                        'qty': line.product_uom_qty,
+                        'uom_id':line.product_uom.id,
+                        'send_date':date.today(),
+                        'company_id': self.company_id.id,
+                        'line_ids': line_list,
+                    })
+        self.send_quality = True
+    
 class InheritStockMove(models.Model):
     _inherit = "stock.move"
 
     demand_bucket = fields.Float(string="Demand (Bucket/Bags/Pouch)")
     done_bucket = fields.Float(string="Done (Bucket/Bags/Pouch)")
     uom_handling_type = fields.Selection(related='product_id.uom_handling_type',string="UoM Handling Type",store=False)
+    quality_result = fields.Selection([
+        ('wt_for_qt','Waiting For Quality'),
+        ('pass','Pass'),
+        ('fail','Fail'),
+    ],string="Quality Result")
 
     def _action_done(self, cancel_backorder=False):
         res = super()._action_done(cancel_backorder=cancel_backorder)
