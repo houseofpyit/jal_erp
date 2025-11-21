@@ -33,6 +33,7 @@
                         </group>
                         <group>
                             <field name="date" />
+                            <field name="booking_date" force_save="1" readonly="1"/>
                         </group>
                     </group>
                     <notebook>

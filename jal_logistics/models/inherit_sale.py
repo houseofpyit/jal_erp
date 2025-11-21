@@ -6,8 +6,11 @@ from datetime import date,datetime
 class InheritSale(models.Model):
     _inherit = 'sale.order'
 
-    def action_confirm(self):
-        res = super(InheritSale, self).action_confirm()
+    mo_count = fields.Integer(string="MO Count", copy=False,help="Count of the created sale for MO")
+    logistics_count = fields.Integer(string="Lead Count", copy=False,help="Count of the created sale for Logistics")
+
+    def action_create_pi(self):
+        res = super(InheritSale, self).action_create_pi()
         for line in self.order_line:
             line_list = []
             packing_line_list = []
@@ -15,13 +18,13 @@ class InheritSale(models.Model):
                 line_list.append((0,0,{
                     'product_id': raw_line.product_id.id,
                     'uom_id': raw_line.uom_id.id,
-                    'qty': line.product_uom_qty * line.product_id.drum_cap_id.weight,
+                    'qty': line.product_uom_qty * raw_line.qty,
                     }))
             for pac_line in line.product_id.packing_line_ids:
                 packing_line_list.append((0,0,{
                     'product_id': pac_line.product_id.id,
                     'uom_id': pac_line.uom_id.id,
-                    'qty': line.product_uom_qty * line.product_id.drum_cap_id.weight,
+                    'qty': line.product_uom_qty * pac_line.qty,
                     }))
 
             mrp_production_rec = self.env['jal.mrp.production'].sudo().create({
@@ -42,6 +45,62 @@ class InheritSale(models.Model):
             })
         
         return res
+    
+    def action_confirm_pi(self):
+        logistics_rec = self.env['jal.logistics'].search([('sale_id', 'in', self.ids)])
+        for log in logistics_rec:
+            log.state = 'pi_confirm'
+        self.state = 'sale'
+
+    @api.depends('company_id.account_fiscal_country_id', 'fiscal_position_id.country_id', 'fiscal_position_id.foreign_vat')
+    def _compute_tax_country_id(self):
+        res = super(InheritSale, self)._compute_tax_country_id()
+        for line in self:
+            line.mo_count = len(self.env['jal.mrp.production'].search([('sale_id', '=', line.id)]))
+            line.logistics_count = len(self.env['jal.logistics'].search([('sale_id', '=', line.id)]))
+        return res
+    
+    def action_view_mo(self):
+        mo_rec = self.env['jal.mrp.production'].search([('sale_id', 'in', self.ids)])
+        if len(mo_rec) == 1:
+            return {
+                'type': 'ir.actions.act_window',
+                'name': 'MO',
+                'view_mode': 'form',
+                'res_model': 'jal.mrp.production',
+                'res_id': mo_rec.id,
+                'context': {'create': False},
+            }
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'MO',
+            'view_mode': 'tree,form',
+            'res_model': 'jal.mrp.production',
+            'domain': [('id', 'in', mo_rec.ids)],
+            'context': {'create': False},
+        }
+
+    def action_view_logistics(self):
+        logistics_rec = self.env['jal.logistics'].search([('sale_id', 'in', self.ids)])
+        if len(logistics_rec) == 1:
+            return {
+                'type': 'ir.actions.act_window',
+                'name': 'Logistics',
+                'view_mode': 'form',
+                'res_model': 'jal.logistics',
+                'res_id': logistics_rec.id,
+                'context': {'create': False},
+            }
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Logistics',
+            'view_mode': 'tree,form',
+            'res_model': 'jal.logistics',
+            'domain': [('id', 'in', logistics_rec.ids)],
+            'context': {'create': False},
+        }
     
 class inheritedSaleOrderLine(models.Model):
     _inherit = "sale.order.line"

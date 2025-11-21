@@ -13,6 +13,7 @@ class JalLogistics(models.Model):
     date = fields.Date(copy=False,string="Date",default=fields.Date.context_today)
     user_id = fields.Many2one('res.users',string="User",default=lambda self: self.env.user.id)
     sale_id = fields.Many2one('sale.order',string="Proforma Invoice")
+    state = fields.Selection([('pending', 'Pending'),('pi_confirm', 'PI Confirm'),('booking_confirm', 'Booking Confirm'),('done', 'Done')], default='pending',tracking=True)
 
     # Pre-Shipment
     booking_id = fields.Many2one('booking.agent.mst',string="Booking Agent",tracking=True)
@@ -158,6 +159,19 @@ class JalLogistics(models.Model):
                     'title': "Validation",
                     'message': "You cannot set Duty Drawback Claimed to 'Yes' because EPCG Licence Used is already 'Yes'.",                    }
             }
+        
+    def action_booking_confirm(self):
+        mo_rec = self.env['jal.mrp.production'].search([('sale_id', 'in', self.sale_id.ids)])
+        for mo in mo_rec:
+            mo.booking_date = date.today()
+        for pic in self.sale_id.picking_ids:
+            if pic.state != 'done':
+                pic.booking_date = date.today()
+        self.booking_date = date.today()
+        self.state = 'booking_confirm'
+
+    def action_done(self):
+        self.state = 'done'
 
 class LogisticsDispatchLine(models.Model):
     _name = 'logistics.dispatch.line'

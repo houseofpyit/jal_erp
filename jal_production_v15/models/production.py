@@ -74,8 +74,7 @@ class JalProduction(models.Model):
                 product_id = products.id if len(products) == 1 else False
                 domain_ids = products.ids if len(products) == 1 else self.env['product.product'].search([]).ids
                 uom_id = products.uom_id.id if len(products) == 1 else False
-
-                key = (line.grade_id.id, line.mesh_id.id, product_id)
+                key = (line.product_id)
 
                 if key not in merged:
                     merged[key] = {
@@ -97,76 +96,76 @@ class JalProduction(models.Model):
         self.finished_line_ids = [(5, 0, 0)] + final_lines
 
     def action_complete_btn(self):
-        self._create_stock_picking_receipts()
+        # self._create_stock_picking_receipts()
         self._create_stock_picking_out()
-        self.state = 'complete'
+        # self.state = 'complete'
 
-    def _create_stock_picking_receipts(self):
-        if not self.finished_line_ids:
-            raise ValidationError("No finished products to receive!")
+    # def _create_stock_picking_receipts(self):
+    #     if not self.finished_line_ids:
+    #         raise ValidationError("No finished products to receive!")
 
-        for line in self.finished_line_ids:
-            if not line.product_id:
-                raise ValidationError(
-                     _("Please select a product for finished lines before proceeding.")
-                )
+    #     for line in self.finished_line_ids:
+    #         if not line.product_id:
+    #             raise ValidationError(
+    #                  _("Please select a product for finished lines before proceeding.")
+    #             )
             
-            if line.qty <= 0:
-                raise ValidationError(
-                    f"Finished Goods in Quantity must be greater than 0 for product: {line.product_id.display_name}"
-                )
+    #         if line.qty <= 0:
+    #             raise ValidationError(
+    #                 f"Finished Goods in Quantity must be greater than 0 for product: {line.product_id.display_name}"
+    #             )
 
-        main_location = self.env['stock.location'].sudo().search([('main_store_location', '=', True)], limit=1)
-        if not main_location:
-            raise ValidationError("Main Store Location not found!")
+    #     main_location = self.env['stock.location'].sudo().search([('main_store_location', '=', True)], limit=1)
+    #     if not main_location:
+    #         raise ValidationError("Main Store Location not found!")
 
-        src_location = self.env['stock.location'].sudo().search([('usage', '=', 'supplier')], limit=1)
-        if not src_location:
-            raise ValidationError("No Vendor/Partner location found!")
+    #     src_location = self.env['stock.location'].sudo().search([('usage', '=', 'supplier')], limit=1)
+    #     if not src_location:
+    #         raise ValidationError("No Vendor/Partner location found!")
 
-        picking_type = self.env['stock.picking.type'].sudo().search([('code', '=', 'incoming')], limit=1)
-        if not picking_type:
-            raise ValidationError("Incoming Picking Type not found!")
+    #     picking_type = self.env['stock.picking.type'].sudo().search([('code', '=', 'incoming')], limit=1)
+    #     if not picking_type:
+    #         raise ValidationError("Incoming Picking Type not found!")
 
-        move_list = []
+    #     move_list = []
 
-        for line in self.finished_line_ids:
-            move_vals = {
-                'name': line.product_id.display_name,
-                'product_id': line.product_id.id,
-                'product_uom_qty': line.qty,
-                'demand_bucket': line.bucket_qty,
-                'done_bucket': line.bucket_qty,
-                'product_uom': line.uom_id.id,
-                'location_id': src_location.id,
-                'location_dest_id': main_location.id,
-                'move_line_ids': [(0, 0, {
-                    'product_id': line.product_id.id,
-                    'qty_done': line.qty,
-                    'done_bucket': line.qty,
-                    'product_uom_id': line.uom_id.id,
-                    'location_id': src_location.id,
-                    'location_dest_id': main_location.id,
-                    'date': fields.Datetime.now(),
-                })],
-            }
-            move_list.append((0, 0, move_vals))
+    #     for line in self.finished_line_ids:
+    #         move_vals = {
+    #             'name': line.product_id.display_name,
+    #             'product_id': line.product_id.id,
+    #             'product_uom_qty': line.qty,
+    #             'demand_bucket': line.bucket_qty,
+    #             'done_bucket': line.bucket_qty,
+    #             'product_uom': line.uom_id.id,
+    #             'location_id': src_location.id,
+    #             'location_dest_id': main_location.id,
+    #             'move_line_ids': [(0, 0, {
+    #                 'product_id': line.product_id.id,
+    #                 'qty_done': line.qty,
+    #                 'done_bucket': line.qty,
+    #                 'product_uom_id': line.uom_id.id,
+    #                 'location_id': src_location.id,
+    #                 'location_dest_id': main_location.id,
+    #                 'date': fields.Datetime.now(),
+    #             })],
+    #         }
+    #         move_list.append((0, 0, move_vals))
 
-        picking = self.env['stock.picking'].sudo().create({
-            'location_id': src_location.id,
-            'location_dest_id': main_location.id,
-            'picking_type_id': picking_type.id,
-            'production_id': self.id,
-            'origin': f"{self.name} - Receipt",
-            'move_ids_without_package': move_list,
-            'scheduled_date': fields.Datetime.now(),
-        })
+    #     picking = self.env['stock.picking'].sudo().create({
+    #         'location_id': src_location.id,
+    #         'location_dest_id': main_location.id,
+    #         'picking_type_id': picking_type.id,
+    #         'production_id': self.id,
+    #         'origin': f"{self.name} - Receipt",
+    #         'move_ids_without_package': move_list,
+    #         'scheduled_date': fields.Datetime.now(),
+    #     })
 
-        picking.action_confirm()
-        picking.action_assign()
-        self.env.context = dict(self.env.context, skip_backorder=True)
-        picking.action_set_quantities_to_reservation()
-        picking.button_validate()
+    #     picking.action_confirm()
+    #     picking.action_assign()
+    #     self.env.context = dict(self.env.context, skip_backorder=True)
+    #     picking.action_set_quantities_to_reservation()
+    #     picking.button_validate()
 
     def _create_stock_picking_out(self):
         StockQuant = self.env['stock.quant'].sudo()
@@ -186,78 +185,151 @@ class JalProduction(models.Model):
         if not picking_type:
             raise ValidationError(_("Outgoing Picking Type not found!"))
 
-        def _validate_lines(line_ids, line_type):
-            for line in line_ids:
+
+        def _validate_lines(lines, line_type):
+            for line in lines:
+
                 if not line.product_id:
-                    raise ValidationError(_("Please select a product for %s lines before proceeding.") % line_type)
+                    raise ValidationError(_("Please select a product for %s.") % line_type)
+
                 if line.qty <= 0:
-                    raise ValidationError(_(f"{line_type} in Quantity must be greater than 0 for product: %s") % line.product_id.display_name)
+                    raise ValidationError(_("%s quantity must be > 0 for product %s.") % (line_type, line.product_id.display_name))
 
                 if line.product_id.tracking in ('lot', 'serial') and not line.lot_ids:
-                    raise ValidationError(_(f"{line_type} in Please select a lot/serial number for tracked product: %s") % line.product_id.display_name)
+                    raise ValidationError(_("%s: Please select lot/serial for product %s.") % (line_type, line.product_id.display_name))
 
-                domain = [('product_id', '=', line.product_id.id), ('location_id', '=', main_location.id)]
+                domain = [('product_id', '=', line.product_id.id),('location_id', '=', main_location.id)]
+
                 if line.lot_ids:
                     domain.append(('lot_id', 'in', line.lot_ids.ids))
+
                 stock_quants = StockQuant.search(domain)
 
                 available_qty = sum(stock_quants.mapped('available_quantity'))
                 if available_qty < line.qty:
-                    raise ValidationError(_("Insufficient stock for product %s. Available: %s, Required: %s") %
-                                        (line.product_id.display_name, available_qty, line.qty))
+                    raise ValidationError(_("Insufficient QTY for %s. Available %s, Required %s.") % (line.product_id.display_name, available_qty, line.qty))
+
+                available_bucket = sum(stock_quants.mapped('on_hand_bucket'))
+                if available_bucket < line.bucket:
+                    raise ValidationError(_("Insufficient BUCKET for %s. Available %s, Required %s.") % (line.product_id.display_name, available_bucket, line.bucket))
+
 
         _validate_lines(self.line_ids, "Raw Materials")
         _validate_lines(self.packing_line_ids, "Packing Materials")
 
+
+        for line in self.finished_line_ids:
+
+            if not line.product_id:
+                raise ValidationError(_("Select a product for Finished Goods."))
+
+            domain = [('product_id', '=', line.product_id.id),('location_id', '=', main_location.id)]
+
+            stock_quants = StockQuant.search(domain)
+
+            available_qty = sum(stock_quants.mapped('available_quantity'))
+            if available_qty < line.wastage_qty:
+                raise ValidationError(_("Insufficient finished QTY for %s. Available %s, Required %s.") % (line.product_id.display_name, available_qty, line.wastage_qty))
+
+            available_bucket = sum(stock_quants.mapped('on_hand_bucket'))
+            if available_bucket < line.wastage_weight:
+                raise ValidationError(_("Insufficient finished BUCKET for %s. Available %s, Required %s.") % (line.product_id.display_name, available_bucket, line.wastage_weight))
+
+
         move_list = []
+
         def _prepare_moves(lines):
             for line in lines:
-                product = line.product_id
+
                 required_qty = line.qty
+                required_bucket = line.bucket
 
-                quants_domain = [('product_id', '=', product.id), ('location_id', '=', main_location.id), ('quantity', '>', 0)]
+                quants = StockQuant.search([('product_id', '=', line.product_id.id),('location_id', '=', main_location.id),('quantity', '>', 0)])
+
                 if line.lot_ids:
-                    quants_domain.append(('lot_id', 'in', line.lot_ids.ids))
+                    quants = quants.filtered(lambda q: q.lot_id.id in line.lot_ids.ids)
 
-                quants = StockQuant.search(quants_domain)
-                remaining = required_qty
+                remaining_qty = required_qty
+                remaining_bucket = required_bucket
 
                 for quant in quants:
-                    take_qty = min(quant.available_quantity, remaining)
-                    if take_qty <= 0:
+
+                    take_qty = min(quant.available_quantity, remaining_qty)
+                    take_bucket = min(quant.on_hand_bucket, remaining_bucket)
+
+                    if take_qty <= 0 and take_bucket <= 0:
                         continue
 
                     move_vals = {
                         'product_id': line.product_id.id,
                         'qty_done': take_qty,
+                        'demand_bucket': take_bucket,
+                        'done_bucket': take_bucket,
                         'product_uom_id': line.uom_id.id,
                         'location_id': main_location.id,
                         'location_dest_id': des_location.id,
                     }
 
-                    if product.tracking in ('lot', 'serial') and quant.lot_id:
+                    if line.product_id.tracking in ('lot', 'serial') and quant.lot_id:
                         move_vals['lot_id'] = quant.lot_id.id
 
-                    remaining -= take_qty
-                    if remaining <= 0:
+                    move_list.append((0, 0, move_vals))
+
+                    remaining_qty -= take_qty
+                    remaining_bucket -= take_bucket
+
+                    if remaining_qty <= 0 and remaining_bucket <= 0:
                         break
 
-                move_list.append((0, 0, move_vals))
 
         _prepare_moves(self.line_ids)
         _prepare_moves(self.packing_line_ids)
-        
+
+        for line in self.finished_line_ids:
+
+            required_qty = line.wastage_qty
+            required_bucket = line.wastage_weight
+
+            quants = StockQuant.search([('product_id', '=', line.product_id.id),('location_id', '=', main_location.id),('quantity', '>', 0)])
+
+            remaining_qty = required_qty
+            remaining_bucket = required_bucket
+
+            for quant in quants:
+
+                take_qty = min(quant.available_quantity, remaining_qty)
+                take_bucket = min(quant.on_hand_bucket, remaining_bucket)
+
+                if take_qty <= 0 and take_bucket <= 0:
+                    continue
+
+                move_vals = {
+                    'product_id': line.product_id.id,
+                    'qty_done': take_qty,
+                    'demand_bucket': take_bucket,
+                    'done_bucket': take_bucket,
+                    'product_uom_id': line.uom_id.id,
+                    'location_id': main_location.id,
+                    'location_dest_id': des_location.id,
+                }
+
+                move_list.append((0, 0, move_vals))
+
+                remaining_qty -= take_qty
+                remaining_bucket -= take_bucket
+
+                if remaining_qty <= 0 and remaining_bucket <= 0:
+                    break
+
         picking = StockPicking.create({
             'location_id': main_location.id,
             'location_dest_id': des_location.id,
             'picking_type_id': picking_type.id,
             'production_id': self.id,
             'origin': f"{self.name} - Outgoing",
-            # 'move_ids_without_package': move_list,
             'move_line_ids_without_package': move_list,
             'scheduled_date': fields.Datetime.now(),
         })
-
         picking.action_confirm()
         self.env.context = dict(self.env.context, skip_backorder=True)
         picking.button_validate()
@@ -279,7 +351,9 @@ class JalProductionLine(models.Model):
     lot_ids = fields.Many2many('stock.production.lot', string='Lot/Serial',domain="[('product_id', '=', product_id),('product_qty', '>', 0)]")
     uom_id = fields.Many2one('uom.uom',string="Unit")
     qty = fields.Float(string = "Quantity",digits='BaseAmount')
+    bucket = fields.Float(string='Packing Unit')
     product_tracking = fields.Selection(related='product_id.tracking')
+    uom_handling_type = fields.Selection(related='product_id.uom_handling_type',string="UoM Handling Type",store=False)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
 
     @api.onchange('product_id')
@@ -297,7 +371,9 @@ class JalPackingProductionLine(models.Model):
     lot_ids = fields.Many2many('stock.production.lot', string='Lot/Serial',domain="[('product_id', '=', product_id),('product_qty', '>', 0)]")
     uom_id = fields.Many2one('uom.uom',string="Unit")
     qty = fields.Float(string = "Quantity",digits='BaseAmount')
+    bucket = fields.Float(string='Packing Unit')
     product_tracking = fields.Selection(related='product_id.tracking')
+    uom_handling_type = fields.Selection(related='product_id.uom_handling_type',string="UoM Handling Type",store=False)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
 
     @api.onchange('product_id')
@@ -331,11 +407,13 @@ class JalFinishedProductionLine(models.Model):
         else:
             self.qty = 0
 
-    @api.onchange('product_id')
+    @api.onchange('product_id','wastage_qty')
     def onchange_product_id(self):
         for rec in self:
             if rec.product_id:
                 rec.uom_id = rec.product_id.uom_po_id.id
+
+                rec.wastage_weight = rec.wastage_qty * rec.product_id.drum_cap_id.weight
                 
     @api.onchange('grade_id', 'mesh_id', 'bucket_id')
     def _onchange_product_attributes(self):

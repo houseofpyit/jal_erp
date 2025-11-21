@@ -68,7 +68,76 @@ class JalQuality(models.Model):
 
         
     def action_complete_btn(self):
+        self._create_stock_picking_receipts()
         self.state = 'complete'
+
+    def _create_stock_picking_receipts(self):
+        if not self.quality_grade_ids:
+            raise ValidationError("No Productive Details products to receive!")
+
+        for line in self.quality_grade_ids:
+            if not line.product_id:
+                raise ValidationError(
+                     _("Please select a product for Productive Details before proceeding.")
+                )
+            
+            if line.no_of_drum <= 0:
+                raise ValidationError(
+                    f"Productive Details in No of Drum must be greater than 0 for product: {line.product_id.display_name}"
+                )
+
+        main_location = self.env['stock.location'].sudo().search([('main_store_location', '=', True)], limit=1)
+        if not main_location:
+            raise ValidationError("Main Store Location not found!")
+
+        src_location = self.env['stock.location'].sudo().search([('usage', '=', 'supplier')], limit=1)
+        if not src_location:
+            raise ValidationError("No Vendor/Partner location found!")
+
+        picking_type = self.env['stock.picking.type'].sudo().search([('code', '=', 'incoming')], limit=1)
+        if not picking_type:
+            raise ValidationError("Incoming Picking Type not found!")
+
+        move_list = []
+
+        for line in self.quality_grade_ids:
+            move_vals = {
+                'name': line.product_id.display_name,
+                'product_id': line.product_id.id,
+                'product_uom_qty': line.weight,
+                'demand_bucket': line.no_of_drum,
+                'done_bucket': line.no_of_drum,
+                'product_uom': line.uom_id.id,
+                'location_id': src_location.id,
+                'location_dest_id': main_location.id,
+                'move_line_ids': [(0, 0, {
+                    'product_id': line.product_id.id,
+                    'qty_done': line.weight,
+                    'done_bucket': line.no_of_drum,
+                    'product_uom_id': line.uom_id.id,
+                    'location_id': src_location.id,
+                    'location_dest_id': main_location.id,
+                    'date': fields.Datetime.now(),
+                })],
+            }
+            move_list.append((0, 0, move_vals))
+
+        picking = self.env['stock.picking'].sudo().create({
+            'location_id': src_location.id,
+            'location_dest_id': main_location.id,
+            'picking_type_id': picking_type.id,
+            'quality_id': self.id,
+            'origin': f"{self.name} - Receipt",
+            'move_ids_without_package': move_list,
+            'scheduled_date': fields.Datetime.now(),
+        })
+
+        picking.action_confirm()
+        picking.action_assign()
+        self.env.context = dict(self.env.context, skip_backorder=True)
+        picking.action_set_quantities_to_reservation()
+        picking.button_validate()
+
 
     @api.model
     def create(self, vals):
@@ -156,7 +225,7 @@ class QualityGradeLine(models.Model):
     no_of_drum = fields.Integer(string="No of Drum")
     weight = fields.Float(string="Weight")
     product_id = fields.Many2one('product.product')
-    product_tmpl_id = fields.Many2one('product.template', string='Product Template')
+    product_tmpl_id = fields.Many2one('product.template', string='Packing Type')
     uom_id = fields.Many2one('uom.uom',string="Unit")
 
     @api.onchange('product_id','no_of_drum')

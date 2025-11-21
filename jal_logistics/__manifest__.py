@@ -16,6 +16,7 @@
 
         'views/logistics_misc_mst.xml',
         'views/logistics.xml',
+        'views/inherit_sale.xml',
         'views/master_menu.xml',
 
     ],

@@ -6,8 +6,10 @@ class inheriteStockPicking(models.Model):
     _inherit = "stock.picking"
 
     production_id = fields.Many2one('jal.production',string="Production")
+    quality_id = fields.Many2one('jal.quality',string="Quality")
     send_quality = fields.Boolean(string="Send For Quality")
     purchase_quality_count = fields.Integer("Purchase Quality count")
+    booking_date = fields.Date(string="Booking Date",tracking=True)
     
     def button_validate(self):
         for line in self.move_lines:
@@ -22,6 +24,9 @@ class inheriteStockPicking(models.Model):
         for line in self.move_lines:
             stock_move = self.env['stock.move.line'].search([('picking_id', '=', line.picking_id.id),('product_id', '=', line.product_id.id)])
             stock_move.write({'done_bucket': line.done_bucket})
+        for line in self.move_line_ids_without_package:
+            stock_move = self.env['stock.move'].search([('picking_id', '=', line.picking_id.id),('product_id', '=', line.product_id.id)])
+            stock_move.write({'demand_bucket': line.demand_bucket,'done_bucket': line.demand_bucket})
         return res
     
     def _compute_hide_pickign_type(self):
@@ -147,12 +152,13 @@ class InheritStockMoveLine(models.Model):
     _inherit = "stock.move.line"
 
     done_bucket = fields.Float(string="Done (Bucket/Bags/Pouch)")
+    demand_bucket = fields.Float(string="Demand (Bucket/Bags/Pouch)")
     uom_handling_type = fields.Selection(related='product_id.uom_handling_type',string="UoM Handling Type",store=False)
 
 class InheritStockQuant(models.Model):
     _inherit = "stock.quant"
 
-    on_hand_bucket = fields.Float(string="On Hand (Bucket/Bags/Pouch)")
+    on_hand_bucket = fields.Float(string="On Hand Packing Unit")
 
 class inheriteStockLocation(models.Model):
     _inherit = "stock.location"

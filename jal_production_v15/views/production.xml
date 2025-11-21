@@ -37,6 +37,8 @@
                                     <field name="product_id" required="1" options="{'no_quick_create': True}" domain="[('is_raw_material', '=', True)]"/>
                                     <field name="lot_ids" widget="many2many_tags" options="{'no_create': True}" attrs="{'readonly': [('product_tracking', '=', 'none')], 'required': [('product_tracking', '!=', 'none')]}"/>
                                     <field name="qty"/>
+                                    <field name="bucket" attrs="{'readonly': [('uom_handling_type', '!=', 'multi')]}"/>
+                                    <field name="uom_handling_type" invisible="1"/>
                                     <field name="uom_id" readonly="1" force_save="1"/>
                                     <field name="product_tracking" invisible="1"/>
                                 </tree>
@@ -48,6 +50,8 @@
                                     <field name="product_id" required="1" options="{'no_quick_create': True}" domain="[('is_packing', '=', True)]"/>
                                     <field name="lot_ids" widget="many2many_tags" options="{'no_create': True}" attrs="{'readonly': [('product_tracking', '=', 'none')], 'required': [('product_tracking', '!=', 'none')]}"/>
                                     <field name="qty"/>
+                                    <field name="bucket" attrs="{'readonly': [('uom_handling_type', '!=', 'multi')]}"/>
+                                    <field name="uom_handling_type" invisible="1"/>
                                     <field name="uom_id" readonly="1" force_save="1"/>
                                     <field name="product_tracking" invisible="1"/>
                                 </tree>

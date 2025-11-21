@@ -70,7 +70,6 @@
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value" widget="statinfo">
                             <field name="bucket_qty_hand_total" widget="statinfo" nolabel="1" class="mr4"/>
-                            <field name="uom_name"/>
                         </span>
                         <span class="o_stat_text">On Hand (Bucket/Bags/Pouch)</span>
                     </div>
@@ -80,20 +79,19 @@
     </record>
 
     <!-- Product Template form: field + smart button -->
-    <record id="product_template_only_form_view_inherit_bucket" model="ir.ui.view">
+    <!-- <record id="product_template_only_form_view_inherit_bucket" model="ir.ui.view">
         <field name="name">product.template.only.form.inherit.bucket</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_only_form_view"/>
         <field name="arch" type="xml">
 
-        <!-- Also show inside the Inventory tab -->
         <xpath expr="//page[@name='inventory']/group" position="inside">
             <group string="Bucket Stock (All Variants)">
             <field name="bucket_qty_hand_total" readonly="1"/>
             </group>
         </xpath>
         </field>
-    </record>
+    </record> -->
 
     <record id="product_template_tree_view_inherit_bucket" model="ir.ui.view">
         <field name="name">product.template.tree.inherit.bucket</field>
@@ -113,6 +111,24 @@
         <field name="arch" type="xml">
             <xpath expr="//tree/field[@name='lst_price']" position="after">
             <field name="bucket_qty_hand_total"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_product_normal_form_viewinherit_bucket" model="ir.ui.view">
+        <field name="name">product.product.tree.inherit.bucket</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']/button[@name='action_open_quants']" position="after">
+                <button type="object" name="action_view_bucket_on_hand" class="oe_stat_button" icon="fa-cubes">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value" widget="statinfo">
+                            <field name="bucket_qty_hand_total" widget="statinfo" nolabel="1" class="mr4"/>
+                        </span>
+                        <span class="o_stat_text">On Hand (Bucket/Bags/Pouch)</span>
+                    </div>
+                </button>
             </xpath>
         </field>
     </record>

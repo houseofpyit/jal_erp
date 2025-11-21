@@ -121,6 +121,7 @@ class inheritedSaleOrder(models.Model):
       self.state = 'quotation_confirm'
 
    def action_create_pi(self):
+      self.action_confirm()
       self.state = 'create_pi'
 
 class inheritedSaleOrderLine(models.Model):

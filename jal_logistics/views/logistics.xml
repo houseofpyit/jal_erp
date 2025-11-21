@@ -6,12 +6,14 @@
         <field name='model'>jal.logistics</field>
         <field name='arch' type='xml'>
             <form>
-                <!-- <header>
-                    <button string="Running" name="action_running_btn" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'draft')]}"  confirm=""/>
+                <header>
+                    <!-- <button string="Running" name="action_running_btn" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'draft')]}"  confirm=""/>
                     <button string="Complete" name="action_complete_btn" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'running')]}" groups="jal_logistics_v15.res_group_logistics_admin" confirm="Are you sure you want to complete this logistics?"/>
-                    <button string="Get Quality" name="action_get_quality_btn" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'running')]}" groups="jal_logistics_v15.res_group_logistics_admin" confirm=""/>
+                    <button string="Get Quality" name="action_get_quality_btn" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'running')]}" groups="jal_logistics_v15.res_group_logistics_admin" confirm=""/> -->
+                    <button string="Booking Confirm" name="action_booking_confirm" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'pi_confirm')]}" />
+                    <button string="Done" name="action_done" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'booking_confirm')]}" />
                     <field name="state" widget="statusbar"/>
-                </header> -->
+                </header>
                 <sheet>
                     <div class="oe_title">
                         <h1>
@@ -257,6 +259,7 @@
                 <field name='name'/>
                 <field name="date" />
                 <field name='sale_id' required="1"/>
+                <field name="state" widget="badge"/>
             </tree>
         </field>
     </record>

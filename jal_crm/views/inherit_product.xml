@@ -15,6 +15,15 @@
             <xpath expr="//field[@name='sale_ok']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
+            <xpath expr="//page[@name='inventory']/group[@name='inventory']/group[@name='group_lots_and_weight']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='inventory']/group[@name='inventory']/group[@name='operations']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='inventory']/group[@name='inventory']/group[@name='stock_property']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
             <xpath expr="//label[@for='sale_ok']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>

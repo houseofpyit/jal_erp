@@ -16,6 +16,7 @@ class JalMrpProduction(models.Model):
     product_id = fields.Many2one('product.product',tracking=True)
     uom_id = fields.Many2one('uom.uom',string="Unit",tracking=True)
     qty = fields.Float(string = "Quantity",digits='BaseAmount',tracking=True)
+    booking_date = fields.Date(string="Booking Date",tracking=True)
     
     line_ids = fields.One2many('jal.mrp.production.line', 'mst_id',string="Raw Material Products")
     packing_line_ids = fields.One2many('jal.mrp.production.packing.line', 'mst_id',string="Packing Products")
