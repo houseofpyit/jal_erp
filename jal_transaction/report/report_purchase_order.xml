@@ -35,7 +35,7 @@
                                         ,<span t-esc="o.company_id.country_id.name" />
                                     </t><br/>
                                     <span style="padding-right:4px;" t-esc="o.company_id.email"/><br/>
-                                    <span>GSTIN: </span><span t-esc="o.company_id.vat" /><br/>
+                                    <span>GSTIN: </span><span t-esc="o.company_id.gstno" /><br/>
                                     <span>PAN: </span><span t-esc="o.company_id.pan_no" /><br/>
                                     <span>TAN: </span>
                                 </td>
@@ -54,7 +54,7 @@
                                         ,<span t-esc="o.partner_id.country_id.name" />
                                     </t><br/>
                                     <span style="padding-right:4px;" t-esc="o.partner_id.email"/><br/>
-                                    <span>GSTIN: </span><span t-esc="o.partner_id.vat" /><br/>
+                                    <span>GSTIN: </span><span t-esc="o.partner_id.gstno" /><br/>
                                 </td>
                             </t>
                         </tr>
