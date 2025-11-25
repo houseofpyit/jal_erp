@@ -34,3 +34,4 @@ access_product_rawmaterial_line,product_rawmaterial_line,model_product_rawmateri
 access_product_packing_line,product_packing_line,model_product_packing_line,,1,1,1,1
 
 access_production_exel_wiz,production_exel_wiz,model_production_exel_wiz,,1,1,1,1
+access_production1_exel_wiz,production1_exel_wiz,model_production1_exel_wiz,,1,1,1,1

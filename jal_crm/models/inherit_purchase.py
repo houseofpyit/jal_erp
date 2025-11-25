@@ -13,11 +13,16 @@ class inheritedPurchaseOrder(models.Model):
    pur_req_id = fields.Many2one('jal.purchase.requisite',string="Purchase Requisition")
    attachment_ids = fields.Many2many('ir.attachment','attachment_po_id',string="Document Attachment")
    # remarks = fields.Text(string="Remarks")
-   conditions_id = fields.Many2one('sale.term.conditions',string="Term & Conditions",tracking=True)
+   conditions_ids = fields.Many2many('sale.term.conditions','ref_po_conditions_ids',string="Term & Conditions")
 
-   @api.onchange('conditions_id')
-   def _onchange_conditions_id(self):
-      self.notes = self.conditions_id.note
+   @api.onchange('conditions_ids')
+   def _onchange_conditions_ids(self):
+      notes = ""
+      for co in self.conditions_ids:
+         if co.note:
+               notes += co.note + "\n"
+
+      self.notes = notes.strip()
 
    @api.onchange('team_id')
    def _onchange_team_id(self):

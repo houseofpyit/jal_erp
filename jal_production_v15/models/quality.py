@@ -151,10 +151,21 @@ class JalQuality(models.Model):
         line_list = []
         for line in self.quality_grade_ids:
             for _ in range(line.no_of_drum):
+                def float_to_time(float_time):
+                    hours = int(float_time)
+                    minutes = int(round((float_time - hours) * 60))
+                    return f"{hours:02d}:{minutes:02d}"
+                if self.shift_time_id.start_time and self.shift_time_id.end_time:
+                    start = float_to_time(self.shift_time_id.start_time)
+                    end = float_to_time(self.shift_time_id.end_time)
+                    name = f"{self.shift_time_id.name} ({start} - {end})"
                 line_list.append({
                     'product_name': self.product_tmpl_id.name,
                     'production_name': self.production_id.name,
                     'name': self.name,
+                    'date': self.date.strftime("%d/%m/%Y") if self.date else '',
+                    'shift_name': self.shift_id.name,
+                    'shift_time': name,
                     'grade_name': line.grade_id.name,
                     'mesh_name': line.mesh_id.name,
                     'dryer_name': self.dryer_id.name,
@@ -162,7 +173,7 @@ class JalQuality(models.Model):
                 })
 
         return line_list
-
+    
 class PackingQualityLine(models.Model):
     _name = 'packing.quality.line'
     _description = "Packing Quality Line"

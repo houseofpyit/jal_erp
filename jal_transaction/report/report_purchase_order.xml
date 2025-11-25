@@ -76,7 +76,7 @@
                             </td>
                             <td width="30%">
                                 <span style="font-size:16px;"><b>Order Deadline:</b></span><br/>
-                                <span style="font-size:15px;" t-if="o.date_planned" t-esc="o.date_planned.strftime('%d/%m/%Y %H:%M:%S')"/>
+                                <span style="font-size:15px;" t-if="o.date" t-esc="o.date.strftime('%d/%m/%Y')"/>
                             </td>
                         </tr>
                     </table>
@@ -97,7 +97,7 @@
                             </t>
                             <tr>
                                 <td style="border:1px solid #000; padding:3px;font-size:13px;">
-                                    <span t-esc="line.product_id.name"/><br/>
+                                    <span t-esc="line.name"/><br/>
                                 </td>
                                 <td style="border:1px solid #000; padding:3px;font-size:13px;">
                                     <span t-esc="gst_name"/>
@@ -179,7 +179,7 @@
                             </tr>
                             <tr>
                                 <td><span><b>Terms &amp; Conditions</b></span><br/>
-                                <span style="font-size:13px;" t-esc="o.conditions_id.note" /></td>
+                                <span style="font-size:13px;" t-esc="o.notes" /></td>
                             </tr>
                         </table>
                 </div>

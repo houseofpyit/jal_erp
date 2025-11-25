@@ -164,10 +164,16 @@ class JalPurchaseRequisiteLine(models.Model):
     _description = "Purchase Requisite Line"
 
     mst_id = fields.Many2one('jal.purchase.requisite',string="Purchase Req",ondelete='cascade')
-    product_id = fields.Many2one('product.product',required=True)
+    product_id = fields.Many2one('product.product',required=True,domain=[('is_finished_goods','=',False)])
     uom_id = fields.Many2one('uom.uom',string="Unit")
     qty = fields.Float(string = "Quantity",digits='BaseAmount')
+    description = fields.Char(string="Description")
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        if self.product_id:
+            self.uom_id = self.product_id.uom_po_id.id
 
     # def _compute_pen_po_qty(self):
     #     for i in self:

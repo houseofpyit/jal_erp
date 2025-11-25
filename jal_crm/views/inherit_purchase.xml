@@ -16,10 +16,13 @@
                     <field name="attachment_ids" widget="many2many_binary"/>
                 </group>
             </xpath>
+            <xpath expr="//tree/field[@name='product_id']" position="attributes">
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
             <xpath expr="//page/group" position="before">
                 <group>
                     <group>
-                        <field name="conditions_id" domain="[('module_type', '=', 'purchase')]" options="{'no_open': True, 'no_create': True}" />
+                        <field name="conditions_ids" widget="many2many_tags"  domain="[('module_type', '=', 'purchase')]" options="{'no_create': True}" />
                     </group>
                 </group>
             </xpath>

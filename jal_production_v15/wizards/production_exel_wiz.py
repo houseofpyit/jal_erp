@@ -15,93 +15,250 @@ class ProductionReportExelWiz(models.TransientModel):
     from_date = fields.Date(string="From Date",default=fields.Date.context_today)
     to_date = fields.Date(string="To Date",default=fields.Date.context_today)
     company_id = fields.Many2one('res.company',string="Company" , default=lambda self: self.env.company)
+    shift_ids = fields.Many2many('shift.mst',string="Shift")
 
     def production_xls_report(self):
         workbook = xlwt.Workbook()
-        sheet = workbook.add_sheet('Product Master')
+
+        # ===============================#
+        #           SHEET 1
+        # ===============================#
+        sheet = workbook.add_sheet('Shift Wise Report')
 
         # Styles
         header_style = xlwt.easyxf(
-            "pattern: pattern solid, fore_colour green; font: bold 1, colour white;"
-            "align: vert centre, horiz centre; border: top thick, right thick, bottom thick, left thick;"
+            "font: bold 1, colour black;"
+            "align: vert centre, horiz centre;"
+            "border: top thick, right thick, bottom thick, left thick;"
         )
         data_style = xlwt.easyxf(
             "align: vert centre, horiz centre; border: top thin, right thin, bottom thin, left thin;"
         )
-        bold_style = xlwt.easyxf('font: bold on;')
-        srl_bold_style = xlwt.easyxf("align: vert centre, horiz centre; border: top thin, right thin, bottom thin, left thin; font: bold on;")
+        srl_bold_style = xlwt.easyxf(
+            "align: vert centre, horiz centre; border: top thin, right thin, bottom thin, left thin; font: bold on;"
+        )
 
-            
-        # Headers
-        headers = ["Sr No.", "Product Name", "Attributes", "Name"]
-        for col, head in enumerate(headers):
-            sheet.write(0, col, head, header_style)
-            sheet.col(col).width = 5000
-
+        # Domain Filter
         domain = [('company_id', '=', self.company_id.id)]
-        
         if self.from_date:
             domain.append(('date', '>=', self.from_date))
         if self.to_date:
             domain.append(('date', '<=', self.to_date))
-
+        if self.shift_ids:
+            domain.append(('shift_id', 'in', self.shift_ids.ids))
+        
         production_rec = self.env['jal.production'].sudo().search(domain, order="date")
-
+        
         if not production_rec:
             raise ValidationError("No Data Found.")
 
+        # ==========================
+        # Dynamic Product List
+        # ==========================
+        raw_products = list(set(production_rec.line_ids.mapped('product_id')))
+        raw_products = sorted(raw_products, key=lambda p: p.name)
+        
+        # Headers
+        headers = ["Date", "Shift"] + [p.name for p in raw_products] + ["Total Production (MT)"]
+
+        # Write Header - Sheet 1
+        for col, head in enumerate(headers):
+            sheet.write(0, col, head, header_style)
+            sheet.col(col).width = 5000
+
         row = 1
-        sr_no = 1
 
-        for rec in production_rec:
-            for line in rec.finished_line_ids:
+        # Unique Dates
+        date_list = sorted(list(set(production_rec.mapped('date'))))
+        
+        # ==================================#
+        #       LOOP DATE-WISE
+        # ==================================#
+        last_date = None   # <-- Put this BEFORE the for prod_date
 
-                product = line.product_id
-                tmpl = product.product_tmpl_id
-                attribute_lines = tmpl.attribute_line_ids
+        for prod_date in date_list:
 
-                # Write Sr No and Product name ONLY once per product
-                first_row = True
+            date_recs = production_rec.filtered(lambda r: r.date == prod_date)
+            shift_list = sorted(list(set(date_recs.mapped('shift_id'))), key=lambda s: s.name)
 
-                for att in attribute_lines:
-                    # Values under this attribute
-                    values = att.value_ids
+            for shift in shift_list:
 
-                    # For 1st value of attribute → write attribute name
-                    first_value = True
+                rec = date_recs.filtered(lambda r: r.shift_id.id == shift.id)
+                if not rec:
+                    continue
 
-                    for val in values:
+                rec = rec[0]
 
-                        # Sr No & Product Name only once
-                        if first_row:
-                            sheet.write(row, 0, sr_no, srl_bold_style)
-                            sheet.write(row, 1, product.name, bold_style)
-                            first_row = False
-                        else:
-                            sheet.write(row, 0, "", data_style)
-                            sheet.write(row, 1, "", data_style)
+                # ----------------------------------
+                # PRINT DATE ONLY ON FIRST OCCURRENCE
+                # ----------------------------------
+                date_str = prod_date.strftime('%d-%m-%Y')
 
-                        # Attribute name printed only once
-                        if first_value:
-                            sheet.write(row, 2, att.attribute_id.name, data_style)
-                            first_value = False
-                        else:
-                            sheet.write(row, 2, "", data_style)
+                if last_date != date_str:
+                    sheet.write(row, 0, date_str, srl_bold_style)
+                    last_date = date_str
+                else:
+                    sheet.write(row, 0, "", srl_bold_style)
+                # sheet.write(row, 0, str(prod_date), data_style)
+                sheet.write(row, 1, shift.name, data_style)
 
-                        # Value name (always printed)
-                        sheet.write(row, 3, val.name, data_style)
+                col = 2
+                for prod in raw_products:
+                    qty = sum(
+                        date_recs.mapped('line_ids').filtered(
+                            lambda l: l.product_id.id == prod.id and
+                                    l.mst_id.shift_id.id == shift.id
+                        ).mapped('qty')
+                    )
 
-                        row += 1
+                    sheet.write(row, col, qty, data_style)
+                    col += 1
 
-                sr_no += 1
+                total_mt = sum(
+                    date_recs.mapped('finished_line_ids').filtered(
+                        lambda l: l.mst_id.shift_id.id == shift.id
+                    ).mapped('qty')
+                )
 
-            # Save file
-            fp = io.BytesIO()
-            workbook.save(fp)
-            self.rpt_xls_file = base64.encodebytes(fp.getvalue())
+                sheet.write(row, col, total_mt, srl_bold_style)
+                row += 1
+
+        # ==========================
+        # SAVE FILE
+        # ==========================
+
+        fp = io.BytesIO()
+        workbook.save(fp)
+        self.rpt_xls_file = base64.encodebytes(fp.getvalue())
 
         return {
             'type': 'ir.actions.act_url',
-            'url': f"/web/content/{self._name}/{self.id}/rpt_xls_file/product_master.xls?download=true",
+            'url': f"/web/content/{self._name}/{self.id}/rpt_xls_file/Shift_wise_report.xls?download=true",
+            'target': 'self',
+        }
+
+
+class Production1ReportExelWiz(models.TransientModel):
+    _name = 'production1.exel.wiz'
+    _description= "Day Wise Report"
+
+    rpt_xls_file = fields.Binary()
+    from_date = fields.Date(string="From Date",default=fields.Date.context_today)
+    to_date = fields.Date(string="To Date",default=fields.Date.context_today)
+    company_id = fields.Many2one('res.company',string="Company" , default=lambda self: self.env.company)
+
+    def production_xls_report(self):
+        workbook = xlwt.Workbook()
+
+        # ===============================#
+        #           SHEET 1
+        # ===============================#
+        sheet = workbook.add_sheet('Shift Wise Report')
+
+        # Styles
+        header_style = xlwt.easyxf(
+            "font: bold 1, colour black;"
+            "align: vert centre, horiz centre;"
+            "border: top thick, right thick, bottom thick, left thick;"
+        )
+        data_style = xlwt.easyxf(
+            "align: vert centre, horiz centre; border: top thin, right thin, bottom thin, left thin;"
+        )
+        srl_bold_style = xlwt.easyxf(
+            "align: vert centre, horiz centre; border: top thin, right thin, bottom thin, left thin; font: bold on;"
+        )
+
+        # Domain Filter
+        domain = [('company_id', '=', self.company_id.id)]
+        if self.from_date:
+            domain.append(('date', '>=', self.from_date))
+        if self.to_date:
+            domain.append(('date', '<=', self.to_date))
+        
+        production_rec = self.env['jal.production'].sudo().search(domain, order="date")
+        
+        if not production_rec:
+            raise ValidationError("No Data Found.")
+
+        # ==========================
+        # Dynamic Product List
+        # ==========================
+        raw_products = list(set(production_rec.line_ids.mapped('product_id')))
+        raw_products = sorted(raw_products, key=lambda p: p.name)
+        
+        # Headers        
+
+        sheet.write(0, 0, "", header_style)   # first column blank
+
+        col = 1
+        for p in raw_products:
+            # Merge 1 row (row 0), 4 columns (col → col+3)
+            sheet.write_merge(0, 0, col, col + 3, p.name, header_style)
+
+            # Set column widths
+            sheet.col(col).width = 5000
+            sheet.col(col + 1).width = 5000
+            sheet.col(col + 2).width = 5000
+            sheet.col(col + 3).width = 5000
+
+            col += 4   # jump by 4 columns for next product
+
+
+        # Second Header Row
+        sheet.write(1, 0, "Date", header_style)
+
+        col = 1
+        headers1 = ["Opening", "Receiving", "Consumption", "Closing"]
+
+        for p in raw_products:
+            for h in headers1:
+                sheet.write(1, col, h, header_style)
+                col += 1
+
+        row = 2   # data starts from row 2
+
+        date_list = sorted(list(set(production_rec.mapped('date'))))
+
+        for prod_date in date_list:
+
+            date_recs = production_rec.filtered(lambda r: r.date == prod_date)
+
+            # Write Date
+            sheet.write(row, 0, prod_date.strftime("%d/%m/%Y"), data_style)
+
+            col = 1
+
+            for prod in raw_products:
+
+                # FILTER product lines for this date
+                prod_lines = date_recs.line_ids.filtered(lambda l: l.product_id.id == prod.id)
+
+                # === CALCULATIONS ===
+                opening = 0
+                receiving = 0
+                consumption = sum(prod_lines.mapped('qty'))         
+                closing = 0
+
+                # === WRITE TO SHEET ===
+                sheet.write(row, col,     opening,     data_style)
+                sheet.write(row, col + 1, receiving,   data_style)
+                sheet.write(row, col + 2, consumption, data_style)
+                sheet.write(row, col + 3, closing,     data_style)
+
+                col += 4
+
+            row += 1
+
+        # ==========================
+        # SAVE FILE
+        # ==========================
+
+        fp = io.BytesIO()
+        workbook.save(fp)
+        self.rpt_xls_file = base64.encodebytes(fp.getvalue())
+
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f"/web/content/{self._name}/{self.id}/rpt_xls_file/Shift_wise_report.xls?download=true",
             'target': 'self',
         }

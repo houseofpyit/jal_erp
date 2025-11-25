@@ -31,10 +31,23 @@
         <menuitem
             id="production_exel_wiz_mst_main"
             name="Report"
-            action="action_production_exel_wiz"
             parent="jal_production_v15.production_main_menu"
             sequence="3"/>
             
+            <menuitem
+                id="shift_production_exel_wiz_mst_main"
+                name="Shift Wise Report"
+                action="action_production_exel_wiz"
+                parent="jal_production_v15.production_exel_wiz_mst_main"
+                sequence="1"/>
+            
+            <menuitem
+                id="production1_exel_wiz_mst_main"
+                name="Day Wise Report"
+                action="action_production1_exel_wiz"
+                parent="jal_production_v15.production_exel_wiz_mst_main"
+                sequence="2"/>
+
     <menuitem
         id="quality_main_menu"
         name="Quality"
