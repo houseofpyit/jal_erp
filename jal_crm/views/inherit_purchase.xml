@@ -26,6 +26,23 @@
                     </group>
                 </group>
             </xpath>
+            <xpath expr="//page/group/group/field[@name='notes']" position="replace">
+                <div class="o_form_label">
+                    <div>
+                        <field name="notes"
+                            nolabel="1"
+                            placeholder="Define your terms and conditions ..." 
+                            style="width: 100%;"/>
+                    </div>
+
+                    <div style="margin-top: 10px;">
+                        <field name="remarks"
+                            nolabel="1"
+                            placeholder="Notes..."
+                            style="width: 100%;"/>
+                    </div>
+                </div>
+            </xpath>
         </field>
     </record>
 
