@@ -10,7 +10,8 @@
     'category': 'Tools',
     'depends': ['base','jal_crm','transaction'],
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/user_manager.xml',
+        'security/ir.model.access.csv',
 
         'report/report_purchase_order.xml',
         'report/paper_formate.xml',
@@ -21,6 +22,9 @@
         'views/inherit_partner.xml',
         'views/inherit_master.xml',
         'views/inherit_purchasebill.xml',
+        'views/inherit_product.xml',
+        'views/cost_center_budget.xml',
+        'views/inherit_purchase.xml',
         'views/master_menu.xml',
 
     ],

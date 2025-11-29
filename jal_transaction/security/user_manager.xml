@@ -1,0 +1,12 @@
+<odoo>
+    <data>
+
+        <record model="ir.rule" id="cost_center_budget_rule1">
+            <field name="name">Opening Balance multi year</field>
+            <field name="model_id" ref="model_cost_center_budget"/>
+            <field name="domain_force">[('date','&gt;=',user.fy_from_date),('date','&lt;=',user.fy_to_date),('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('master.group_fy_year_wise_data'))]"/>
+        </record>
+        
+	</data>
+</odoo>
