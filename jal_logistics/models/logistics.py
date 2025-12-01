@@ -54,35 +54,35 @@ class JalLogistics(models.Model):
     epcg_liscence_used = fields.Selection([
             ('yes', 'Yes'),
             ('no', 'No'),
-        ], string='EPCG Liscence Used')
-    epcg_liscence_number = fields.Many2one('epcg.liscence.mst',string='EPCG Liscence Number')
-    epcg_liscence_date = fields.Date(string='EPCG Liscence Date')
+        ], string='EPCG Liscence Used',tracking=True)
+    epcg_liscence_number = fields.Many2one('epcg.liscence.mst',string='EPCG Liscence Number',tracking=True)
+    epcg_liscence_date = fields.Date(string='EPCG Liscence Date',tracking=True)
     advanced_liscence_used = fields.Selection([
             ('yes', 'Yes'),
             ('no', 'No'),
-        ], string='Advance Liscence Used')
-    advanced_liscence_number = fields.Many2one('advanced.liscence.mst',string='Advanced Liscence Number')
-    advanced_liscence_date = fields.Date(string='Advanced Liscence Date')
+        ], string='Advance Liscence Used',tracking=True)
+    advanced_liscence_number = fields.Many2one('advanced.liscence.mst',string='Advanced Liscence Number',tracking=True)
+    advanced_liscence_date = fields.Date(string='Advanced Liscence Date',tracking=True)
     rodtep_claimed = fields.Selection([
             ('yes', 'Yes'),
             ('no', 'No'),
-        ], string='Rodtep Claimed')
-    rodtep_amount = fields.Char(string='Rodtep Amount')
+        ], string='Rodtep Claimed',tracking=True)
+    rodtep_amount = fields.Char(string='Rodtep Amount',tracking=True)
     duty_drawback_claimed = fields.Selection([
             ('yes', 'Yes'),
             ('no', 'No'),
-        ], string='Duty Drawback Claimed')
-    duty_drawback_amount = fields.Char(string='Duty Drawback Amount')
+        ], string='Duty Drawback Claimed',tracking=True)
+    duty_drawback_amount = fields.Char(string='Duty Drawback Amount',tracking=True)
     lut_shipment = fields.Selection([
             ('yes', 'Yes'),
             ('no', 'No'),
-        ], string='Lut Shipment')
-    lut_no = fields.Char(string='Lut No')
+        ], string='Lut Shipment',tracking=True)
+    lut_no = fields.Char(string='Lut No',tracking=True)
     gst_claimed = fields.Selection([
             ('yes', 'Yes'),
             ('no', 'No'),
-        ], string='GST Claimed')
-    gst_value = fields.Char(string='GST Value')  
+        ], string='GST Claimed',tracking=True)
+    gst_value = fields.Char(string='GST Value',tracking=True )
 
     # Shipement Details
     invoice_number = fields.Char(string='Invoice Number',tracking=True)
@@ -100,6 +100,63 @@ class JalLogistics(models.Model):
     total_gross_wt_qty = fields.Float(string='Total Gross Weight Quantity',tracking=True)
     gross_wt_uom_id = fields.Many2one('uom.uom',string="Gross Weight Quantity")
 
+    # Documents for Customs
+    attachment_invoice_ids = fields.Many2many('ir.attachment','attachment_invoice_id',string="Commercial invoice")
+    attachment_packing_ph_ids = fields.Many2many('ir.attachment','attachment_packing_ph_id',string="Packing List")
+    attachment_hazard_ids = fields.Many2many('ir.attachment','attachment_hazard_id',string="Hazard Declaration form")
+    attachment_tax_invoice_ids = fields.Many2many('ir.attachment','attachment_tax_invoice_id',string="Tax Invoice")
+    attachment_annexure_ids = fields.Many2many('ir.attachment','attachment_annexure_id',string="Annexure - A")
+    attachment_examination_ids = fields.Many2many('ir.attachment','attachment_examination_id',string="Self- examination form")
+    attachment_certificate_ids = fields.Many2many('ir.attachment','attachment_certificate_id',string="Certificate of Analysis")
+    attachment_iip_ids = fields.Many2many('ir.attachment','attachment_iip_id',string="IIP-Copies")
+
+    # Documentation for the Customer
+    attachment_invoice1_ids = fields.Many2many('ir.attachment','attachment_invoice1_id',string="Commercial invoice")
+    attachment_packing_ph1_ids = fields.Many2many('ir.attachment','attachment_packing_ph1_id',string="Packing List")
+    attachment_certificate1_ids = fields.Many2many('ir.attachment','attachment_certificate1_id',string="Certificate of Origin")
+    attachment_bill_ids = fields.Many2many('ir.attachment','attachment_bill_id',string="Bill of Lading Draft")
+    attachment_certificate2_ids = fields.Many2many('ir.attachment','attachment_certificate2_id',string="Certificate of Analysis")
+
+    # Post Shipment
+    bill_number = fields.Char(string='Shipping bill number',tracking=True)
+    bill_date = fields.Date(string='Shipping bill date',tracking=True)
+    attachment_shipping_ids = fields.Many2many('ir.attachment','attachment_shipping_id',string="Upload shipping bill document")
+
+    attachment_ladings_ids = fields.Many2many('ir.attachment','attachment_ladings_id',string="Draft Bill of lading’s")
+    bi_date = fields.Date(string='BI date',tracking=True)
+    bi_type = fields.Selection([
+            ('yes', 'Yes'),
+            ('no', 'No'),
+        ], string='Draft BI',tracking=True)
+    comments_bi = fields.Text(string='Draft BL Change Comments',tracking=True)
+    attachment_ladings1_ids = fields.Many2many('ir.attachment','attachment_ladings1_id',string="Draft Bill of lading’s")
+    bi_date1 = fields.Date(string='BI date',tracking=True)
+    bi_type1 = fields.Selection([
+            ('yes', 'Yes'),
+            ('no', 'No'),
+        ], string='Draft BI',tracking=True)
+    comments_bi1 = fields.Text(string='Draft BL Change Comments',tracking=True)
+    attachment_final_ladings_ids = fields.Many2many('ir.attachment','attachment_ladings1_id',string="Final Bill of lading")
+    bi_date2 = fields.Date(string='BI date',tracking=True)
+
+    bl_type = fields.Selection([
+            ('surrender', 'Surrender'),
+            ('courier', 'Courier'),
+        ], string='Type of BL',tracking=True)
+    balance_type = fields.Selection([
+            ('yes', 'Yes'),
+            ('no', 'No'),
+        ], string='Balance payment received',tracking=True)
+    payment_remark = fields.Text(string='Payment Remarks',tracking=True)
+    sale_team_type = fields.Selection([
+            ('yes', 'Yes'),
+            ('no', 'No'),
+        ], string='Sales team BL released confirmation',tracking=True)
+    acoount_team_type = fields.Selection([
+            ('yes', 'Yes'),
+            ('no', 'No'),
+        ], string='Accounts team BL release confirmation',tracking=True)
+    
     @api.model
     def create(self, vals):
         result = super(JalLogistics, self).create(vals)

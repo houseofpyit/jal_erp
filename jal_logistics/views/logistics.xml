@@ -241,6 +241,51 @@
                                     </div>
                                 </group>
                             </group>
+                            <group>
+                                <group name="documents_for_customs" string="Documents for Customs">
+                                    <field name="attachment_invoice_ids" widget="many2many_binary"/>
+                                    <field name="attachment_packing_ph_ids" widget="many2many_binary"/>
+                                    <field name="attachment_hazard_ids" widget="many2many_binary"/>
+                                    <field name="attachment_tax_invoice_ids" widget="many2many_binary"/>
+                                    <field name="attachment_annexure_ids" widget="many2many_binary"/>
+                                    <field name="attachment_examination_ids" widget="many2many_binary"/>
+                                    <field name="attachment_certificate_ids" widget="many2many_binary"/>
+                                    <field name="attachment_iip_ids" widget="many2many_binary"/>
+                                </group>
+                                <group name="documentation_for_customer" string="Documentation for the Customer">
+                                    <field name="attachment_invoice1_ids" widget="many2many_binary"/>
+                                    <field name="attachment_packing_ph1_ids" widget="many2many_binary"/>
+                                    <field name="attachment_certificate1_ids" widget="many2many_binary"/>
+                                    <field name="attachment_bill_ids" widget="many2many_binary"/>
+                                    <field name="attachment_certificate2_ids" widget="many2many_binary"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Post Shipment" name="post_shipment">
+                            <group name="shipping_bill" string="Shipping Bill">
+                                <field name="bill_number" />
+                                <field name="bill_date"/>
+                                <field name="attachment_shipping_ids" widget="many2many_binary"/>
+                            </group>
+                            <group name="draft_bill_lading" string="Draft Bill of Lading">
+                                <field name="attachment_ladings_ids" widget="many2many_binary"/>
+                                <field name="bi_date"/>
+                                <field name="bi_type" />
+                                <field name="comments_bi" attrs="{'required': [('bi_type', '=', 'yes')]}"/>
+                                <field name="attachment_ladings1_ids" widget="many2many_binary"/>
+                                <field name="bi_date1" />
+                                <field name="bi_type1" />
+                                <field name="comments_bi1" attrs="{'required': [('bi_type1', '=', 'yes')]}"/>
+                                <field name="attachment_final_ladings_ids" widget="many2many_binary"/>
+                                <field name="bi_date2" />
+                            </group>
+                            <group name="payment" string="Payment">
+                                <field name="bl_type"/>
+                                <field name="balance_type"/>
+                                <field name="payment_remark" />
+                                <field name="sale_team_type" />
+                                <field name="acoount_team_type"/>
+                            </group>
                         </page>
                     </notebook>
                 </sheet>

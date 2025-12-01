@@ -10,3 +10,6 @@ class ProductShippingMst(models.Model):
     
 
     name = fields.Char(string='Name',tracking=True)
+    display_name_on_pi = fields.Selection([
+        ("product_name", "Product Name"),  
+        ("shipping_name", "Shipping Name")],string="Label Type",tracking=True)

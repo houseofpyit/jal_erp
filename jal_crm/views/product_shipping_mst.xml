@@ -11,6 +11,9 @@
                         <group>
                             <field name="name" required="1" />
                         </group>
+                        <group>
+                            <field name="display_name_on_pi" required="1"/>
+                        </group>
                     </group>                    
                 </sheet>
                 <div class="oe_chatter">
@@ -26,6 +29,7 @@
         <field name="arch" type="xml" >
             <tree sample="1">
                 <field name="name"/>
+                <field name="display_name_on_pi" />
             </tree>
         </field>
     </record>

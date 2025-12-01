@@ -253,7 +253,7 @@
                                         <td style="text-align: left;border-right: 1px solid black;">
                                             <!-- <span><span t-esc="item.product_tmpl_id.name"></span></span><br/> -->
                                             <t t-if="item.order_id.display_name_on_pi == 'product_name'">
-                                                 <span><span t-esc="item.product_tmpl_id.name"></span></span><br/>
+                                                 <span><span t-esc="item.product_shipping_id.name"></span></span><br/>
                                              </t>
                                              <t t-else="item.order_id.display_name_on_pi == 'shipping_name'">
                                                  <span><span t-esc="item.shipping_id.name"></span></span><br/>

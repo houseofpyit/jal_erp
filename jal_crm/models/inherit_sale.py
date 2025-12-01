@@ -128,6 +128,7 @@ class inheritedSaleOrderLine(models.Model):
    _inherit = "sale.order.line"
 
    shipping_id = fields.Many2one('product.shipping.mst',string="Shipping Name")
+   product_shipping_id = fields.Many2one('product.shipping.mst',string="Product Name")
    # drum_cap_id = fields.Many2one('capacity.mst',string="Capacity Per Drum",domain="[('packaging_type','=','drum')]")
    # bucket_cap_id = fields.Many2one('capacity.mst',string="Capacity",domain="[('packaging_type','=','bucket')]")
    # box_cap_id = fields.Many2one('capacity.mst',string="Capacity Per Box",domain="[('packaging_type','=','box')]")
