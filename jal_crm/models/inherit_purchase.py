@@ -12,8 +12,8 @@ class inheritedPurchaseOrder(models.Model):
    team_id = fields.Many2one('crm.team',string="Sales Team",domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",tracking=True,default=_get_default_team)
    pur_req_id = fields.Many2one('jal.purchase.requisite',string="Purchase Requisition")
    attachment_ids = fields.Many2many('ir.attachment','attachment_po_id',string="Document Attachment")
-   # remarks = fields.Text(string="Remarks")
    conditions_ids = fields.Many2many('sale.term.conditions','ref_po_conditions_ids',string="Term & Conditions")
+   remarks = fields.Text(string="Remarks")
 
    @api.onchange('conditions_ids')
    def _onchange_conditions_ids(self):

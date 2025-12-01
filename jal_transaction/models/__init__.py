@@ -4,3 +4,6 @@ from . import inherit_purchase_requisite
 from . import inherit_sale
 from . import inherit_partner
 from . import inherit_purchasebill
+from . import inherit_product
+from . import cost_center_budget
+from . import inherit_purchase

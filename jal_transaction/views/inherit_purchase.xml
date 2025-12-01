@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="purchase_order_form_view_inherit_transaction" model="ir.ui.view">
+        <field name="name">purchase.order.form.view.inherit.transaction</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='name']" position="after">
+                <field name="cost_id" width="150px"  options="{'no_open': True, 'no_create': True}"/>
+                <field name="cost_budget" width="150px" readonly="1" force_save="1" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

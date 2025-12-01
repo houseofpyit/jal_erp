@@ -7,40 +7,41 @@
         <field name='arch' type='xml'>
             <form>
                 <header>
-                    <button string="Create PO" name="create_purchase_po" type="object" class="btn-primary" attrs="{'invisible': ['|',('state', '=', 'confirm'),('is_po_count' ,'!=', 0)]}" />
+                    <button name="action_send_manager" string="Send to Manager" type="object" attrs="{'invisible': [('state', '!=', 'draft')]}" class="btn-primary"/>
+                    <button string="Approve" name="action_approved" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', 'sent')]}" groups="jal_crm.res_group_purchase_req_manager,jal_crm.res_group_purchase_req_admin"/>
+                    <button string="Create PO" name="create_purchase_po" type="object" class="btn-primary" attrs="{'invisible': ['|',('state', '!=', 'approved'),('is_po_count' ,'!=', 0)]}" groups="jal_crm.res_group_purchase_req_manager,jal_crm.res_group_purchase_req_admin"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                    <button name="action_view_pur_order" type="object" class="oe_stat_button" icon="fa-shopping-cart" attrs="{'invisible': [('is_po_count', '=', 0)]}">
-                        <field name="is_po_count" widget="statinfo" string="Purchase Order"/>
-                    </button>
+                        <button name="action_view_pur_order" type="object" class="oe_stat_button" icon="fa-shopping-cart" attrs="{'invisible': [('is_po_count', '=', 0)]}">
+                            <field name="is_po_count" widget="statinfo" string="Purchase Order"/>
+                        </button>
                     </div>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" readonly="1"/>
+                            <field name="name" readonly="1" force_save="1"/>
                         </h1>
                     </div>
                     <group>
                         <group>
-                            <field name="date_order" readonly="1" />
-                            <!-- <field name="is_po_count"  /> -->
-                            <field name="user_id" invisible="1"/>
+                            <field name="date_order" readonly="1" force_save="1"/>
+                                <field name="user_id" invisible="1"/>
                             <field name='company_id' invisible="1"/>
                         </group>
                         <group>
-                            <field name='sale_id' options="{'no_create': True,}" readonly="1"/>
-                            <field name="date_confirm" readonly="1" attrs="{'invisible': [('state', '=', 'draft')]}" />
+                            <field name='sale_id' options="{'no_create': True,}" readonly="1" force_save="1"/>
+                            <field name="date_confirm" readonly="1" attrs="{'invisible': [('state', '!=', 'confirm')]}" />
                         </group>
                     </group>
                     <notebook>
                         <page string="Products">
                             <field name="line_ids" >
                                 <tree editable="bottom">
-                                    <field name="product_id" options="{'no_create': True}" required="1"/>
-                                    <field name="description"/>
-                                    <field name="uom_id" readonly="1" options="{'no_create': True}" attrs="{'readonly': [('parent.state','!=','draft')]}"/>
-                                    <field name="qty" attrs="{'readonly': [('parent.state','!=','draft')]}" sum="Qty"/>
+                                    <field name="product_id" options="{'no_create': True}" required="1" attrs="{'readonly': [('parent.state','=','confirm')]}"/>
+                                    <field name="description" attrs="{'readonly': [('parent.state','=','confirm')]}"/>
+                                    <field name="qty" attrs="{'readonly': [('parent.state','=','confirm')]}" sum="Qty"/>
+                                    <field name="uom_id" readonly="1" options="{'no_create': True}" attrs="{'readonly': [('parent.state','=','confirm')]}"/>
                                 </tree>
                             </field>
                         </page>
@@ -55,11 +56,12 @@
         <field name='name'>jal.purchase.requisite.tree</field>
         <field name='model'>jal.purchase.requisite</field>
         <field name='arch' type='xml'>
-            <tree decoration-success="state == 'approve'" decoration-info="state == 'request'" decoration-danger="state == 'reject'">
+            <tree>
                 <field name='name'/>
+                <field name='sale_id'/>
                 <field name="user_id" />
                 <field name="date_order" />
-                <field name="state" decoration-success="state == 'approve'" decoration-info="state == 'request'" decoration-danger="state == 'reject'" widget="badge" />
+                <field name="state" widget="badge" />
             </tree>
         </field>
     </record>
@@ -69,13 +71,13 @@
         <field name="model">jal.purchase.requisite</field>
         <field name="arch" type="xml">
             <search string="Purchase Requisite Filter">
-                <field name="name" string="Search" filter_domain="['|',('name', 'ilike', self),('date_order', 'ilike', self)]"/>
-                <!-- <field name="product_id"/>
-                <field name="vendor_id" /> -->
+                <field name="name" string="Search" filter_domain="['|',('name', 'ilike', self),('sale_id', 'ilike', self)]"/>
+                <field name="sale_id"/>
                 <group expand="0" string="Group By">
-                    <filter domain="[('state','=','draft')]" string="Draft" name="filter_draft"/>
-                    <filter domain="[('state','=','request')]" string="Request" name="filter_request"/>
+                        <filter string="Requisition Date" name="groupby_date_order" domain="[]" context="{'group_by': 'date_order'}"/>
                     <separator/>
+                    <filter domain="[('state','=','draft')]" string="Draft" name="filter_draft"/>
+                    <filter domain="[('state','=','confirm')]" string="Confirm" name="filter_confirm"/>
                 </group>
             </search>
         </field>

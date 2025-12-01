@@ -11,6 +11,7 @@
     'depends': ['base','crm','sale_management','purchase','stock','l10n_in','sale_stock','sale_crm'],
     'data': [
         'data/sequence.xml',
+        'data/inherit_res_lang.xml',
         'security/ir.model.access.csv',
         'security/record_rule.xml',
         'security/security_group.xml',
