@@ -21,8 +21,8 @@
                 <field name="send_quality" invisible="1"/>
             </xpath>
             <xpath expr="//page[@name='operations']/field[@name='move_ids_without_package']/tree/field[@name='product_uom']" position="before">
-                <field name="demand_bucket" attrs="{'readonly': ['|',('state','!=','draft'),('uom_handling_type', '!=', 'multi')]}"/>
-                <field name="done_bucket" attrs="{'readonly': ['|','|',('is_quantity_done_editable', '=', False),('state','!=','draft'),('uom_handling_type', '!=', 'multi')], 'column_invisible':[('parent.state', '=', 'draft')]}"/>
+                <field name="demand_bucket" force_save="1" attrs="{'readonly': ['|',('state','!=','draft'),('uom_handling_type', '!=', 'multi')]}"/>
+                <field name="done_bucket" force_save="1" attrs="{'readonly': ['|','|',('is_quantity_done_editable', '=', False),('state','!=','draft'),('uom_handling_type', '!=', 'multi')], 'column_invisible':[('parent.state', '=', 'draft')]}"/>
                 <field name="uom_handling_type" invisible="1"/>
                 <field name="quality_result" readonly="1" attrs="{'column_invisible':[('parent.picking_type_code', '!=', 'incoming')]}"/>
             </xpath>
@@ -35,8 +35,8 @@
         <field name="inherit_id" ref="stock.view_stock_move_line_detailed_operation_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//tree/field[@name='qty_done']" position="after">
-                <field name="demand_bucket" invisible="1"/>
-                <field name="done_bucket" attrs="{'readonly': [('uom_handling_type', '!=', 'multi')]}"/>
+                <field name="demand_bucket" force_save="1" invisible="1"/>
+                <field name="done_bucket" force_save="1" attrs="{'readonly': [('uom_handling_type', '!=', 'multi')]}"/>
                 <field name="uom_handling_type" invisible="1"/>
             </xpath>
         </field>
@@ -67,7 +67,7 @@
                 <label for="done_bucket"/>
                     <div class="o_row">
                         <span><field name="done_bucket" readonly="1" force_save="1"/> / </span>
-                        <span><field name="demand_bucket" readonly="1" /></span>
+                        <span><field name="demand_bucket" force_save="1" readonly="1" /></span>
                         <span><field name="product_uom" readonly="1"/></span>
                     </div>
             </xpath>
