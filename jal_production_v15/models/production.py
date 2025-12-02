@@ -98,7 +98,7 @@ class JalProduction(models.Model):
     def action_complete_btn(self):
         # self._create_stock_picking_receipts()
         self._create_stock_picking_out()
-        # self.state = 'complete'
+        self.state = 'complete'
 
     # def _create_stock_picking_receipts(self):
     #     if not self.finished_line_ids:
