@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="stock_picking_form_inherit_production" model="ir.ui.view">
+        <field name="name">stock.picking.form.view.inherit.production</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='location_dest_id']" position="after">
+                <field name="vendor_bill_no" attrs="{'invisible': [('picking_type_code', '!=', 'incoming')]}"/>
+                <field name="vendor_bill_date" attrs="{'invisible': [('picking_type_code', '!=', 'incoming')]}"/>
+                <field name="vehicle_no" attrs="{'invisible': [('picking_type_code', '!=', 'incoming')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

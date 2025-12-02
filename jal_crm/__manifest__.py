@@ -33,6 +33,7 @@
         'views/sale_misc_mst.xml',
         'views/product_misc_mst.xml',
         'views/purchase_requisite.xml',
+        'views/inherit_stock.xml',
         # 'views/inherit_company.xml',
         'views/master_menu.xml',
 

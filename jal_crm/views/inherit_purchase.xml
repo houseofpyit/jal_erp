@@ -9,6 +9,7 @@
             <xpath expr="//div[@name='reminder']" position="after">
                 <field name="team_id" options="{'no_open': True, 'no_create': True}"/>
                 <field name="business_type" />
+                <field name="picking_ids" widget="many2many_tags"/>
                 <field name="pur_req_id" invisible="1"/>
             </xpath>
             <xpath expr="//page[@name='purchase_delivery_invoice']/group" position="after">

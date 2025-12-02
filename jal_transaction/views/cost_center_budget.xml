@@ -11,6 +11,7 @@
                             <group>
                                 <field name="cost_id" options="{'no_open': True, 'no_create': True}"/>
                                 <field name="amount" />
+                                <field name="per_month_cost" />
                             </group>
                             <group>
                                 <field name="date" />

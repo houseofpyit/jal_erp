@@ -27,3 +27,12 @@ class inheritedPurchaseOrder(models.Model):
    @api.onchange('team_id')
    def _onchange_team_id(self):
       self.business_type = self.team_id.business_type
+
+   def action_bill(self):
+      res = super(inheritedPurchaseOrder, self).action_bill()
+      purchase_bill_line_rec = self.env['hop.purchasebill.line'].search([('order_id','=',self.id)],limit=1)
+      bill_rec = ''
+      for picking in self.picking_ids:
+         bill_rec = picking.vendor_bill_no
+      purchase_bill_line_rec.mst_id.bill_number = bill_rec
+      return res
