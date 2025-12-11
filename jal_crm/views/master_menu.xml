@@ -28,14 +28,14 @@
             name="CRM"
             action="crm_lead_action_pipeline_international"
             parent="jal_crm.international_main_menu"
-            sequence="1"/>
+            sequence="2"/>
 
         <menuitem
             id="sale_international_main"
             name="Sales"
             action="jal_crm.action_quotations_with_onboarding_international"
             parent="jal_crm.international_main_menu"
-            sequence="2"/>
+            sequence="1"/>
 
         <menuitem
             id="stock_international_main"
@@ -121,8 +121,14 @@
 
             <menuitem id="jal_crm.international_sale_inspection_mst_menu"
                 active="False"/>
-                
 
+            <menuitem
+                id="menu_crm_lead_stage_act"
+                name="CRM Stages"
+                sequence="8"
+                parent="jal_crm.international_configuration_main_menu"
+                action="crm.crm_stage_action"/>
+                
         <menuitem
             id="international_packing_list_main_menu"
             name="Packing Master"
@@ -209,14 +215,14 @@
             name="CRM"
             action="crm_lead_action_pipeline_domestic"
             parent="jal_crm.domestic_main_menu"
-            sequence="1"/>
+            sequence="2"/>
 
         <menuitem
             id="sale_domestic_main"
             name="Sales"
             action="jal_crm.action_quotations_with_onboarding_domestic"
             parent="jal_crm.domestic_main_menu"
-            sequence="2"/>
+            sequence="1"/>
 
         <menuitem
             id="stock_domestic_main"
@@ -387,14 +393,14 @@
             name="CRM"
             action="crm_lead_action_pipeline_trading"
             parent="jal_crm.trading_main_menu"
-            sequence="1"/>
+            sequence="2"/>
 
         <menuitem
             id="sale_trading_main"
             name="Sales"
             action="jal_crm.action_quotations_with_onboarding_trading"
             parent="jal_crm.trading_main_menu"
-            sequence="2"/>
+            sequence="1"/>
             
         <menuitem
             id="stock_trading_main"

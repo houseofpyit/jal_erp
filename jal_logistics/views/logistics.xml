@@ -10,19 +10,23 @@
                     <!-- <button string="Running" name="action_running_btn" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'draft')]}"  confirm=""/>
                     <button string="Complete" name="action_complete_btn" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'running')]}" groups="jal_logistics_v15.res_group_logistics_admin" confirm="Are you sure you want to complete this logistics?"/>
                     <button string="Get Quality" name="action_get_quality_btn" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'running')]}" groups="jal_logistics_v15.res_group_logistics_admin" confirm=""/> -->
-                    <button string="Booking Confirm" name="action_booking_confirm" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'pi_confirm')]}" />
-                    <button string="Done" name="action_done" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'booking_confirm')]}" />
+                    <button string="Start Booking" name="action_start_booking" type="object" class="btn-primary" attrs="{'invisible': ['|', ('state', '!=', 'pre_shipment'), ('booking_date', '!=', False)]}" />
+                    <button string="Confirm Booking" name="action_finish_booking" type="object" class="btn-primary" attrs="{'invisible': ['|', ('booking_date', '=', False), ('is_finish_booking', '=', True)]}" />
+                    <button string="Move to Dispatch/Document" name="action_move_document" type="object" class="btn-primary" attrs="{'invisible': ['|', ('is_finish_booking', '=', False), ('state', 'in', ('dispatch_document','post_shipment','close'))]}" />
+                    <button string="Post Shipment" name="action_post_shipment" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', 'dispatch_document')]}" />
+                    <button string="Close" name="action_close" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', 'post_shipment')]}" />
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" readonly="1"/>
+                            <field name="name" readonly="1" force_save="1"/>
                         </h1>
                     </div>
                     <group>
                         <group>
                             <field name='company_id' invisible="1"/>
+                            <field name='is_finish_booking' invisible="1"/>
                             <field name='sale_id' required="1" options="{'no_create': True}" domain="[('state', '=', 'sale')]"/>
                             <!-- <field name='product_tmpl_id' options="{'no_create': True}" domain="[('is_finished_goods', '=', True)]" required="1" attrs="{'readonly': [('state','=','complete')]}"/>
                             <field name='shift_id' options="{'no_quick_create': True}" attrs="{'readonly': [('state','=','complete')]}" required="1"/> -->
@@ -37,12 +41,12 @@
                         <page string="Pre-Shipment" name="pre_shipment">
                             <group>
                                 <group string="Logistics">
-                                    <field name="booking_id" options="{'no_quick_create': True}"/>
-                                    <field name="transport_id" options="{'no_quick_create': True}"/>
+                                    <field name="booking_id" options="{'no_quick_create': True}" domain="[('acc_type','=','AGENT')]" context="{'default_acc_type': 'AGENT'}"/>
+                                    <field name="transport_id" options="{'no_quick_create': True}" domain="[('acc_type','=','TRANSPORT')]" context="{'default_acc_type': 'TRANSPORT'}"/>
                                     <field name="cha_id" options="{'no_quick_create': True}"/>
                                     <field name="shipping_id" options="{'no_quick_create': True}"/>
                                     <field name="hbl_type" widget="radio" options="{'horizontal': true}"/>
-                                    <field name="booking_date" />
+                                    <field name="booking_date" readonly="1" force_save="1"/>
                                     <field name="booking_received" />
                                 </group>
                                 <group string="Booking Details">
@@ -55,7 +59,7 @@
                                 </group>
                                 
                                 <group string="Planning Details">
-                                    <field name="loading_planner" />
+                                    <field name="loading_planner_id" options="{'no_quick_create': True}"/>
                                     <field name="planning_index" />
                                     <field name="remarks" />
                                 </group>
@@ -67,7 +71,28 @@
                                     <field name="inspection_date" attrs="{'invisible': [('loading_type', '!=', 'Yes')]}"/>
                                     <field name="inspection_remarks" attrs="{'invisible': [('loading_type', '!=', 'Yes')]}"/>
                                 </group>
+
+                                <group string="Heading: Booking Documents">
+                                    <field name="attachment_invoice_pre_ids" widget="many2many_binary"/>
+                                    <field name="attachment_packing_list_ids" widget="many2many_binary"/>
+                                    <field name="attachment_iip1_ids" widget="many2many_binary"/>
+                                    <field name="attachment_msds_ids" widget="many2many_binary"/>
+                                </group>
+                                <group string="Need to put attachments">
+                                    <field name="attachment_booking_copy_ids" widget="many2many_binary"/>
+                                    <field name="haz_type" widget="radio" options="{'horizontal': true}" />
+                                    <field name="label_remark_id" options="{'no_quick_create': True}" context="{'default_label_type': 'haz'}" domain="[('label_type', '=', 'haz')]" attrs="{'invisible': [('haz_type', '!=', 'Yes')]}"/>
+                                    <field name="dead_fish_type" widget="radio" options="{'horizontal': true}" />
+                                    <field name="label_remark1_id" options="{'no_quick_create': True}" context="{'default_label_type': 'dead_fish'}" domain="[('label_type', '=', 'dead_fish')]" attrs="{'invisible': [('dead_fish_type', '!=', 'Yes')]}"/>
+                                    <field name="un_printing_type" widget="radio" options="{'horizontal': true}" />
+                                    <field name="label_remark2_id" options="{'no_quick_create': True}" context="{'default_label_type': 'un_print'}" domain="[('label_type', '=', 'un_print')]" attrs="{'invisible': [('un_printing_type', '!=', 'Yes')]}"/>
+                                </group>
+                                <group>
+                                    <field name="hold_type" widget="radio" options="{'horizontal': true}" />
+                                    <field name="remarks_hold" />
+                                </group>
                             </group>
+
                         </page>
                         <page string="Dispatch" name="dispatch">
                             <group>
@@ -83,18 +108,21 @@
                             </group>
                             <field name="dispatch_line_ids" >
                                 <tree editable="" >
-                                    <field name = "container_no" width="150px"/>
-                                    <field name = "seal_no" width="150px"/>
+                                    <field name = "container_no" width="100px"/>
+                                    <field name = "seal_no" width="100px"/>
                                     <field name = "itek_seal_no" width="150px"/>
-                                    <field name = "container_size" width="150px"/>
-                                    <field name = "total_drums" width="150px"/>
+                                    <field name = "container_size" width="200px"/>
+                                    <field name = "total_drums" width="200px"/>
                                     <field name = "lr_no" width="150px"/>
                                     <field name = "truck_no" width="150px"/>
                                     <field name = "transport_id" options="{'no_quick_create': True}" width="150px"/>
                                     <field name = "load_kg" width="150px"/>
                                     <field name = "tare_wt" width="150px"/>
                                     <field name = "total_gross" width="150px"/>
-                                    <field name = "total_gross" width="150px"/>
+                                    <field name = "label_type" width="150px"/>
+                                    <field name = "label_remark" width="150px"/>
+                                    <field name = "product_expiry" width="150px"/>
+                                    <field name = "batch_number" width="150px"/>
                                 </tree>
                                 <form>
                                     <sheet>
@@ -109,18 +137,21 @@
                                             </group>
                                             <group>
                                                 <field name = "truck_no" />
-                                                <field name = "transport_id" options="{'no_quick_create': True}"/>
+                                                <field name="transport_id" options="{'no_quick_create': True}" domain="[('acc_type','=','TRANSPORT')]" context="{'default_acc_type': 'TRANSPORT'}"/>
                                                 <field name = "load_kg" />
                                                 <field name = "tare_wt" />
                                                 <field name = "total_gross" />
-                                                <field name = "total_gross" />
+                                                <field name = "label_type" widget="radio" options="{'horizontal': true}"/>
+                                                <field name = "label_remark" attrs="{'invisible': [('label_type', '!=', 'yes')]}"/>
+                                                <field name = "product_expiry" />
+                                                <field name = "batch_number" />
                                             </group>
                                         </group>
                                         <field name="line_ids" >
                                             <tree editable="bottom" >
                                                 <field name = "sale_line_id" options="{'no_create': True}" domain="[('order_id', '=', sale_id)]" context="{'show_packing_name': True}"/>
                                                 <field name = "sale_id" invisible="1"/>
-                                                <field name = "qty" />
+                                                <field name = "qty" width="150px"/>
                                             </tree>
                                         </field>
                                         <group>
@@ -160,26 +191,28 @@
                                                         <field name="line_ids" >
                                                             <tree editable="bottom" >
                                                                 <field name = "name" />
-                                                                <field name = "qty" sum="Qty"/>
+                                                                <field name = "qty" sum="Qty" width="150px"/>
                                                             </tree>
                                                         </field>
                                                     </sheet>
                                                 </form>
                                             </field>
                                         </group>
-                                        <field name="truck_detention_line_ids">
-                                            <tree editable="bottom" >
-                                                <field name="date" width="130"/>
-                                                <field name="time" widget="float_time" width="120"/>
-                                                <field name="dep_date" width="130"/>
-                                                <field name="dep_time" widget="float_time" width="120"/>
-                                            </tree>
-                                        </field>
+                                        <group>
+                                            <group>
+                                                <field name="date" />
+                                                <field name="dep_date" />
+                                            </group>
+                                            <group>
+                                                <field name="time" widget="float_time" />
+                                                <field name="dep_time" widget="float_time" />
+                                            </group>
+                                        </group>
                                         <group>
                                             <group>
                                                 <field name="detention_type" widget="radio" options="{'horizontal': true}"/>
-                                                <field name="detention_amount" attrs="{'required': [('detention_type', '=', 'yes')]}"/>
-                                                <field name="reason_detention" attrs="{'required': [('detention_type', '=', 'yes')]}"/>
+                                                <field name="detention_amount" attrs="{'required': [('detention_type', '=', 'yes')],'invisible': [('detention_type', '=', 'no')]}"/>
+                                                <field name="reason_detention" attrs="{'required': [('detention_type', '=', 'yes')],'invisible': [('detention_type', '=', 'no')]}"/>
                                             </group>
                                         </group>
                                     </sheet>
@@ -262,32 +295,92 @@
                             </group>
                         </page>
                         <page string="Post Shipment" name="post_shipment">
-                            <group name="shipping_bill" string="Shipping Bill">
-                                <field name="bill_number" />
-                                <field name="bill_date"/>
-                                <field name="attachment_shipping_ids" widget="many2many_binary"/>
+                            <group >
+                                <group name="shipping_bill" string="Shipping Bill">
+                                    <field name="bill_number" />
+                                    <field name="bill_date"/>
+                                    <field name="attachment_shipping_ids" widget="many2many_binary"/>
+                                </group>
                             </group>
-                            <group name="draft_bill_lading" string="Draft Bill of Lading">
-                                <field name="attachment_ladings_ids" widget="many2many_binary"/>
-                                <field name="bi_date"/>
-                                <field name="bi_type" />
-                                <field name="comments_bi" attrs="{'required': [('bi_type', '=', 'yes')]}"/>
-                                <field name="attachment_ladings1_ids" widget="many2many_binary"/>
-                                <field name="bi_date1" />
-                                <field name="bi_type1" />
-                                <field name="comments_bi1" attrs="{'required': [('bi_type1', '=', 'yes')]}"/>
-                                <field name="attachment_final_ladings_ids" widget="many2many_binary"/>
-                                <field name="bi_date2" />
+                            <h6 style="color: #71639e; font-weight: bold;">Draft Bill of Lading</h6>
+                            <field name="bill_lading_line_ids">
+                                <tree editable="bottom" >
+                                    <field name="attachment_ladings_ids" widget="many2many_binary"/>
+                                    <field name="bi_date"/>
+                                    <field name="bi_type"/>
+                                    <field name="comments_bi" attrs="{'required': [('bi_type', '=', 'yes')]}"/>
+                                </tree>
+                            </field>
+                            <group>
+                                <group>
+                                    <field name="attachment_final_ladings_ids" widget="many2many_binary"/>
+                                    <field name="bi_date2" />
+                                </group>
                             </group>
-                            <group name="payment" string="Payment">
-                                <field name="bl_type"/>
-                                <field name="balance_type"/>
-                                <field name="payment_remark" />
-                                <field name="sale_team_type" />
-                                <field name="acoount_team_type"/>
+                            <group>
+                                <group name="bl_status" string="BL Status">
+                                    <field name="bl_status_type" />
+                                </group>
                             </group>
+                            <group >
+                                <group  name="payment" string="Payment">
+                                    <field name="bl_type"/>
+                                    <field name="balance_type" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="payment_remark" />
+                                    <field name="sale_team_type" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="acoount_team_type" widget="radio" options="{'horizontal': true}"/>
+                                </group>
+                            </group>
+
+                            <h2 style="color: #71639e; font-weight: bold;">Shipping Invoices Management</h2>
+                            <group>
+                                <group string="Invoices Details">
+                                    <field name="freight_inv_number" />
+                                    <field name="attachment_freight_inv_ids" widget="many2many_binary"/>
+                                    <field name="transport_inv_number" />
+                                    <field name="attachment_transport_inv_ids" widget="many2many_binary"/>
+                                    <field name="remarks_log_team" />
+                                    <field name="remarks_agent_team" />
+                                </group>
+                                <group string="Detention &amp; late BL &amp;BL Correction &amp; Inspection charges.">
+                                    <field name="detention_type" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="detention_amount" attrs="{'required': [('detention_type', '=', 'yes')]}"/>
+                                    <field name="detention_reason" attrs="{'required': [('detention_type', '=', 'yes')]}"/>
+                                    <field name="late_bl_type" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="late_bl_charges" />
+                                    <field name="bl_correction_type" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="bl_correction_charges" />
+                                    <field name="inspection_chr_type" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="comments_log_team" />
+                                    <field name="comments_agent_team" />
+                                </group>
+                            </group>
+
+                            <group string="Container Management Module">
+                                <group>
+                                    <field name="shipping_route" />
+                                    <field name="shipping_line1_id" options="{'no_quick_create': True}"/>
+                                    <field name="transit_days" />
+                                    <field name="eta" />
+                                    <field name="etd" />
+                                    <field name="management_remarks" />
+                                </group>
+                            </group>
+                            <field name="container_management_line_ids">
+                                <tree editable="bottom" >
+                                    <field name="name"/>
+                                    <field name="check_eta" width="150px"/>
+                                    <field name="remarks"/>
+                                </tree>
+                            </field>
                         </page>
                     </notebook>
+                    <group name="note_group" col="6" class="mt-2 mt-md-0">
+                        <group colspan="4">
+                            <field name="notes" class="oe-bordered-editor" nolabel="1" />
+                        </group>
+                        <div class="oe_clear"/>
+                    </group> 
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_ids"/>
@@ -303,7 +396,17 @@
             <tree>
                 <field name='name'/>
                 <field name="date" />
-                <field name='sale_id' required="1"/>
+                <field name='sale_id' />
+                <field name='booking_id' />
+                <field name='transport_id' />
+                <field name='loading_planner_id' />
+                <field name='epcg_liscence_number' />
+                <field name='invoice_number' />
+                <field name='bill_number' />
+                <field name='bill_date' />
+                <field name='freight_inv_number' />
+                <field name='transport_inv_number' />
+                <field name='shipping_route' />
                 <field name="state" widget="badge"/>
             </tree>
         </field>
@@ -354,6 +457,541 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">jal.logistics</field>
         <!-- <field name="context">{"search_default_filter_draft":1,"search_default_filter_request":1}</field> -->
+        <field name="view_ids"
+            eval="[(5, 0, 0),
+                    (0, 0, {'view_mode': 'tree', 'view_id': ref('jal_logistics_tree')}),
+                    (0, 0, {'view_mode': 'form', 'view_id': ref('jal_logistics_form')})]"/>
+        <field name="view_mode">tree,form,kanban</field>
+    </record>
+
+    <record model='ir.ui.view' id='jal_logistics_pre_shipment_form'>
+        <field name='name'>jal.logistics.pre.shipment.form</field>
+        <field name='model'>jal.logistics</field>
+        <field name='arch' type='xml'>
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1" force_save="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name='company_id' invisible="1"/>
+                            <field name='is_finish_booking' invisible="1"/>
+                            <field name='sale_id' readonly="1" force_save="1" required="1" options="{'no_create': True}" domain="[('state', '=', 'sale')]"/>
+                        </group>
+                        <group>
+                            <field name="date" readonly="1" />
+                            <field name='user_id' force_save="1" readonly="1" />
+                        </group>
+                    </group>
+                    <h2 style="color: #71639e; font-weight: bold;">Pre-Shipment</h2>
+                        <group>
+                            <group string="Logistics">
+                                <field name="booking_id" options="{'no_quick_create': True}" domain="[('acc_type','=','AGENT')]" context="{'default_acc_type': 'AGENT'}"/>
+                                <field name="transport_id" options="{'no_quick_create': True}" domain="[('acc_type','=','TRANSPORT')]" context="{'default_acc_type': 'TRANSPORT'}"/>
+                                <field name="cha_id" options="{'no_quick_create': True}"/>
+                                <field name="shipping_id" options="{'no_quick_create': True}"/>
+                                <field name="hbl_type" widget="radio" options="{'horizontal': true}"/>
+                                <field name="booking_date" readonly="1" force_save="1"/>
+                                <field name="booking_received" />
+                            </group>
+                            <group string="Booking Details">
+                                <field name="total_containers" />
+                                <field name="shipping_line_id" options="{'no_quick_create': True}"/>
+                                <field name="freight_per_container" />
+                                <field name="vessel_date" />
+                                <field name="container_stuffing_date" />
+                                <field name="port_id" options="{'no_quick_create': True}"/>
+                            </group>
+                            
+                            <group string="Planning Details">
+                                <field name="loading_planner_id" options="{'no_quick_create': True}"/>
+                                <field name="planning_index" />
+                                <field name="remarks" />
+                            </group>
+                            <group string="Loading Inspection">
+                                <field name="loading_type" widget="radio" options="{'horizontal': true}" />
+                                <field name="inspection_id"  options="{'no_quick_create': True}" attrs="{'invisible': [('loading_type', '!=', 'Yes')]}"/>
+                                <field name="inspection_type" widget="radio" options="{'horizontal': true}" attrs="{'invisible': [('loading_type', '!=', 'Yes')]}"/>
+                                <field name="inspection_name" attrs="{'invisible': [('loading_type', '!=', 'Yes')]}"/>
+                                <field name="inspection_date" attrs="{'invisible': [('loading_type', '!=', 'Yes')]}"/>
+                                <field name="inspection_remarks" attrs="{'invisible': [('loading_type', '!=', 'Yes')]}"/>
+                            </group>
+
+                            <group string="Heading: Booking Documents">
+                                <field name="attachment_invoice_pre_ids" widget="many2many_binary"/>
+                                <field name="attachment_packing_list_ids" widget="many2many_binary"/>
+                                <field name="attachment_iip1_ids" widget="many2many_binary"/>
+                                <field name="attachment_msds_ids" widget="many2many_binary"/>
+                            </group>
+                            <group string="Need to put attachments">
+                                <field name="attachment_booking_copy_ids" widget="many2many_binary"/>
+                                <field name="haz_type" widget="radio" options="{'horizontal': true}" />
+                                <field name="label_remark_id" options="{'no_quick_create': True}" context="{'default_label_type': 'haz'}" domain="[('label_type', '=', 'haz')]"/>
+                                <field name="dead_fish_type" widget="radio" options="{'horizontal': true}" />
+                                <field name="label_remark1_id" options="{'no_quick_create': True}" context="{'default_label_type': 'dead_fish'}" domain="[('label_type', '=', 'dead_fish')]"/>
+                                <field name="un_printing_type" widget="radio" options="{'horizontal': true}" />
+                                <field name="label_remark2_id" options="{'no_quick_create': True}" context="{'default_label_type': 'un_print'}" domain="[('label_type', '=', 'un_print')]"/>
+                            </group>
+                            <group>
+                                <field name="hold_type" widget="radio" options="{'horizontal': true}" />
+                                <field name="remarks_hold" />
+                            </group>
+                        </group>
+                        <group name="note_group" col="6" class="mt-2 mt-md-0">
+                            <group colspan="4">
+                                <field name="notes" class="oe-bordered-editor" nolabel="1" />
+                            </group>
+                            <div class="oe_clear"/>
+                        </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model='ir.ui.view' id='jal_logistics_pre_shipment_tree'>
+        <field name='name'>jal.logistics.pre.shipment.tree</field>
+        <field name='model'>jal.logistics</field>
+        <field name='arch' type='xml'>
+            <tree>
+                <field name='name'/>
+                <field name="date" />
+                <field name='sale_id' />
+                <field name='booking_id' />
+                <field name='transport_id' />
+                <field name='loading_planner_id' />
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_jal_logistics_pre_shipment" model="ir.actions.act_window">
+        <field name="name">Pre-Shipment</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">jal.logistics</field>
+        <field name="domain">[('state','=','pre_shipment')]</field>
+        <field name="view_ids"
+            eval="[(5, 0, 0),
+                    (0, 0, {'view_mode': 'tree', 'view_id': ref('jal_logistics_pre_shipment_tree')}),
+                    (0, 0, {'view_mode': 'form', 'view_id': ref('jal_logistics_pre_shipment_form')})]"/>
+        <field name="view_mode">tree,form,kanban</field>
+    </record>
+
+    <record model='ir.ui.view' id='jal_logistics_dispatch_document_form'>
+        <field name='name'>jal.logistics.dispatch.document.form</field>
+        <field name='model'>jal.logistics</field>
+        <field name='arch' type='xml'>
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1" force_save="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name='company_id' invisible="1"/>
+                            <field name='is_finish_booking' invisible="1"/>
+                            <field name='sale_id' readonly="1" force_save="1" required="1" options="{'no_create': True}" domain="[('state', '=', 'sale')]"/>
+                        </group>
+                        <group>
+                            <field name="date" readonly="1" />
+                            <field name='user_id' force_save="1" readonly="1" />
+                        </group>
+                    </group>
+                    <h2 style="color: #71639e; font-weight: bold;">Dispatch</h2>
+                        <group>
+                            <group>
+                                <field name="attachment_batch_ids" widget="many2many_binary"/>
+                                <field name="attachment_branding_ids" widget="many2many_binary"/>
+                                <field name="attachment_packing_ids" widget="many2many_binary"/>
+                            </group>
+                            <group>
+                                <field name="attachment_container_ids" widget="many2many_binary"/>
+                                <field name="attachment_lr_ids" widget="many2many_binary"/>
+                            </group>
+                        </group>
+                        <field name="dispatch_line_ids" >
+                            <tree editable="" >
+                                <field name = "container_no" width="100px"/>
+                                <field name = "seal_no" width="100px"/>
+                                <field name = "itek_seal_no" width="150px"/>
+                                <field name = "container_size" width="200px"/>
+                                <field name = "total_drums" width="200px"/>
+                                <field name = "lr_no" width="150px"/>
+                                <field name = "truck_no" width="150px"/>
+                                <field name="transport_id" options="{'no_quick_create': True}" domain="[('acc_type','=','TRANSPORT')]" context="{'default_acc_type': 'TRANSPORT'}"/>
+                                <field name = "load_kg" width="150px"/>
+                                <field name = "tare_wt" width="150px"/>
+                                <field name = "total_gross" width="150px"/>
+                                <field name = "label_type" width="150px"/>
+                                <field name = "label_remark" width="150px"/>
+                                <field name = "product_expiry" width="150px"/>
+                                <field name = "batch_number" width="150px"/>
+                            </tree>
+                            <form>
+                                <sheet>
+                                    <group>
+                                        <group>
+                                            <field name = "container_no" />
+                                            <field name = "seal_no" />
+                                            <field name = "itek_seal_no" />
+                                            <field name = "container_size" />
+                                            <field name = "total_drums" />
+                                            <field name = "lr_no" />
+                                        </group>
+                                        <group>
+                                            <field name = "truck_no" />
+                                            <field name="transport_id" options="{'no_quick_create': True}" domain="[('acc_type','=','TRANSPORT')]" context="{'default_acc_type': 'TRANSPORT'}"/>
+                                            <field name = "load_kg" />
+                                            <field name = "tare_wt" />
+                                            <field name = "total_gross" />
+                                            <field name = "label_type" widget="radio" options="{'horizontal': true}"/>
+                                            <field name = "label_remark" attrs="{'invisible': [('label_type', '!=', 'yes')]}"/>
+                                            <field name = "product_expiry" />
+                                            <field name = "batch_number" />
+                                        </group>
+                                    </group>
+                                    <field name="line_ids" >
+                                        <tree editable="bottom" >
+                                            <field name = "sale_line_id" options="{'no_create': True}" domain="[('order_id', '=', sale_id)]" context="{'show_packing_name': True}"/>
+                                            <field name = "sale_id" invisible="1"/>
+                                            <field name = "qty" width="150px"/>
+                                        </tree>
+                                    </field>
+                                    <group>
+                                        <group>
+                                            <field name="palletized_type" widget="radio" options="{'horizontal': true}"/>
+                                        </group>
+                                    </group>
+                                    <group attrs="{'invisible': [('palletized_type', '!=', 'yes')]}">
+                                        <field name="palletized_line1_ids" nolabel="1">
+                                            <tree editable="bottom" >
+                                                <field name = "pallet_id" options="{'no_quick_create': True}"/>
+                                                <field name = "bucket_qty" sum="Bucket Qty"/>
+                                                <field name = "sale_id" invisible="1"/>
+                                                <field name = "sale_line_id" options="{'no_create': True}" domain="[('order_id', '=', sale_id)]" context="{'show_packing_name': True}"/>
+                                            </tree>
+                                        </field>
+                                        <field name="palletized_line2_ids" nolabel="1">
+                                            <tree editable="bottom" >
+                                                <field name = "pallet_id" />
+                                                <field name = "bucket_qty" sum="Bucket Qty"/>
+                                                <field name = "sale_id" invisible="1"/>
+                                                <field name = "sale_line_id" options="{'no_create': True}" domain="[('order_id', '=', sale_id)]" context="{'show_packing_name': True}"/>
+                                            </tree>
+                                        </field>
+                                    </group>
+                                    <group attrs="{'invisible': [('palletized_type', '!=', 'no')]}">
+                                        <field name="palletized_line_ids" nolabel="1">
+                                            <tree editable="" >
+                                                <field name = "sale_line_id" options="{'no_create': True}" context="{'show_packing_name': True}"/>
+                                            </tree>
+                                            <form>
+                                                <sheet>
+                                                    <group>
+                                                        <field name = "sale_id" invisible="1"/>
+                                                        <field name = "sale_line_id" domain="[('order_id', '=', sale_id)]" options="{'no_create': True}" context="{'show_packing_name': True}"/>
+                                                    </group>
+                                                    <field name="line_ids" >
+                                                        <tree editable="bottom" >
+                                                            <field name = "name" />
+                                                            <field name = "qty" sum="Qty" width="150px"/>
+                                                        </tree>
+                                                    </field>
+                                                </sheet>
+                                            </form>
+                                        </field>
+                                    </group>
+                                    <group>
+                                        <group>
+                                            <field name="date" />
+                                            <field name="dep_date" />
+                                        </group>
+                                        <group>
+                                            <field name="time" widget="float_time" />
+                                            <field name="dep_time" widget="float_time" />
+                                        </group>
+                                    </group>
+                                    <group>
+                                        <group>
+                                            <field name="detention_type" widget="radio" options="{'horizontal': true}"/>
+                                            <field name="detention_amount" attrs="{'required': [('detention_type', '=', 'yes')],'invisible': [('detention_type', '=', 'no')]}"/>
+                                            <field name="reason_detention" attrs="{'required': [('detention_type', '=', 'yes')],'invisible': [('detention_type', '=', 'no')]}"/>
+                                        </group>
+                                    </group>
+                                </sheet>
+                            </form>
+                        </field>
+                        <h2 style="color: #71639e; font-weight: bold;">Documentation</h2>
+                        <group>
+                            <group>
+                                <field name="epcg_liscence_used" widget="radio" options="{'horizontal': true}"/>
+                                <field name="epcg_liscence_number" attrs="{'required': [('epcg_liscence_used', '=', 'yes')]}" options="{'no_quick_create': True}"/>
+                                <field name="epcg_liscence_date" />
+                                <field name="advanced_liscence_used" widget="radio" options="{'horizontal': true}"/>
+                                <field name="advanced_liscence_number" attrs="{'required': [('advanced_liscence_used', '=', 'yes')]}" options="{'no_quick_create': True}"/>
+                                <field name="advanced_liscence_date" />
+                                <field name="rodtep_claimed" widget="radio" options="{'horizontal': true}"/>
+                            </group>
+                            <group>
+                                <field name="rodtep_amount" attrs="{'required': [('rodtep_claimed', '=', 'yes')]}"/>
+                                <field name="duty_drawback_claimed" widget="radio" options="{'horizontal': true}"/>
+                                <field name="duty_drawback_amount" attrs="{'required': [('duty_drawback_claimed', '=', 'yes')]}"/>
+                                <field name="lut_shipment" widget="radio" options="{'horizontal': true}"/>
+                                <field name="lut_no" attrs="{'required': [('lut_shipment', '=', 'yes')]}"/>
+                                <field name="gst_claimed" widget="radio" options="{'horizontal': true}"/>
+                                <field name="gst_value" attrs="{'required': [('gst_claimed', '=', 'yes')]}"/>
+                            </group>
+                            <group name="shipement_details" string="Shipement Details">
+                                <field name="invoice_number"/>
+                                <field name="date"/>
+                                <label for="total_cif_value" string="Total CIF Value"/>
+                                <div class="o_address_format">
+                                    <field name="total_cif_value" placeholder="Total CIF Value...." class="o_address_city" width="85%"/>
+                                    <field name="cif_currency_id" placeholder="CIF Currency..." class="o_address_state" width="20%" options="{'no_quick_create': True}"/>
+                                </div>
+                                <label for="total_fob_value" string="Total FOB Value"/>
+                                <div class="o_address_format">
+                                    <field name="total_fob_value" placeholder="Total FOB Value...." class="o_address_city" width="85%"/>
+                                    <field name="fob_currency_id" placeholder="FOB Currency..." class="o_address_state" width="20%" options="{'no_quick_create': True}"/>
+                                </div>
+                                <label for="total_freight_value" string="Total Freight Value"/>
+                                <div class="o_address_format">
+                                    <field name="total_freight_value" placeholder="Total Freight Value...." class="o_address_city" width="85%"/>
+                                    <field name="freight_currency_id" placeholder="Freight Currency..." class="o_address_state" width="20%" options="{'no_quick_create': True}"/>
+                                </div>
+                                <label for="total_insurance_value" string="Total Insurance Value"/>
+                                <div class="o_address_format">
+                                    <field name="total_insurance_value" placeholder="Total Insurance Value...." class="o_address_city" width="85%"/>
+                                    <field name="insurance_currency_id" placeholder="Insurance Currency..." class="o_address_state" width="20%" options="{'no_quick_create': True}"/>
+                                </div>
+                                <label for="total_net_wt_qty" string="Total Net Weight Quantity"/>
+                                <div class="o_address_format">
+                                    <field name="total_net_wt_qty" placeholder="Total Net Quantity...." class="o_address_city" width="85%"/>
+                                    <field name="net_wt_uom_id" class="o_address_state" width="20%" options="{'no_quick_create': True}"/>
+                                </div>
+                                <label for="total_gross_wt_qty" string="Total Gross Weight Quantity"/>
+                                <div class="o_address_format">
+                                    <field name="total_gross_wt_qty" placeholder="Total Gross Weight Quantity...." class="o_address_city" width="85%"/>
+                                    <field name="gross_wt_uom_id" class="o_address_state" width="20%" options="{'no_quick_create': True}"/>
+                                </div>
+                            </group>
+                        </group>
+                        <group>
+                            <group name="documents_for_customs" string="Documents for Customs">
+                                <field name="attachment_invoice_ids" widget="many2many_binary"/>
+                                <field name="attachment_packing_ph_ids" widget="many2many_binary"/>
+                                <field name="attachment_hazard_ids" widget="many2many_binary"/>
+                                <field name="attachment_tax_invoice_ids" widget="many2many_binary"/>
+                                <field name="attachment_annexure_ids" widget="many2many_binary"/>
+                                <field name="attachment_examination_ids" widget="many2many_binary"/>
+                                <field name="attachment_certificate_ids" widget="many2many_binary"/>
+                                <field name="attachment_iip_ids" widget="many2many_binary"/>
+                                <field name="attachment_vgm_slip_ids" widget="many2many_binary"/>
+                            </group>
+                            <group name="documentation_for_customer" string="Documentation for the Customer">
+                                <field name="attachment_invoice1_ids" widget="many2many_binary"/>
+                                <field name="attachment_packing_ph1_ids" widget="many2many_binary"/>
+                                <field name="attachment_certificate1_ids" widget="many2many_binary"/>
+                                <field name="attachment_bill_ids" widget="many2many_binary"/>
+                                <field name="attachment_certificate2_ids" widget="many2many_binary"/>
+                                <field name="attachment_insurance_ids" widget="many2many_binary"/>
+                            </group>
+                        </group>
+                        <group name="note_group" col="6" class="mt-2 mt-md-0">
+                            <group colspan="4">
+                                <field name="notes" class="oe-bordered-editor" nolabel="1" />
+                            </group>
+                            <div class="oe_clear"/>
+                        </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model='ir.ui.view' id='jal_logistics_dispatch_document_tree'>
+        <field name='name'>jal.logistics.dispatch.document.tree</field>
+        <field name='model'>jal.logistics</field>
+        <field name='arch' type='xml'>
+            <tree>
+                <field name='name'/>
+                <field name="date" />
+                <field name='sale_id' />
+                <field name='epcg_liscence_number' />
+                <field name='invoice_number' />
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_jal_logistics_dispatch_document" model="ir.actions.act_window">
+        <field name="name">Dispatch/Document</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">jal.logistics</field>
+        <field name="domain">[('state','=','dispatch_document')]</field>
+        <field name="view_ids"
+            eval="[(5, 0, 0),
+                    (0, 0, {'view_mode': 'tree', 'view_id': ref('jal_logistics_dispatch_document_tree')}),
+                    (0, 0, {'view_mode': 'form', 'view_id': ref('jal_logistics_dispatch_document_form')})]"/>
+        <field name="view_mode">tree,form,kanban</field>
+    </record>
+
+    <record model='ir.ui.view' id='jal_logistics_post_shipment_form'>
+        <field name='name'>jal.logistics.post.shipment.form</field>
+        <field name='model'>jal.logistics</field>
+        <field name='arch' type='xml'>
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1" force_save="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name='company_id' invisible="1"/>
+                            <field name='is_finish_booking' invisible="1"/>
+                            <field name='sale_id' readonly="1" force_save="1" required="1" options="{'no_create': True}" domain="[('state', '=', 'sale')]"/>
+                        </group>
+                        <group>
+                            <field name="date" readonly="1" />
+                            <field name='user_id' force_save="1" readonly="1" />
+                        </group>
+                    </group>
+                    <h2 style="color: #71639e; font-weight: bold;">Post Shipment</h2>
+                    <group >
+                        <group name="shipping_bill" string="Shipping Bill">
+                            <field name="bill_number" />
+                            <field name="bill_date"/>
+                            <field name="attachment_shipping_ids" widget="many2many_binary"/>
+                        </group>
+                    </group>
+                    <h6 style="color: #71639e; font-weight: bold;">Draft Bill of Lading</h6>
+                    <field name="bill_lading_line_ids">
+                        <tree editable="bottom" >
+                            <field name="attachment_ladings_ids" widget="many2many_binary" />
+                            <field name="bi_date" />
+                            <field name="bi_type" />
+                            <field name="comments_bi" attrs="{'required': [('bi_type', '=', 'yes')]}" />
+                        </tree>
+                    </field>
+                    <group>
+                        <group>
+                            <field name="attachment_final_ladings_ids" widget="many2many_binary"/>
+                            <field name="bi_date2" />
+                        </group>
+                    </group>
+                    <group>
+                        <group name="bl_status" string="BL Status">
+                            <field name="bl_status_type" />
+                        </group>
+                    </group>
+                    <group  name="payment" string="Payment">
+                        <field name="bl_type"/>
+                        <field name="balance_type" widget="radio" options="{'horizontal': true}"/>
+                        <field name="payment_remark" />
+                        <field name="sale_team_type" widget="radio" options="{'horizontal': true}"/>
+                        <field name="acoount_team_type" widget="radio" options="{'horizontal': true}"/>
+                    </group>
+
+                    <h2 style="color: #71639e; font-weight: bold;">Shipping Invoices Management</h2>
+                        <group>
+                            <group string="Invoices Details">
+                                <field name="freight_inv_number" />
+                                <field name="attachment_freight_inv_ids" widget="many2many_binary"/>
+                                <field name="transport_inv_number" />
+                                <field name="attachment_transport_inv_ids" widget="many2many_binary"/>
+                                <field name="remarks_log_team" />
+                                <field name="remarks_agent_team" />
+                            </group>
+                            <group string="Detention &amp; late BL &amp;BL Correction &amp; Inspection charges.">
+                                <field name="detention_type" widget="radio" options="{'horizontal': true}"/>
+                                <field name="detention_amount" attrs="{'required': [('detention_type', '=', 'yes')]}"/>
+                                <field name="detention_reason" attrs="{'required': [('detention_type', '=', 'yes')]}"/>
+                                <field name="late_bl_type" widget="radio" options="{'horizontal': true}"/>
+                                <field name="late_bl_charges" />
+                                <field name="bl_correction_type" widget="radio" options="{'horizontal': true}"/>
+                                <field name="bl_correction_charges" />
+                                <field name="inspection_chr_type" widget="radio" options="{'horizontal': true}"/>
+                                <field name="comments_log_team" />
+                                <field name="comments_agent_team" />
+                            </group>
+                        </group>
+
+                        <group string="Container Management Module">
+                            <group>
+                                <field name="shipping_route" />
+                                <field name="shipping_line1_id" options="{'no_quick_create': True}"/>
+                                <field name="transit_days" />
+                                <field name="eta" />
+                                <field name="etd" />
+                                <field name="management_remarks" />
+                            </group>
+                        </group>
+                        <field name="container_management_line_ids">
+                            <tree editable="bottom" >
+                                <field name="name"/>
+                                <field name="check_eta" width="150px"/>
+                                <field name="remarks"/>
+                            </tree>
+                        </field>
+
+                        <group name="note_group" col="6" class="mt-2 mt-md-0">
+                            <group colspan="4">
+                                <field name="notes" class="oe-bordered-editor" nolabel="1" />
+                            </group>
+                            <div class="oe_clear"/>
+                        </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model='ir.ui.view' id='jal_logistics_post_shipment_tree'>
+        <field name='name'>jal.logistics.post.shipment.tree</field>
+        <field name='model'>jal.logistics</field>
+        <field name='arch' type='xml'>
+            <tree      decoration-success="balance_type == 'yes'"
+    decoration-warning="bi_date2 != False and balance_type != 'yes'">
+                <field name='name'/>
+                <field name="date" />
+                <field name='sale_id' />
+                <field name='bill_number' />
+                <field name='bill_date' />
+                <field name='freight_inv_number' />
+                <field name='transport_inv_number' />
+                <field name='shipping_route' />
+                <field name='balance_type' />
+                <field name='bi_date2' />
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_jal_logistics_post_shipment" model="ir.actions.act_window">
+        <field name="name">Post Shipment</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">jal.logistics</field>
+        <field name="domain">[('state','=','post_shipment')]</field>
+        <field name="view_ids"
+            eval="[(5, 0, 0),
+                    (0, 0, {'view_mode': 'tree', 'view_id': ref('jal_logistics_post_shipment_tree')}),
+                    (0, 0, {'view_mode': 'form', 'view_id': ref('jal_logistics_post_shipment_form')})]"/>
+        <field name="view_mode">tree,form,kanban</field>
+    </record>
+
+    <record id="action_jal_logistics_close" model="ir.actions.act_window">
+        <field name="name">Close</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">jal.logistics</field>
+        <field name="domain">[('state','=','close')]</field>
+        <field name="view_ids"
+            eval="[(5, 0, 0),
+                    (0, 0, {'view_mode': 'tree', 'view_id': ref('jal_logistics_tree')}),
+                    (0, 0, {'view_mode': 'form', 'view_id': ref('jal_logistics_form')})]"/>
         <field name="view_mode">tree,form,kanban</field>
     </record>
 

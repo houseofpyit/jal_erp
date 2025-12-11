@@ -13,18 +13,20 @@ class JalLogistics(models.Model):
     date = fields.Date(copy=False,string="Date",default=fields.Date.context_today)
     user_id = fields.Many2one('res.users',string="User",default=lambda self: self.env.user.id)
     sale_id = fields.Many2one('sale.order',string="Proforma Invoice")
-    state = fields.Selection([('pending', 'Pending'),('pi_confirm', 'PI Confirm'),('booking_confirm', 'Booking Confirm'),('done', 'Done')], default='pending',tracking=True)
+    # state = fields.Selection([('pending', 'Pending'),('pi_confirm', 'PI Confirm'),('booking_confirm', 'Booking Confirm'),('done', 'Done')], default='pending',tracking=True)
+    state = fields.Selection([('pre_shipment', 'Pre-Shipment'),('dispatch_document', 'Dispatch/Document'),('post_shipment', 'Post Shipment'),('close', 'Close')], default='pre_shipment',tracking=True)
+    notes = fields.Html(string="Notes")
 
     # Pre-Shipment
-    booking_id = fields.Many2one('booking.agent.mst',string="Booking Agent",tracking=True)
-    transport_id = fields.Many2one('transport.agent.mst',string="Transport Agent",tracking=True)
+    booking_id = fields.Many2one('res.partner',string="Booking Agent",tracking=True)
+    transport_id = fields.Many2one('res.partner',string="Transport Agent",tracking=True)
     cha_id = fields.Many2one('cha.mst',string="CHA",tracking=True)
     shipping_id = fields.Many2one('product.shipping.mst',string="Shipping Name",tracking=True)
     hbl_type = fields.Selection([('Yes', 'Yes'),('No', 'No')], string='HBL',tracking=True)
     booking_date = fields.Date(string="Booking Date",tracking=True)
-    booking_received = fields.Char(string="Booking Received",tracking=True)
+    booking_received = fields.Date(string="Booking Received",tracking=True)
     planning_details = fields.Char(string="Planning Details",tracking=True)
-    loading_planner = fields.Char(string="Loading Planner",tracking=True)
+    loading_planner_id = fields.Many2one('loading.planner.mst',string="Loading Planner",tracking=True)
     planning_index = fields.Selection([('Urgent', 'Urgent'),('Hot', 'Hot'),('mild', 'Mild'),('cold', 'Cold')], string='Planning index',tracking=True)
     remarks = fields.Text(string="Remarks",tracking=True)
 
@@ -40,6 +42,21 @@ class JalLogistics(models.Model):
     inspection_name = fields.Char(string="Inspector Name",tracking=True)
     inspection_date = fields.Date(string="Inspection Date",tracking=True)
     inspection_remarks = fields.Text(string="Inspection Remarks",tracking=True)
+
+    attachment_invoice_pre_ids = fields.Many2many('ir.attachment','attachment_invoice_pre_id',string="Invoice")
+    attachment_packing_list_ids = fields.Many2many('ir.attachment','attachment_packing_list_id',string="packing list")
+    attachment_iip1_ids = fields.Many2many('ir.attachment','attachment_iip1_id',string="IIP")
+    attachment_msds_ids = fields.Many2many('ir.attachment','attachment_msds_id',string="MSDS")
+    attachment_booking_copy_ids = fields.Many2many('ir.attachment','attachment_booking_copy_id',string="Booking copy")
+    hold_type = fields.Selection([('Yes', 'Yes'),('No', 'No')], string='Hold',tracking=True)
+    remarks_hold = fields.Text(string='Hold Remark',tracking=True)
+
+    haz_type = fields.Selection([('Yes', 'Yes'),('No', 'No')], string='HAZ Label',tracking=True)
+    label_remark_id = fields.Many2one('label.remark.mst',string='HAZ Remark',tracking=True)
+    dead_fish_type = fields.Selection([('Yes', 'Yes'),('No', 'No')], string='Dead Fish Label',tracking=True)
+    label_remark1_id = fields.Many2one('label.remark.mst',string='HAZ Remark',tracking=True)
+    un_printing_type = fields.Selection([('Yes', 'Yes'),('No', 'No')], string='UN Printing Label',tracking=True)
+    label_remark2_id = fields.Many2one('label.remark.mst',string='HAZ Remark',tracking=True)
 
     # Dispatch
     attachment_batch_ids = fields.Many2many('ir.attachment','attachment_batch_id',string="Batch Label")
@@ -109,6 +126,7 @@ class JalLogistics(models.Model):
     attachment_examination_ids = fields.Many2many('ir.attachment','attachment_examination_id',string="Self- examination form")
     attachment_certificate_ids = fields.Many2many('ir.attachment','attachment_certificate_id',string="Certificate of Analysis")
     attachment_iip_ids = fields.Many2many('ir.attachment','attachment_iip_id',string="IIP-Copies")
+    attachment_vgm_slip_ids = fields.Many2many('ir.attachment','attachment_vgm_slip_id',string="VGM slip")
 
     # Documentation for the Customer
     attachment_invoice1_ids = fields.Many2many('ir.attachment','attachment_invoice1_id',string="Commercial invoice")
@@ -116,28 +134,23 @@ class JalLogistics(models.Model):
     attachment_certificate1_ids = fields.Many2many('ir.attachment','attachment_certificate1_id',string="Certificate of Origin")
     attachment_bill_ids = fields.Many2many('ir.attachment','attachment_bill_id',string="Bill of Lading Draft")
     attachment_certificate2_ids = fields.Many2many('ir.attachment','attachment_certificate2_id',string="Certificate of Analysis")
+    attachment_insurance_ids = fields.Many2many('ir.attachment','attachment_insurance_id',string="Insurance")
 
     # Post Shipment
     bill_number = fields.Char(string='Shipping bill number',tracking=True)
     bill_date = fields.Date(string='Shipping bill date',tracking=True)
     attachment_shipping_ids = fields.Many2many('ir.attachment','attachment_shipping_id',string="Upload shipping bill document")
 
-    attachment_ladings_ids = fields.Many2many('ir.attachment','attachment_ladings_id',string="Draft Bill of lading’s")
-    bi_date = fields.Date(string='BI date',tracking=True)
-    bi_type = fields.Selection([
-            ('yes', 'Yes'),
-            ('no', 'No'),
-        ], string='Draft BI',tracking=True)
-    comments_bi = fields.Text(string='Draft BL Change Comments',tracking=True)
-    attachment_ladings1_ids = fields.Many2many('ir.attachment','attachment_ladings1_id',string="Draft Bill of lading’s")
-    bi_date1 = fields.Date(string='BI date',tracking=True)
-    bi_type1 = fields.Selection([
-            ('yes', 'Yes'),
-            ('no', 'No'),
-        ], string='Draft BI',tracking=True)
-    comments_bi1 = fields.Text(string='Draft BL Change Comments',tracking=True)
+    bill_lading_line_ids = fields.One2many('bill.lading.line','mst_id',string="Bill Lading Dispatch")
+
     attachment_final_ladings_ids = fields.Many2many('ir.attachment','attachment_ladings1_id',string="Final Bill of lading")
     bi_date2 = fields.Date(string='BI date',tracking=True)
+
+    bl_status_type = fields.Selection([
+            ('scan_bl_pending', 'Scan BL Pending'),
+            ('linder_draft_in_progress', 'Linder Draft in Progress'),
+            ('surrender_draft_in_progress', 'Surrender Draft in Progress'),
+        ], string='Status',tracking=True)
 
     bl_type = fields.Selection([
             ('surrender', 'Surrender'),
@@ -157,12 +170,55 @@ class JalLogistics(models.Model):
             ('no', 'No'),
         ], string='Accounts team BL release confirmation',tracking=True)
     
+    # SHIPPING INVOICES MANAGEMENT
+    
+    freight_inv_number = fields.Char(string='Freight invoices Number',tracking=True)
+    attachment_freight_inv_ids = fields.Many2many('ir.attachment','attachment_freight_inv_id',string="Freight invoices")
+    transport_inv_number = fields.Char(string='Transport invoices Number',tracking=True)
+    attachment_transport_inv_ids = fields.Many2many('ir.attachment','attachment_transport_inv_id',string="Transport invoices")
+    remarks_log_team = fields.Char(string='Remarks by logistic team',tracking=True)
+    remarks_agent_team = fields.Char(string='Remarks by agent team',tracking=True)
+
+    detention_type = fields.Selection([('yes', 'Yes'),('no', 'No'),], string='Detention',tracking=True)
+    detention_amount = fields.Float(string='DetentionTotal Detention amount (INR)',tracking=True)
+    detention_reason = fields.Char(string='Reason for Detention',tracking=True)
+    late_bl_type = fields.Selection([('yes', 'Yes'),('no', 'No'),], string='Late Bl',tracking=True)
+    late_bl_charges = fields.Float(string='Late Bl charges',tracking=True)
+    bl_correction_type = fields.Selection([('yes', 'Yes'),('no', 'No'),], string='Bl correction',tracking=True)
+    bl_correction_charges = fields.Float(string='Bl correction charges',tracking=True)
+    inspection_chr_type = fields.Selection([('yes', 'Yes'),('no', 'No'),], string='Inspection charges',tracking=True)
+    comments_log_team = fields.Char(string='Comments by the logistic team',tracking=True)
+    comments_agent_team = fields.Char(string='Comments by the agent team',tracking=True)
+
+    shipping_route = fields.Char(string="Shipping Route",tracking=True)
+    shipping_line1_id = fields.Many2one('shipping.line.mst',string="Shipping line",tracking=True)
+    transit_days = fields.Integer(string="Transit days",tracking=True)
+    eta = fields.Date(string="ETA")
+    etd = fields.Datetime(string="ETD")
+    management_remarks = fields.Char(string="Remarks")
+    is_finish_booking = fields.Boolean(string="Is Finish Booking")
+
+    container_management_line_ids = fields.One2many('logistics.container.management.line','mst_id',string="Line Container Management")
+
     @api.model
     def create(self, vals):
         result = super(JalLogistics, self).create(vals)
         if vals.get('name', _('New')) == _('New'):
             result['name'] = self.env['ir.sequence'].next_by_code('jal.logistics.seq') or _('New')
         return result
+    
+    def default_get(self, fields):
+        res = super(JalLogistics, self).default_get(fields)
+        usd = self.env.ref('base.USD').id
+        res['cif_currency_id'] = usd
+        res['fob_currency_id'] = usd
+        res['freight_currency_id'] = usd
+        res['insurance_currency_id'] = usd
+
+        mt = self.env['uom.uom'].search([('name', '=', 'MT')], limit=1).id
+        res['net_wt_uom_id'] = mt
+        res['gross_wt_uom_id'] = mt
+        return res
     
     @api.onchange('epcg_liscence_used')
     def _onchange_epcg_liscence_used(self):
@@ -217,18 +273,33 @@ class JalLogistics(models.Model):
                     'message': "You cannot set Duty Drawback Claimed to 'Yes' because EPCG Licence Used is already 'Yes'.",                    }
             }
         
-    def action_booking_confirm(self):
+    def action_start_booking(self):
+        self.booking_date = date.today()
+
+    def action_finish_booking(self):
+        if not self.container_stuffing_date:
+            raise ValidationError("Please enter the Container Stuffing Date before finishing the booking.")
+
+        if not self.booking_received:
+            raise ValidationError("Please confirm the Booking Received Date before finishing the booking.")
+        
         mo_rec = self.env['jal.mrp.production'].search([('sale_id', 'in', self.sale_id.ids)])
         for mo in mo_rec:
-            mo.booking_date = date.today()
+            mo.booking_date = self.container_stuffing_date
         for pic in self.sale_id.picking_ids:
             if pic.state != 'done':
-                pic.booking_date = date.today()
-        self.booking_date = date.today()
-        self.state = 'booking_confirm'
+                pic.booking_date = self.container_stuffing_date
 
-    def action_done(self):
-        self.state = 'done'
+        self.is_finish_booking = True
+
+    def action_move_document(self):
+        self.state = 'dispatch_document'
+
+    def action_post_shipment(self):
+        self.state = 'post_shipment'
+
+    def action_close(self):
+        self.state = 'close'
 
 class LogisticsDispatchLine(models.Model):
     _name = 'logistics.dispatch.line'
@@ -244,23 +315,35 @@ class LogisticsDispatchLine(models.Model):
     total_drums = fields.Float(string="Total drums / container")
     lr_no = fields.Char(string="LR No")
     truck_no = fields.Char(string="Truck No")
-    transport_id = fields.Many2one('transport.agent.mst',string="Transport Name")
+    transport_id = fields.Many2one('res.partner',string="Transport Name")
     load_kg = fields.Float(string="Maximum Allowed Load (Kg)")
     tare_wt = fields.Float(string="Tare Wt. (Kg)")
     total_gross = fields.Float(string="Total Gross Including Tare")
     total_gross = fields.Float(string="Weighment Slip No")
-
+    label_type = fields.Selection([('yes', 'Yes'),('no', 'No'),], string='Label directly inside container',default='no')
+    label_remark = fields.Char(string='Remarks')
+    product_expiry = fields.Selection(related='mst_id.sale_id.product_expiry', string="Product Expiry")
+    batch_number = fields.Char(string='Batch number')
+    
     line_ids = fields.One2many('dispatch.packing.line','mst_id',string="Line Dispatch packing")
 
-    palletized_type = fields.Selection([('yes', 'Yes'),('no', 'No'),], string='Palletized')
+    palletized_type = fields.Selection([('yes', 'Yes'),('no', 'No'),], string='Palletized',default='no')
     palletized_line1_ids = fields.One2many('palletized1.line','mst_id',string="Palletized Line 1")
     palletized_line2_ids = fields.One2many('palletized2.line','mst_id',string="Palletized Line 2")
     palletized_line_ids = fields.One2many('palletized.line','mst_id',string="Palletized Line")
-    truck_detention_line_ids = fields.One2many('truck.detention.line','mst_id',string="Truck Detention Line")
 
-    detention_type = fields.Selection([('yes', 'Yes'),('no', 'No'),], string='Detention Applicable')
+    date = fields.Date(string="Truck Arrival Date")
+    time = fields.Float(string="Truck Arrival Time")
+    dep_date = fields.Date(string="Truck Departure Date")
+    dep_time = fields.Float(string="Truck Departure Time")
+
+    detention_type = fields.Selection([('yes', 'Yes'),('no', 'No'),], string='Detention Applicable',default='no')
     detention_amount = fields.Float(string='Detention Amount')
     reason_detention = fields.Text(string='Reason for Detention')
+
+    @api.onchange('line_ids','line_ids.qty')
+    def _onchange_line_ids(self):
+        self.total_drums = sum(self.line_ids.mapped('qty'))
 
 class DispatchPackingLine(models.Model):
     _name = 'dispatch.packing.line'
@@ -269,7 +352,7 @@ class DispatchPackingLine(models.Model):
 
     mst_id = fields.Many2one('logistics.dispatch.line',string="Mst",ondelete='cascade')
 
-    sale_line_id = fields.Many2one('sale.order.line',string="Packing Type (Name)")
+    sale_line_id = fields.Many2one('sale.order.line',string="Stuffing Description")
     sale_id = fields.Many2one(related='mst_id.mst_id.sale_id',string="Proforma Invoice")
     qty = fields.Float(string="No. of Units.")
 
@@ -322,15 +405,34 @@ class LayerLine(models.Model):
     name = fields.Char(string="Description")
     qty = fields.Float(string="Qty")
 
-class TruckDetentionLine(models.Model):
-    _name = 'truck.detention.line'
-    _description = 'Truck Detention Line'
+class LogisticsContainerManagementLine(models.Model):
+    _name = 'logistics.container.management.line'
+    _description = 'Logistics Container Management Line'
     _order = "id desc"
 
-    mst_id = fields.Many2one('logistics.dispatch.line',string="Mst",ondelete='cascade')
+    mst_id = fields.Many2one('jal.logistics',string="Mst",ondelete='cascade')
 
-    date = fields.Date(string="Truck Arrival Date")
-    time = fields.Float(string="Truck Arrival Time")
-    dep_date = fields.Date(string="Truck Departure Date")
-    dep_time = fields.Float(string="Truck Departure Time")
+    name = fields.Char(string="Container No")
+    check_eta = fields.Date(string="Check ETA")
+    remarks = fields.Char(string="Remarks")
     
+class BillLadingLine(models.Model):
+    _name = 'bill.lading.line'
+    _description = 'Bill of Lading Line'
+    _order = "id desc"
+
+    mst_id = fields.Many2one('jal.logistics',string="Mst",ondelete='cascade')
+
+    attachment_ladings_ids = fields.Many2many(
+        'ir.attachment',
+        'jal_logistic_lading_rel',        # relation table name
+        'logistic_id',                    # column referring to this model
+        'attachment_id',                  # column referring to ir.attachment
+        string="Draft Bill of Lading"
+    )
+    bi_date = fields.Date(string='Date',tracking=True)
+    bi_type = fields.Selection([
+            ('yes', 'Yes'),
+            ('no', 'No'),
+        ], string='Draft Bl Approved',tracking=True)
+    comments_bi = fields.Char(string='Draft BL Change Comments',tracking=True)

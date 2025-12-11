@@ -12,27 +12,46 @@
             name="Logistics"
             parent="jal_logistics.logistics_main_menu"
             action="action_jal_logistics"
+            groups="jal_logistics.res_group_logistics_user,jal_logistics.res_group_logistics_admin"
+            sequence="5"/>
+
+        <menuitem
+            id="jal_logistics_pre_shipment_main_menu"
+            name="Pre-Shipment"
+            parent="jal_logistics.logistics_main_menu"
+            action="action_jal_logistics_pre_shipment"
+            groups="jal_logistics.res_group_logistics_agent,jal_logistics.res_group_logistics_user,jal_logistics.res_group_logistics_admin"
             sequence="1"/>
+
+        <menuitem
+            id="jal_logistics_dispatch_document_main_menu"
+            name="Dispatch/Document"
+            parent="jal_logistics.logistics_main_menu"
+            action="action_jal_logistics_dispatch_document"
+            groups="jal_logistics.res_group_logistics_user,jal_logistics.res_group_logistics_admin"
+            sequence="2"/>
+
+        <menuitem
+            id="jal_logistics_post_shipment_main_menu"
+            name="Post Shipment"
+            parent="jal_logistics.logistics_main_menu"
+            action="action_jal_logistics_post_shipment"
+            groups="jal_logistics.res_group_logistics_user,jal_logistics.res_group_logistics_admin"
+            sequence="3"/>
+
+        <menuitem
+            id="jal_logistics_close_main_menu"
+            name="Close"
+            parent="jal_logistics.logistics_main_menu"
+            action="action_jal_logistics_close"
+            groups="jal_logistics.res_group_logistics_user,jal_logistics.res_group_logistics_admin"
+            sequence="4"/>
 
         <menuitem
             id="logistics_configuration_main_menu"
             name="Configuration"
             parent="jal_logistics.logistics_main_menu"
-            sequence="2"/>
-
-            <menuitem
-                id="booking_agent_mst_menu"
-                name="Booking Agent"
-                parent="jal_logistics.logistics_configuration_main_menu"
-                action="action_booking_agent_mst"
-                sequence="1"/>
-
-            <menuitem
-                id="transport_agent_mst_menu"
-                name="Transport Agent"
-                parent="jal_logistics.logistics_configuration_main_menu"
-                action="action_transport_agent_mst"
-                sequence="2"/>
+            sequence="6"/>
 
             <menuitem
                 id="cha_mst_menu"
@@ -75,6 +94,19 @@
                 parent="jal_logistics.logistics_configuration_main_menu"
                 action="action_pallet_size_mst"
                 sequence="8"/>
-           
+
+            <menuitem
+                id="loading_planner_mst_menu"
+                name="Loading Planner"
+                parent="jal_logistics.logistics_configuration_main_menu"
+                action="action_loading_planner_mst"
+                sequence="9"/>
+
+            <menuitem
+                id="label_remark_mst_menu"
+                name="Label Remark"
+                parent="jal_logistics.logistics_configuration_main_menu"
+                action="action_label_remark_mst"
+                sequence="10"/>
            
 </odoo>

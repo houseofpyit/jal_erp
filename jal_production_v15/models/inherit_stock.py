@@ -7,6 +7,8 @@ class inheriteStockPicking(models.Model):
 
     production_id = fields.Many2one('jal.production',string="Production")
     quality_id = fields.Many2one('jal.quality',string="Quality")
+    product_transformation_id = fields.Many2one('product.transformation',string="Product Transformation")
+    constipation_material_id = fields.Many2one('constipation.material',string="Constipation Material")
     send_quality = fields.Boolean(string="Send For Quality")
     purchase_quality_count = fields.Integer("Purchase Quality count")
     booking_date = fields.Date(string="Booking Date",tracking=True)
@@ -21,12 +23,23 @@ class inheriteStockPicking(models.Model):
     
     def action_confirm(self):
         res = super(inheriteStockPicking,self).action_confirm()
-        for line in self.move_lines:
-            stock_move = self.env['stock.move.line'].search([('picking_id', '=', line.picking_id.id),('product_id', '=', line.product_id.id)])
-            stock_move.write({'done_bucket': line.done_bucket})
-        for line in self.move_line_ids_without_package:
-            stock_move = self.env['stock.move'].search([('picking_id', '=', line.picking_id.id),('product_id', '=', line.product_id.id)])
-            stock_move.write({'demand_bucket': line.demand_bucket,'done_bucket': line.demand_bucket})
+        if self.picking_type_code == 'incoming':
+            for line in self.move_lines:
+                stock_move = self.env['stock.move.line'].search([('picking_id', '=', line.picking_id.id),('product_id', '=', line.product_id.id)])
+                stock_move.write({'done_bucket': line.demand_bucket})
+        if self.picking_type_code == 'outgoing' or self.env.context.get('is_consumption', False) == True:
+            for line in self.move_line_ids_without_package:
+                stock_move = self.env['stock.move'].search([('picking_id', '=', line.picking_id.id),('product_id', '=', line.product_id.id)])
+                stock_move.write({'demand_bucket': line.demand_bucket,'done_bucket': line.demand_bucket})
+        return res
+    
+    def action_set_quantities_to_reservation(self):
+        res = super(inheriteStockPicking,self).action_set_quantities_to_reservation()
+        if self.picking_type_code == 'incoming':
+            for line in self.move_lines:
+                stock_move = self.env['stock.move.line'].search([('picking_id', '=', line.picking_id.id),('product_id', '=', line.product_id.id)])
+                stock_move.write({'done_bucket': line.demand_bucket})
+                line.write({'done_bucket': stock_move.done_bucket})
         return res
     
     def _compute_hide_pickign_type(self):
@@ -164,3 +177,4 @@ class inheriteStockLocation(models.Model):
     _inherit = "stock.location"
 
     main_store_location = fields.Boolean(string="Is a Main Store Location?",tracking=True)
+    consumption_location = fields.Boolean(string="Consumption Location?",tracking=True)

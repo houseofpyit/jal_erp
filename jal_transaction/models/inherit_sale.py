@@ -1,6 +1,37 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 
+class inheritSaleOrder(models.Model):
+    _inherit = "sale.order"
+
+    @api.onchange('freight','net_amt','insurance','order_line')
+    def _onchange_freight(self):
+        for rec in self:
+            if rec.freight > 0:
+                rec.fob_rates = (rec.net_amt - rec.freight - rec.insurance)
+            else:
+                rec.fob_rates = 0
+
+    @api.onchange('order_chr','order_no')
+    def _onchange_chr_no(self):
+        pass
+
+    def action_create_pi(self):
+        res = super(inheritSaleOrder, self).action_create_pi()
+        self.order_no = self.order_chr_vld()
+        if self.order_chr:
+            self.name = str(self.order_chr)+ str(self.order_no)
+        else:
+            self.name = self.order_no
+        return res
+
+    @api.model
+    def create(self, vals):
+        res = super(inheritSaleOrder, self).create(vals)
+        res.name = 'New'
+        res.order_no = None
+        return res
+
 class inheritSaleOrderLine(models.Model):
     _inherit = "sale.order.line"
     
@@ -21,4 +52,13 @@ class inheritSaleOrderLine(models.Model):
     #         if self.order_id.partner_id.disc:
     #             self.disc_per = self.order_id.partner_id.disc
     #     return res
+
+
+    @api.depends('hsn_id')
+    @api.onchange('hsn_id')
+    def _onchang_hsn_id(self):
+        if self.order_id.business_type == 'international':
+            self.gst_ids = False
+        else:
+            self.gst_ids = [(6, 0, self.hsn_id.hsncode_selection(self.order_id.date_order.date(),self.price_unit,self.order_id.partner_id))]
                 

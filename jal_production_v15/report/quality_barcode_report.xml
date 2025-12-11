@@ -13,17 +13,22 @@
                                 <t t-if="i &lt; total">
                                     <td style="text-align: center; width:47%; padding: 2mm;border: none !important;">
                                         <t t-set="barcode_value"
-                                            t-value="'Production No : %s | Quality No : %s | Date : %s | Shift : %s | Time : %s | Dryer : %s | Mesh : %s' % (
+                                            t-value="'Production No : %s | Quality No : %s | Date : %s | Shift : %s | Time : %s | Dryer : %s | Mesh : %s | %s' % (
                                                 barcodes[i]['production_name'],
                                                 barcodes[i]['name'],
                                                 barcodes[i]['date'],
                                                 barcodes[i]['shift_name'],
                                                 barcodes[i]['shift_time'],
                                                 barcodes[i]['dryer_name'],
-                                                barcodes[i]['mesh_name']
+                                                barcodes[i]['mesh_name'],
+                                                barcodes[i]['parameters_string'],
                                             )"/>
-
-                                        <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;quiet=0' % ('QR', barcode_value, 300, 300)" style="width:90%;height:25%;" />
+                                        <t t-if="barcodes[i]['is_border']">
+                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;quiet=0' % ('QR', barcode_value, 300, 300)" style="width:90%;height:25%;border:1px solid black;" />
+                                        </t>
+                                        <t t-else="">
+                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;quiet=0' % ('QR', barcode_value, 300, 300)" style="width:90%;height:25%;" />
+                                        </t>
 
                                     </td>
                                 </t>
@@ -35,18 +40,23 @@
                                 <t t-if="i + 1 &lt; total">
                                     <td style="text-align: center; width:47%; padding: 2mm;border: none !important;">
                                         <t t-set="barcode_value"
-                                            t-value="'Production No : %s | Quality No : %s | Date : %s | Shift : %s | Time : %s | Dryer : %s | Mesh : %s' % (
+                                            t-value="'Production No : %s | Quality No : %s | Date : %s | Shift : %s | Time : %s | Dryer : %s | Mesh : %s | : %s' % (
                                                 barcodes[i+1]['production_name'],
                                                 barcodes[i+1]['name'],
                                                 barcodes[i+1]['date'],
                                                 barcodes[i+1]['shift_name'],
                                                 barcodes[i+1]['shift_time'],
                                                 barcodes[i+1]['dryer_name'],
-                                                barcodes[i+1]['mesh_name']
+                                                barcodes[i+1]['mesh_name'],
+                                                barcodes[i+1]['parameters_string'],
                                             )"/>
 
-                                        <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;quiet=0' % ('QR', barcode_value, 300, 300)" style="width:90%;height:25%;" />
-
+                                        <t t-if="barcodes[i+1]['is_border']">
+                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;quiet=0' % ('QR', barcode_value, 300, 300)" style="width:90%;height:25%;border:1px solid black;" />
+                                        </t>
+                                        <t t-else="">
+                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;quiet=0' % ('QR', barcode_value, 300, 300)" style="width:90%;height:25%;" />
+                                        </t>
                                     </td>
                                 </t>
 

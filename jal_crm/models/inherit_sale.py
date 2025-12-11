@@ -46,15 +46,34 @@ class inheritedSaleOrder(models.Model):
         ("shipping_name", "Shipping Name")],default="product_name",string="Display Name On PI",tracking=True)
    buyer_notify_id = fields.Many2one('res.partner',string="Buyer & Notify",tracking=True)
    buyer_ref_details = fields.Text(string="Buyer Reference Details",tracking=True)
+   jal_currency_id = fields.Many2one('res.currency',string="Currency")
+   shipping_id = fields.Many2one('product.shipping.mst',string="Shipping Name")
+   product_shipping_id = fields.Many2one('product.shipping.mst',string="Product Name")
+   product_expiry = fields.Selection([
+      ('1', '1 Year'),
+      ('2', '2 Years'),
+      ('3', '3 Years'),
+      ('4', '4 Years'),
+      ('5', '5 Years'),
+   ], string="Product Expiry")
 
    # @api.onchange('team_id')
    # def _onchange_team_id(self):
    #    self.business_type = self.team_id.business_type
 
+   @api.onchange('jal_currency_id')
+   @api.depends('jal_currency_id')
+   def _onchange_jal_currency_id(self):
+      if self.jal_currency_id:
+         self.currency_id = self.jal_currency_id.id
+
    def default_get(self, fields):
       res = super(inheritedSaleOrder, self).default_get(fields)
       if self.env.context.get('default_business_type',False) == 'international':
          res['currency_id'] = self.env.ref('base.EUR').id
+         res['jal_currency_id'] = self.env.ref('base.EUR').id
+      else:
+         res['currency_id'] = self.env.company.currency_id.id
       return res
 
    def amount_to_text(self, amount, currency='INR'):
@@ -124,6 +143,22 @@ class inheritedSaleOrder(models.Model):
       self.action_confirm()
       self.state = 'create_pi'
 
+   @api.model
+   def create(self, vals):
+      if vals.get('jal_currency_id'):
+         vals['currency_id'] = vals['jal_currency_id']
+      res = super(inheritedSaleOrder, self).create(vals)
+      if res.jal_currency_id:
+         res.currency_id = res.jal_currency_id.id
+      return res
+   
+   def write(self, vals):
+      if vals.get('jal_currency_id'):
+         vals['currency_id'] = vals['jal_currency_id']
+      res = super(inheritedSaleOrder, self).write(vals)
+
+      return res
+
 class inheritedSaleOrderLine(models.Model):
    _inherit = "sale.order.line"
 
@@ -157,6 +192,10 @@ class inheritedSaleOrderLine(models.Model):
    def _onchange_product_tmpl_id(self):
       self.product_uom = self.product_tmpl_id.uom_id.id
       self.price_unit = self.product_tmpl_id.list_price
+
+   def get_sale_order_line_multiline_description_sale(self, product):
+      res = super(inheritedSaleOrderLine, self).get_sale_order_line_multiline_description_sale(product)
+      return ''
 
    #  @api.onchange('product_id')
    #  def _onchange_product_id(self):

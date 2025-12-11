@@ -2,19 +2,20 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_jal_logistics,jal_logistics,model_jal_logistics,,1,1,1,1
 access_logistics_dispatch_line,logistics_dispatch_line,model_logistics_dispatch_line,,1,1,1,1
 access_dispatch_packing_line,dispatch_packing_line,model_dispatch_packing_line,,1,1,1,1
+access_logistics_container_management_line,logistics_container_management_line,model_logistics_container_management_line,,1,1,1,1
+access_bill_lading_line,bill_lading_line,model_bill_lading_line,,1,1,1,1
 
 access_palletized1_line,palletized1_line,model_palletized1_line,,1,1,1,1
 access_palletized2_line,palletized2_line,model_palletized2_line,,1,1,1,1
 access_palletized_line,palletized_line,model_palletized_line,,1,1,1,1
 access_layer_line,layer_line,model_layer_line,,1,1,1,1
-access_truck_detention_line,truck_detention_line,model_truck_detention_line,,1,1,1,1
 
-access_booking_agent_mst,booking_agent_mst,model_booking_agent_mst,,1,1,1,1
-access_transport_agent_mst,transport_agent_mst,model_transport_agent_mst,,1,1,1,1
 access_cha_mst,cha_mst,model_cha_mst,,1,1,1,1
 access_shipping_line_mst,shipping_line_mst,model_shipping_line_mst,,1,1,1,1
 access_inspection_mst,inspection_mst,model_inspection_mst,,1,1,1,1
 access_pallet_size_mst,pallet_size_mst,model_pallet_size_mst,,1,1,1,1
+access_loading_planner_mst,loading_planner_mst,model_loading_planner_mst,,1,1,1,1
+access_label_remark_mst,label_remark_mst,model_label_remark_mst,,1,1,1,1
 
 access_epcg_liscence_mst,epcg_liscence_mst,model_epcg_liscence_mst,,1,1,1,1
 access_advanced_liscence_mst,advanced_liscence_mst,model_advanced_liscence_mst,,1,1,1,1

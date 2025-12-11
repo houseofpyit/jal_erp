@@ -47,9 +47,9 @@ class InheritSale(models.Model):
         return res
     
     def action_confirm_pi(self):
-        logistics_rec = self.env['jal.logistics'].search([('sale_id', 'in', self.ids)])
-        for log in logistics_rec:
-            log.state = 'pi_confirm'
+        # logistics_rec = self.env['jal.logistics'].search([('sale_id', 'in', self.ids)])
+        # for log in logistics_rec:
+        #     log.state = 'pre_shipment'
         self.state = 'sale'
 
     @api.depends('company_id.account_fiscal_country_id', 'fiscal_position_id.country_id', 'fiscal_position_id.foreign_vat')

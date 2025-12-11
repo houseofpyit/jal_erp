@@ -2,22 +2,6 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 from datetime import date,datetime
 
-class BookingAgentMst(models.Model):
-    _name = 'booking.agent.mst'
-    _description = 'Booking Agent Master'
-    _inherit = ['mail.thread']
-    _order = 'id desc'
-    
-    name = fields.Char(string='Name',tracking=True)
-
-class TransportAgentMst(models.Model):
-    _name = 'transport.agent.mst'
-    _description = 'Transport Agent Master'
-    _inherit = ['mail.thread']
-    _order = 'id desc'
-    
-    name = fields.Char(string='Name',tracking=True)
-
 class CHAMst(models.Model):
     _name = 'cha.mst'
     _description = 'CHA Master'
@@ -77,3 +61,19 @@ class PalletSizeMst(models.Model):
     _inherit = ['mail.thread']
 
     name = fields.Char(string='Pallet Size',tracking=True)
+
+class LoadingPlannerMst(models.Model):
+    _name = 'loading.planner.mst'
+    _description = 'Loading Planner Master'
+    _inherit = ['mail.thread']
+
+    name = fields.Char(string='Loading Planner Name',tracking=True)
+
+class LabelRemarkMst(models.Model):
+    _name = 'label.remark.mst'
+    _description = 'Label Remark Master'
+    _inherit = ['mail.thread']
+
+    name = fields.Char(string='Name',tracking=True)
+    label_type = fields.Selection([('haz', 'HAZ Label'),('dead_fish', 'Dead Fish Label'),('un_print', 'UN Printing Label')], string='Label Type',tracking=True)
+    

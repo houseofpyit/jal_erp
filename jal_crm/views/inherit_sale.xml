@@ -44,11 +44,12 @@
                 <attribute name="attrs">{'invisible': [('business_type', '==', 'international')]}</attribute>
             </xpath>
             <xpath expr="//field[@name='sale_order_template_id']" position="after">
-                <field name="currency_id" options="{'no_create': True}" readonly="0" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
+                <field name="currency_id" options="{'no_create': True}" readonly="0" invisible="1" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
+                <field name="jal_currency_id" options="{'no_create': True}" readonly="0" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
                 <field name="bank_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': ['|',('business_type', '!=', 'international'),('state', '==', 'draft')],'readonly': [('state', '=', 'sale')]}"/>
                 <field name="po_no" attrs="{'invisible': ['|',('business_type', '!=', 'international'),('state', '==', 'draft')],'readonly': [('state', '=', 'sale')]}"/>
                 <field name="po_date" attrs="{'invisible': ['|',('business_type', '!=', 'international'),('state', '==', 'draft')],'readonly': [('state', '=', 'sale')]}"/>
-                <field name="reference" attrs="{'invisible': ['|',('business_type', '!=', 'international'),('state', '==', 'draft')],'readonly': [('state', '=', 'sale')]}"/>
+                <!-- <field name="reference" attrs="{'invisible': ['|',('business_type', '!=', 'international'),('state', '==', 'draft')],'readonly': [('state', '=', 'sale')]}"/> -->
 
                 <field name="freight" attrs="{'readonly': [('state', '=', 'sale')],'invisible': ['|',('business_type', '!=', 'international'),('state', '==', 'draft')]}"/>
                 <field name="insurance" attrs="{'readonly': [('state', '=', 'sale')],'invisible': ['|',('business_type', '!=', 'international'),('state', '==', 'draft')]}"/>
@@ -96,14 +97,18 @@
                 <field name="country_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
                 <field name="port_id" domain="[('country_id', '=', country_id)]" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
                 <field name="palletized_type" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
-                <field name="business_type" invisible="0" attrs="{'readonly': [('state', '=', 'sale')]}"/>
-                <field name="display_name_on_pi" attrs="{'readonly': [('state', '=', 'sale')]}"/>
+                <field name="business_type" invisible="1" attrs="{'readonly': [('state', '=', 'sale')]}"/>
+                <field name="display_name_on_pi" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
+                <field name="shipping_id" domain="[('display_name_on_pi','=', 'shipping_name')]" options="{'no_quick_create': True}" attrs="{'invisible': ['|',('display_name_on_pi', '=', 'product_name'),('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
+                <field name="product_shipping_id" domain="[('display_name_on_pi','=', 'product_name')]" options="{'no_quick_create': True}" attrs="{'invisible': ['|',('display_name_on_pi', '=', 'shipping_name'),('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
                 <field name="buyer_ref_details" attrs="{'readonly': [('state', '=', 'sale')]}"/>
+                <field name="product_expiry" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
+                <field name="company_id" options="{'no_create': True}" attrs="{'readonly': [('state', '=', 'sale')]}"/>
             </xpath>
-            <xpath expr="//tree/field[@name='product_template_id']" position="before">
+            <!-- <xpath expr="//tree/field[@name='product_template_id']" position="before">
                 <field name="shipping_id" width="150px" attrs="{'column_invisible': [('parent.business_type', '!=', 'international')]}"/>
                 <field name="product_shipping_id" width="150px" attrs="{'column_invisible': [('parent.business_type', '!=', 'international')]}"/>
-            </xpath>
+            </xpath> -->
             <xpath expr="//tree" position="attributes">
                 <attribute name="editable"></attribute>
                 <!-- <tree string="Sales Order Lines" editable="bottom"></tree> -->
@@ -113,9 +118,9 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//field[@name='order_line']/form/group/group/field[@name='product_id']" position="after">
-                <field name="shipping_id" width="150px" domain="[('display_name_on_pi','=', 'shipping_name')]" options="{'no_quick_create': True}" attrs="{'invisible': [('parent.business_type', '!=', 'international')]}"/>
-                <field name="product_shipping_id" width="150px" domain="[('display_name_on_pi','=', 'product_name')]" options="{'no_quick_create': True}" attrs="{'invisible': [('parent.business_type', '!=', 'international')]}"/>
-                <field name="product_tmpl_id" string="Packing Type" options="{'no_quick_create': True}" attrs="{'required': [('display_type', '=', False)]}" readonly="0" context="{'partner_id': parent.partner_id, 'quantity': product_uom_qty, 'pricelist': parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id, 'default_list_price': price_unit, 'default_description_sale': name}" domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" widget="product_configurator"/>
+                <!-- <field name="shipping_id" width="150px" domain="[('display_name_on_pi','=', 'shipping_name')]" options="{'no_quick_create': True}" attrs="{'invisible': [('parent.business_type', '!=', 'international')]}"/>
+                <field name="product_shipping_id" width="150px" domain="[('display_name_on_pi','=', 'product_name')]" options="{'no_quick_create': True}" attrs="{'invisible': [('parent.business_type', '!=', 'international')]}"/> -->
+                <field name="product_tmpl_id" string="Packing Type" options="{'no_create': True}" attrs="{'required': [('display_type', '=', False)]}" readonly="0" context="{'partner_id': parent.partner_id, 'quantity': product_uom_qty, 'pricelist': parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id, 'default_list_price': price_unit, 'default_description_sale': name}" domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" widget="product_configurator"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/form/group/group/field[@name='analytic_tag_ids']" position="after">
                 <field name="packing_type" invisible="1" attrs="{'invisible': [('parent.business_type', '!=', 'international')],'required': [('parent.business_type', '=', 'international'),('display_type', '=', False)]}"/>
@@ -160,7 +165,7 @@
                 <!-- <attribute name="width">150px</attribute>
                 <attribute name="invisible">0</attribute>
                 <attribute name="force_save">1</attribute> -->
-                <field name="product_tmpl_id" width="150px" string="Packing Type" options="{'no_quick_create': True}" readonly="0" context="{'partner_id': parent.partner_id, 'quantity': product_uom_qty, 'pricelist': parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id, 'default_list_price': price_unit, 'default_description_sale': name}" domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" />
+                <field name="product_tmpl_id" width="150px" string="Packing Type" options="{'no_create': True}" readonly="0" context="{'partner_id': parent.partner_id, 'quantity': product_uom_qty, 'pricelist': parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id, 'default_list_price': price_unit, 'default_description_sale': name}" domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" />
             </xpath>
             <xpath expr="//control/create[@name='add_note_control']" position="replace"/>
         </field>

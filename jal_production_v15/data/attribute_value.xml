@@ -75,4 +75,10 @@
         <field name="active">False</field>
     </record>
 
+    <record id="location_consumption" model="stock.location">
+        <field name="name">Consumption</field>
+        <field name="usage">inventory</field>
+        <field name="consumption_location">True</field>
+    </record>
+
 </odoo>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model='ir.ui.view' id='constipation_material_form'>
+        <field name='name'>constipation.material.form</field>
+        <field name='model'>constipation.material</field>
+        <field name='arch' type='xml'>
+            <form>
+                <header>
+                    <button string="Complete" name="action_complete_btn" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'draft')]}" confirm="Are you sure you want to complete this Product Constipation?"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name='company_id' invisible="1"/>
+                            <field name='bill_chr' invisible="1"/>
+                            <field name='bill_no' invisible="1"/>
+                            <field name='employee_id' required="1" options="{'no_create': True}" attrs="{'readonly': [('state','=','complete')]}"/>
+                        </group>
+                        <group>
+                            <field name="date" attrs="{'readonly': [('state','=','complete')]}"/>
+                            <field name="department_id" options="{'no_create': True}" attrs="{'readonly': [('state','=','complete')]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Products Materials">
+                            <field name="line_ids" attrs="{'readonly': [('state','=','complete')]}">
+                                <tree editable="bottom">
+                                    <field name="product_id" domain="[('is_finished_goods', '!=', True)]" required="1" options="{'no_create': True}" />
+                                    <field name="qty" sum="Quantity"/>
+                                    <field name="bucket" sum="Packing Unit"/>
+                                    <field name="uom_id" readonly="1" force_save="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    
+
+    <record model='ir.ui.view' id='constipation_material_tree'>
+        <field name='name'>constipation.material.tree</field>
+        <field name='model'>constipation.material</field>
+        <field name='arch' type='xml'>
+            <tree>
+                <field name='name'/>
+                <field name='date'/>
+                <field name="employee_id" />
+                <field name="department_id" />
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_constipation_material_filter" model="ir.ui.view">
+        <field name="name">constipation.material.filter</field>
+        <field name="model">constipation.material</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Search" filter_domain="['|','|','|',('name', 'ilike', self),('employee_id', 'ilike', self),('department_id', 'ilike', self),('state', 'ilike', self)]"/>
+                <field name="employee_id"/>
+                <field name="department_id" />
+                <field name="state" />
+                <separator/>
+                    <filter string="Date" name="date" date="date"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Employee" name="group_by_employee_id" domain="[]" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Department" name="group_department_id" domain="[]" context="{'group_by': 'department_id'}"/>
+                    <filter string="State" name="group_state" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="action_constipation_material" model="ir.actions.act_window">
+        <field name="name">Material Constipation</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">constipation.material</field>
+        <field name="context">{'default_bill_chr':'MC'}</field> 
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

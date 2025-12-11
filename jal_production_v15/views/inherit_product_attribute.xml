@@ -17,6 +17,7 @@
             </xpath>
             <xpath expr="//field[@name='value_ids']//field[@name='name']" position="after">
                 <field name="amount" attrs="{'column_invisible': [('parent.attribute_type', '!=', 'bucket')]}"/>
+                <field name="is_border" />
                 <field name="weight" invisible="1"/>
                 <field name="uom_id" invisible="1"/>
                 <field name="packaging_type" invisible="1"/>

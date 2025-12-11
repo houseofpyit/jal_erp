@@ -35,6 +35,8 @@
         'views/dryer_mst.xml',
         'views/purchase_quality.xml',
         'views/jal_mrp_production.xml',
+        'views/product_transformation.xml',
+        'views/constipation_material.xml',
         'views/master_menu.xml',
 
     ],

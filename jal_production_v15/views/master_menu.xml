@@ -323,6 +323,26 @@
             action="action_packing_name_product_attribute_value"
             sequence="1"/>
 
+    <menuitem
+        id="product_transformation_menu_main_menu"
+        name="Product Transformation"
+        sequence="12"/>
+
+    <menuitem
+            id="product_transformation_menu"
+            name="Product Transformation"
+            parent="jal_production_v15.product_transformation_menu_main_menu"
+            action="action_product_transformation"
+            sequence="1"/>
+
+    <menuitem
+        id="constipation_material_menu"
+        name="Material Constipation"
+        parent="stock.menu_stock_root"
+        action="action_constipation_material"
+        sequence="3"/>
+
+            
 </odoo>
 
 

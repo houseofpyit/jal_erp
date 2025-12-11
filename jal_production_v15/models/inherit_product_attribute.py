@@ -42,6 +42,7 @@ class inheritedProductAttributeValue(models.Model):
         ("bucket", "Bucket"),
         ("usa_bucket", "USA-Bucket"), 
         ("pouch", "Pouch")],string="Packing Type")
+   is_border = fields.Boolean(string='Border')
 
    def default_get(self, fields):
       res = super(inheritedProductAttributeValue, self).default_get(fields)

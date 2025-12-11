@@ -1,87 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-
-<!-- Booking Agent -->
-    <record id="booking_agent_mst_form" model="ir.ui.view">
-        <field name="name">booking.agent.mst.form</field>
-        <field name="model">booking.agent.mst</field>
-        <field name="arch" type="xml" >
-            <form>
-                <sheet>
-                    <group>
-                        <group>
-                            <field name="name" required="1" />
-                        </group>
-                    </group>                    
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"/>
-                </div>
-            </form>
-        </field>
-    </record>
-
-    <record id="booking_agent_mst_tree" model="ir.ui.view">
-        <field name="name">booking.agent.mst.tree</field>
-        <field name="model">booking.agent.mst</field>
-        <field name="arch" type="xml" >
-            <tree sample="1">
-                <field name="name"/>
-            </tree>
-        </field>
-    </record>
-
-    <record id="action_booking_agent_mst" model="ir.actions.act_window">
-        <field name="name">Booking Agent</field>
-        <field name="res_model">booking.agent.mst</field>
-        <field name="view_mode">tree,form</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create a New Record</p>
-        </field>
-    </record>
-
-<!-- Transport Agent -->
-    <record id="transport_agent_mst_form" model="ir.ui.view">
-        <field name="name">transport.agent.mst.form</field>
-        <field name="model">transport.agent.mst</field>
-        <field name="arch" type="xml" >
-            <form>
-                <sheet>
-                    <group>
-                        <group>
-                            <field name="name" required="1" />
-                        </group>
-                    </group>                    
-                </sheet>
-                <div class="oe_chatter">
-                    <field name="message_ids"/>
-                </div>
-            </form>
-        </field>
-    </record>
-
-    <record id="transport_agent_mst_tree" model="ir.ui.view">
-        <field name="name">transport.agent.mst.tree</field>
-        <field name="model">transport.agent.mst</field>
-        <field name="arch" type="xml" >
-            <tree sample="1">
-                <field name="name"/>
-            </tree>
-        </field>
-    </record>
-
-    <record id="action_transport_agent_mst" model="ir.actions.act_window">
-        <field name="name">Transport Agent</field>
-        <field name="res_model">transport.agent.mst</field>
-        <field name="view_mode">tree,form</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create a New Record</p>
-        </field>
-    </record>
-
 <!-- CHA -->
     <record id="cha_mst_form" model="ir.ui.view">
         <field name="name">cha.mst.form</field>
@@ -330,5 +249,87 @@
         </field>
     </record>
 
+<!-- Loading Planner -->
+<record id="loading_planner_mst_form" model="ir.ui.view">
+        <field name="name">loading.planner.mst.form</field>
+        <field name="model">loading.planner.mst</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1" />
+                        </group>
+                    </group>                    
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
 
+    <record id="loading_planner_mst_tree" model="ir.ui.view">
+        <field name="name">loading.planner.mst.tree</field>
+        <field name="model">loading.planner.mst</field>
+        <field name="arch" type="xml" >
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_loading_planner_mst" model="ir.actions.act_window">
+        <field name="name">Loading Planner</field>
+        <field name="res_model">loading.planner.mst</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+    </record>
+
+<!-- Label Remark -->
+<record id="label_remark_mst_form" model="ir.ui.view">
+        <field name="name">label.remark.mst.form</field>
+        <field name="model">label.remark.mst</field>
+        <field name="arch" type="xml" >
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1" />
+                        </group>
+                        <group>
+                            <field name="label_type" required="1" />
+                        </group>
+                    </group>                    
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="label_remark_mst_tree" model="ir.ui.view">
+        <field name="name">label.remark.mst.tree</field>
+        <field name="model">label.remark.mst</field>
+        <field name="arch" type="xml" >
+            <tree>
+                <field name="name"/>
+                <field name="label_type"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_label_remark_mst" model="ir.actions.act_window">
+        <field name="name">Label Remark</field>
+        <field name="res_model">label.remark.mst</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+    </record>
 </odoo>

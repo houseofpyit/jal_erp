@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model='ir.ui.view' id='product_transformation_form'>
+        <field name='name'>product.transformation.form</field>
+        <field name='model'>product.transformation</field>
+        <field name='arch' type='xml'>
+            <form>
+                <header>
+                    <button string="Complete" name="action_complete_btn" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'draft')]}" confirm="Are you sure you want to complete this Product Transformation?"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name='company_id' invisible="1"/>
+                            <field name='bill_chr' invisible="1"/>
+                            <field name='bill_no' invisible="1"/>
+                            <field name='product_id' required="1" options="{'no_create': True}" domain="[('is_finished_goods', '=', True)]" attrs="{'readonly': [('state','=','complete')]}"/>
+                            <label for="qty" string="Quantity" attrs="{'readonly': [('state','=','complete')]}"/>
+                            <div class="o_row no-gutters d-flex">
+                                <field name="qty" class="oe_inline text-left" attrs="{'readonly': [('state','=','complete')]}"/>
+                                <field name="uom_id" force_save="1" readonly="1"/>
+                            </div>
+                            <field name='bucket' attrs="{'readonly': [('state','=','complete')]}"/>
+                        </group>
+                        <group>
+                            <field name="date" attrs="{'readonly': [('state','=','complete')]}"/>
+                            <field name="packing_type" attrs="{'readonly': [('state','=','complete')]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Packing Materials">
+                            <field name="packing_line_ids" attrs="{'readonly': [('state','=','complete')]}">
+                                <tree editable="bottom">
+                                    <field name="product_id" required="1" options="{'no_create': True}" domain="[('is_packing', '=', True)]"/>
+                                    <field name="qty"/>
+                                    <field name="bucket" />
+                                    <field name="uom_id" readonly="1" force_save="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Finished Goods">
+                            <field name="finished_line_ids" attrs="{'readonly': [('state','=','complete')]}">
+                                <tree editable="bottom">
+                                    <field name="product_id" domain="[('is_finished_goods', '=', True)]" required="1" options="{'no_create': True}" />
+                                    <field name="qty" />
+                                    <field name="bucket" />
+                                    <field name="uom_id" readonly="1" force_save="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    
+
+    <record model='ir.ui.view' id='product_transformation_tree'>
+        <field name='name'>product.transformation.tree</field>
+        <field name='model'>product.transformation</field>
+        <field name='arch' type='xml'>
+            <tree>
+                <field name='name'/>
+                <field name='date'/>
+                <field name="product_id" />
+                <field name="packing_type" />
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- <record id="view_product_transformation_filter" model="ir.ui.view">
+        <field name="name">product.transformation.filter</field>
+        <field name="model">product.transformation</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Search" filter_domain="['|','|','|',('name', 'ilike', self),('product_tmpl_id', 'ilike', self),('shift_id', 'ilike', self),('employee_id', 'ilike', self)]"/>
+                <field name="product_tmpl_id"/>
+                <field name="shift_id" />
+                <field name="employee_id" />
+                <separator/>
+                    <filter string="Date" name="date" date="date"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Product" name="group_by_product_tmpl_id" domain="[]" context="{'group_by': 'product_tmpl_id'}"/>
+                    <filter string="Shift" name="group_shift_id" domain="[]" context="{'group_by': 'shift_id'}"/>
+                    <filter string="Shift Incharge" name="group_employee_id" domain="[]" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record> -->
+
+
+    <record id="action_product_transformation" model="ir.actions.act_window">
+        <field name="name">Product Transformation</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.transformation</field>
+        <field name="context">{'default_bill_chr':'PT'}</field> 
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

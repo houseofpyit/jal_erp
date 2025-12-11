@@ -103,6 +103,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='return_location']" position="after">
                 <field name="main_store_location" />
+                <field name="consumption_location" />
             </xpath>
         </field>
     </record>

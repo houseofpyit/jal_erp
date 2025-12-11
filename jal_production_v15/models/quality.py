@@ -36,6 +36,13 @@ class JalQuality(models.Model):
     quality_para_ids = fields.One2many('quality.parameter.line','mst_id',string="Quality Parameter Line")
     quality_grade_ids = fields.One2many('quality.grade.line','mst_id',string="Quality Grade Line")
 
+    def unlink(self):
+        for i in self:
+            if i.state == 'complete':
+                raise ValidationError("You cannot delete this record because it is already marked as Complete.")
+
+        return super(JalQuality,self).unlink()
+
     @api.onchange('production_id', 'date')
     def _onchange_shift_time_id(self):
         self.shift_time_id = False
@@ -149,12 +156,27 @@ class JalQuality(models.Model):
     
     def get_barcode_data(self):
         line_list = []
+
+        # Prepare parameters
+        par_line = []
+        for par in self.quality_para_ids:
+            par_line.append({
+                'item_attribute': par.item_attribute.name,
+                'result_value': par.result_value
+            })
+
+        # Text for QR
+        parameters_string = " | ".join(
+            f"{p['item_attribute']} : {p['result_value']}" for p in par_line
+        )
+
         for line in self.quality_grade_ids:
             for _ in range(line.no_of_drum):
                 def float_to_time(float_time):
                     hours = int(float_time)
                     minutes = int(round((float_time - hours) * 60))
                     return f"{hours:02d}:{minutes:02d}"
+                name = ''
                 if self.shift_time_id.start_time and self.shift_time_id.end_time:
                     start = float_to_time(self.shift_time_id.start_time)
                     end = float_to_time(self.shift_time_id.end_time)
@@ -168,8 +190,10 @@ class JalQuality(models.Model):
                     'shift_time': name,
                     'grade_name': line.grade_id.name,
                     'mesh_name': line.mesh_id.name,
+                    'is_border': line.mesh_id.is_border,
                     'dryer_name': self.dryer_id.name,
-                    # 'bucket_name': line.bucket_id.name,
+                    'parameters': par_line,                # <-- Needed by XML
+                    'parameters_string': parameters_string,  # <-- For QR or text
                 })
 
         return line_list
@@ -249,10 +273,11 @@ class QualityGradeLine(models.Model):
 
     @api.onchange('grade_id', 'mesh_id', 'bucket_id')
     def _onchange_product_attributes(self):
-        if not (self.grade_id and self.mesh_id):
-            self.product_id = False
-            return {'domain': {'product_id': []}}
+        # if not (self.grade_id and self.mesh_id):
+        #     self.product_id = False
+        #     return {'domain': {'product_id': []}}
         domain = [
+            '|',
             ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.grade_id.id),
             ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.mesh_id.id),
             # ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.bucket_id.id),

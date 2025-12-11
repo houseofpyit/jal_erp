@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        
+    <record id="crm_lead_form_view_inherit_jal_transaction" model="ir.ui.view">
+        <field name="name">crm.lead.form.view.inherit.jal.transaction</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='opportunity_partner']/field[@name='partner_id']" position="attributes">
+                <attribute name="context">{'default_name': contact_name,'default_title': title,'default_street': street,'default_street2': street2,'default_city': city,'default_state_id': state_id,'default_zip': zip,'default_country_id': country_id,'default_function': function,'default_phone': phone,'default_mobile': mobile,'default_email': email_from,'default_user_id': user_id,'default_team_id': team_id,'default_website': website,'show_vat': True,'default_acc_type': 'SALE_PARTY',}</attribute>
+                <attribute name="options">{'no_quick_create': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -25,6 +25,7 @@
         'views/inherit_product.xml',
         'views/cost_center_budget.xml',
         'views/inherit_purchase.xml',
+        'views/inherit_crm.xml',
         'views/master_menu.xml',
 
     ],

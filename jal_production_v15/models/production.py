@@ -32,6 +32,14 @@ class JalProduction(models.Model):
             result.append((i.id, name))
         return result
     
+    def unlink(self):
+        for i in self:
+            if i.state == 'complete':
+                raise ValidationError("You cannot delete this record because it is already marked as Complete.")
+            if i.state == 'running':
+                raise ValidationError("You cannot delete this record because it is already marked as Running.")
+        return super(JalProduction,self).unlink()
+    
     @api.onchange('product_tmpl_id')
     def _onchange_product_tmpl_id(self):
         line_list = []
