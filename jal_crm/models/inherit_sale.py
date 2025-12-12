@@ -75,11 +75,16 @@ class inheritedSaleOrder(models.Model):
       else:
          res['currency_id'] = self.env.company.currency_id.id
       return res
-
-   def amount_to_text(self, amount, currency='INR'):
-      word = num2words(amount, lang='en_IN').upper()
-      word = word.replace(",", " ")
-      return word
+   
+   def amount_to_text(self, amount, currency):
+      if currency == 'INR':
+         words = num2words(amount, lang='en_IN')
+         suffix = ' Rupees'
+      else:
+         words = num2words(amount, lang='en')
+         suffix = ''
+      words = words.replace(",", " ").title()
+      return f"{words}{suffix}"
    
    @api.onchange('conditions_id')
    def _onchange_conditions_id(self):

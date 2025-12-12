@@ -42,6 +42,11 @@ class BankMaster(models.Model):
     swift_code = fields.Char("Swift Code")
     currency_id = fields.Many2one('res.currency', string="Currency")
 
+    correspondent_bank = fields.Char("Correspondent Bank")
+    swift_code1 = fields.Char("Swift Code")
+    acc_no = fields.Char("Account Number")
+    currency1_id = fields.Many2one('res.currency', string="Currency")
+
 class SaleTermConditions(models.Model):
     _name = "sale.term.conditions"
     _description= "Sale Term Conditions"

@@ -1,5 +1,6 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
+from num2words import num2words
 
 class inheritedPurchaseOrder(models.Model):
     _inherit = "purchase.order"
@@ -17,6 +18,16 @@ class inheritedPurchaseOrder(models.Model):
             purc_bill.rd_urd = self.partner_id.rd_urd
             purc_bill.due_days = self.partner_id.due_days
         return res
+    
+    def amount_to_text(self, amount, currency):
+      if currency == 'INR':
+         words = num2words(amount, lang='en_IN')
+         suffix = ' Rupees'
+      else:
+         words = num2words(amount, lang='en')
+         suffix = ''
+      words = words.replace(",", " ").title()
+      return f"{words}{suffix}"
 
 class inheritedPurchaseOrderLine(models.Model):
     _inherit = "purchase.order.line"

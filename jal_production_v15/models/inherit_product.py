@@ -12,6 +12,7 @@ class inheritedProductTemplate(models.Model):
    packing_line_ids = fields.One2many('product.packing.line','template_id',string="Product Packing")
    is_quality_required = fields.Boolean('Quality Required or Not')
    is_spares = fields.Boolean('Spares')
+   is_caustic = fields.Boolean('Caustic Product')
    bucket_qty_hand_total = fields.Float(
       string="On Hand (Bucket/Bags/Pouch)",
       digits='Product Unit of Measure',

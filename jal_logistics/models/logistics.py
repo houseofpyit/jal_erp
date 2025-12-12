@@ -200,6 +200,16 @@ class JalLogistics(models.Model):
 
     container_management_line_ids = fields.One2many('logistics.container.management.line','mst_id',string="Line Container Management")
 
+    delivery_count = fields.Integer(string='Delivery Orders', compute="compute_logistics_delivery_count")
+
+    @api.depends('sale_id','state')
+    def compute_logistics_delivery_count(self):
+        for order in self:
+            order.delivery_count = len(order.sale_id.picking_ids)
+
+    def action_view_logistics_delivery(self):
+        return self.sale_id._get_action_view_picking(self.sale_id.picking_ids)
+
     @api.model
     def create(self, vals):
         result = super(JalLogistics, self).create(vals)
@@ -300,6 +310,9 @@ class JalLogistics(models.Model):
 
     def action_close(self):
         self.state = 'close'
+
+    def action_document_order_form(self):
+        return self.env.ref('jal_crm.action_order_form_report').report_action(self.sale_id.id)
 
 class LogisticsDispatchLine(models.Model):
     _name = 'logistics.dispatch.line'

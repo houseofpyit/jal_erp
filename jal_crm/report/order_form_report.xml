@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <template id="report_sale_proforma">
+        <template id="order_form_report">
             <t t-call="web.basic_layout">
                 <style>
                     td{
@@ -101,68 +101,6 @@
                         <table style="width:100%;" >
                             <tr>
                                 <td style="padding-bottom:5px;padding-top:5px;width:50%;">
-                                    <b><span style="padding-bottom:5px;">CONSIGNEE</span></b>
-                                </td>
-                                <td style="padding-bottom:5px;padding-top:5px;width:50%;">
-                                    <t t-if="o.buyer_notify_id">
-                                        <b><span style="padding-bottom:5px;">BUYER &amp; NOTIFY (1) </span></b>
-                                    </t>
-                                </td>
-                            </tr>
-                        </table>
-                        <table style="width:100%;" >
-                            <tr>
-                                <td width="9%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
-                                    <span>Company :</span><br/>
-                                    <span>Address :</span><br/><br/>
-                                    <span>Country :</span><br/>
-                                    <span>Phone :</span><br/>
-                                    <span>Email :</span>
-                                    <!-- <span>GST No.</span> -->
-                                </td>
-                                <td width="41%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
-                                    <span t-esc="o.partner_id.name" /><br/>
-                                    <span t-esc="o.partner_id.street" style="padding-right:3px;"/>
-                                    <span t-esc="o.partner_id.street2" style="padding-right:3px;"/>
-                                    <span t-esc="o.partner_id.city" /><t t-if="o.partner_id.state_id">
-                                        ,<span t-esc="o.partner_id.state_id.name" />
-                                    </t><t t-if="o.partner_id.zip">
-                                        ,<span t-esc="o.partner_id.zip" />
-                                    </t><br/>
-                                    <span  t-esc="o.partner_id.country_id.name" /><br/>
-                                    <span  t-esc="o.partner_id.phone" style="padding-right:3px;"/><span t-esc="o.partner_id.mobile" /><br/>
-                                    <span t-esc="o.partner_id.email" />
-                                    <!-- <span t-esc="o.partner_id.vat" /> -->
-                                </td>
-                                <td width="9%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
-                                    <t t-if="o.buyer_notify_id">
-                                        <span>Company :</span><br/>
-                                        <span>Address :</span><br/><br/>
-                                        <span>Country :</span><br/>
-                                        <span>Phone :</span><br/>
-                                        <span>Email :</span>
-                                    </t>
-                                </td>
-                                 <td width="41%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
-                                    <t t-if="o.buyer_notify_id">
-                                        <span t-esc="o.buyer_notify_id.name" /><br/>
-                                        <span t-esc="o.buyer_notify_id.street" style="padding-right:3px;"/>
-                                        <span t-esc="o.buyer_notify_id.street2" style="padding-right:3px;"/>
-                                        <span t-esc="o.buyer_notify_id.city" /><t t-if="o.partner_id.state_id">
-                                            ,<span t-esc="o.buyer_notify_id.state_id.name" />
-                                        </t><t t-if="o.buyer_notify_id.zip">
-                                            ,<span t-esc="o.buyer_notify_id.zip" />
-                                        </t><br/>
-                                        <span  t-esc="o.buyer_notify_id.country_id.name" /><br/>
-                                        <span  t-esc="o.buyer_notify_id.phone" style="padding-right:3px;"/><span t-esc="o.partner_id.mobile" /><br/>
-                                        <span t-esc="o.buyer_notify_id.email" /><br/>
-                                    </t>
-                                </td>
-                            </tr>
-                        </table>
-                        <table style="width:100%;" >
-                            <tr>
-                                <td style="padding-bottom:5px;padding-top:5px;width:50%;">
                                     <b><span style="padding-bottom:5px;">DELIVERY AND PAYMENT TERMS</span></b>
                                 </td>
                                 <td style="padding-bottom:5px;padding-top:5px;width:50%;">
@@ -232,33 +170,20 @@
                                 <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:13px;text-align:center;background-color:#005fa9;color:white;">PACKING DESCRIPTION</th>
                                 <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:13px;text-align:center;background-color:#005fa9;color:white;">PACKING</th>
                                 <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:13px;text-align:center;background-color:#005fa9;color:white;">QTY UNIT</th>
-                                <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:13px;text-align:center;background-color:#005fa9;color:white;">UNIT PRICE</th>
-                                <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:13px;text-align:center;background-color:#005fa9;color:white;">TOTAL PRICE</th>
                             </tr>
                             <t t-set="srl" t-value="0" />
                             <t t-set="tot_pcs" t-value="0" />
-                            <t t-set="tot_amt" t-value="0" />
-                            <t t-set="tot_final_amt" t-value="0" />
                             
                             <t t-foreach="o.order_line" t-as="item">
                                 <t t-if="item.product_tmpl_id">
                                     <t t-set="srl" t-value="srl + 1" />
                                     <t t-set="tot_pcs" t-value="tot_pcs + item.product_uom_qty" />
-                                    <t t-set="tot_amt" t-value="tot_amt + item.price_unit" />
-                                    <t t-set="tot_final_amt" t-value="tot_final_amt + item.price_subtotal" />
 
-                                    <!-- <t t-if="item.bucket_cap_id.weight">
-                                        <t t-set="tot_weight" t-value="(item.product_uom_qty * item.product_uom.ratio) / item.bucket_cap_id.weight" />
-                                    </t>
-                                    <t t-else="">
-                                        <t t-set="tot_weight" t-value="0.0" />
-                                    </t> -->
                                     <tr>
                                         <td style="text-align: center;border-right: 1px solid black;">
                                             <span><span t-esc="srl"></span></span>
                                         </td>
                                         <td style="text-align: left;border-right: 1px solid black;">
-                                            <!-- <span><span t-esc="item.product_tmpl_id.name"></span></span><br/> -->
                                             <t t-if="o.display_name_on_pi == 'product_name'">
                                                  <span><span t-esc="o.product_shipping_id.name"></span></span><br/>
                                              </t>
@@ -291,41 +216,17 @@
                                         <td style="text-align: center;border-right: 1px solid black;">
                                             <span style="padding-right:2px;" t-esc="item.product_uom_qty"/> <span t-esc="item.product_uom.name"/>
                                         </td>
-                                        <td style="text-align: right;border-right: 1px solid black;">
-                                            <span ><span t-esc="'{:,.2f}'.format(float(item.price_unit))"></span></span> <span t-esc="o.currency_id.name"/>
-                                        </td>
-                                        <td style="text-align: right;">
-                                            <span ><span t-esc="'{:,.2f}'.format(float(item.price_subtotal))"></span></span> <span t-esc="o.currency_id.name"/>
-                                        </td>
                                     </tr>
                                 </t>
                                 <t t-elif="item.name">
                                     <t t-set="srl" t-value="0" />
                                     <tr>
-                                        <td colspan="7" style="border: 1px solid black;padding-bottom:2px;padding-top:4px;">
+                                        <td colspan="5" style="border: 1px solid black;padding-bottom:2px;padding-top:4px;">
                                             <b><span t-esc="item.name"/></b>
                                         </td>
                                     </tr>
                                 </t>
                             </t>
-                            <tr style="border:1px solid black;border-left:none;border-right:none;">
-                                <td style="border:1px solid black;border-left:none;border-right:none;border-right: 1px solid black;"></td>
-                                <td style="border:1px solid black;border-left:none;border-right:none;border-right: 1px solid black;"></td>
-                                <td style="border:1px solid black;border-left:none;border-right:none;border-right: 1px solid black;"></td>
-                                <td style="border:1px solid black;border-left:none;border-right:none;text-align:right;border-right: 1px solid black;">
-                                </td>
-                                <td style="border:1px solid black;border-left:none;border-right:none;text-align:right;border-right: 1px solid black;">
-                                </td>
-                                <!-- <td style="border:1px solid black;border-left:none;border-right:none;text-align:right;border-right: 1px solid black;">
-                                    <t t-esc="tot_pcs" />
-                                </td> -->
-                                <td style="border:1px solid black;border-left:none;border-right:none;text-align:right;border-right: 1px solid black;">
-                                    <t t-esc="'{:,.2f}'.format(float(tot_amt))" /> <span t-esc="o.currency_id.name"/>
-                                </td>
-                                <td style="border:1px solid black;border-left:none;border-right:none;text-align:right;">
-                                    <t t-esc="'{:,.2f}'.format(float(tot_final_amt))" /> <span t-esc="o.currency_id.name"/>
-                                </td>
-                            </tr>
                         </table>
                         <div style="height:5px;"></div>
                         <table style="width:100%; border-collapse:collapse;">
@@ -347,86 +248,6 @@
                                         <span style="padding-right:3px;"><b>TOTAL FOB :</b></span>
                                         <span t-esc="o.fob_rates"/>
                                     </t>
-                                </td>
-
-                                <td style="width:35%; vertical-align:top;">
-                                    <table style="width:100%; border-collapse:collapse; border:1px solid black;">
-                                        <tr>
-                                            <td style="padding:4px; border:1px solid black;font-size:13px;">
-                                                <span>Untaxed Amount</span>
-                                            </td>
-                                            <td style="padding:4px; border:1px solid black; text-align:right; font-size:13px; padding-right:7px;">
-                                                <t t-if="o.currency_id.position == 'before'">
-                                                    <span t-esc="o.currency_id.symbol"/> 
-                                                    <span t-esc="'{:,.2f}'.format(float(o.tot_amt))"/>
-                                                </t>
-                                                <t t-if="o.currency_id.position == 'after'">
-                                                    <span t-esc="'{:,.2f}'.format(float(o.tot_amt))"/> 
-                                                    <span t-esc="o.currency_id.symbol"/>
-                                                </t>
-                                            </td>
-                                        </tr>
-                                        <t t-if="o.tot_cgst">
-                                            <tr>
-                                                <td style="padding:4px; border:1px solid black; background-color:#f3f4f6; font-size:13px;">
-                                                    CGST Amt
-                                                </td>
-                                                <td style="padding:4px; border:1px solid black; text-align:right; background-color:#f3f4f6; font-size:13px; padding-right:7px;">
-                                                    <t t-if="o.currency_id.position == 'before'">
-                                                        <span t-esc="o.currency_id.symbol"/> <span t-esc="'{:,.2f}'.format(float(o.tot_cgst))"/>
-                                                    </t>
-                                                    <t t-if="o.currency_id.position == 'after'">
-                                                        <span t-esc="'{:,.2f}'.format(float(o.tot_cgst))"/> <span t-esc="o.currency_id.symbol"/>
-                                                    </t>
-                                                </td>
-                                            </tr>
-                                        </t>
-                                        <t t-if="o.tot_sgst">
-                                            <tr>
-                                                <td style="padding:4px; border:1px solid black; background-color:#f3f4f6; font-size:13px;">
-                                                    SGST Amt
-                                                </td>
-                                                <td style="padding:4px; border:1px solid black; text-align:right; background-color:#f3f4f6; font-size:13px; padding-right:7px;">
-                                                    <t t-if="o.currency_id.position == 'before'">
-                                                        <span t-esc="o.currency_id.symbol"/> <span t-esc="'{:,.2f}'.format(float(o.tot_sgst))"/>
-                                                    </t>
-                                                    <t t-if="o.currency_id.position == 'after'">
-                                                        <span t-esc="'{:,.2f}'.format(float(o.tot_sgst))"/> <span t-esc="o.currency_id.symbol"/>
-                                                    </t>
-                                                </td>
-                                            </tr>
-                                        </t>
-                                        <t t-if="o.tot_igst">
-                                            <tr>
-                                                <td style="padding:4px; border:1px solid black; background-color:#f3f4f6; font-size:13px;">
-                                                    IGST Amt
-                                                </td>
-                                                <td style="padding:4px; border:1px solid black; text-align:right; background-color:#f3f4f6; font-size:13px; padding-right:7px;">
-                                                    <t t-if="o.currency_id.position == 'before'">
-                                                        <span t-esc="o.currency_id.symbol"/> <span t-esc="'{:,.2f}'.format(float(o.tot_igst))"/>
-                                                    </t>
-                                                    <t t-if="o.currency_id.position == 'after'">
-                                                        <span t-esc="'{:,.2f}'.format(float(o.tot_igst))"/> <span t-esc="o.currency_id.symbol"/>
-                                                    </t>
-                                                </td>
-                                            </tr>
-                                        </t>
-                                        <tr>
-                                            <td style="padding:4px; border:1px solid black; background-color:#005fa9; font-size:13px;">
-                                                <span style="color:white;">Total</span>
-                                            </td>
-                                            <td style="padding:4px; border:1px solid black; text-align:right; background-color:#005fa9; padding-right:7px; font-size:13px;">
-                                                <t t-if="o.currency_id.position == 'before'">
-                                                    <span style="color:white;" t-esc="o.currency_id.symbol"/> 
-                                                    <span style="color:white;" t-esc="'{:,.2f}'.format(float(o.net_amt))"/>
-                                                </t>
-                                                <t t-if="o.currency_id.position == 'after'">
-                                                    <span style="color:white;" t-esc="'{:,.2f}'.format(float(o.net_amt))"/> 
-                                                    <span style="color:white;" t-esc="o.currency_id.symbol"/>
-                                                </t>
-                                            </td>
-                                        </tr>
-                                    </table>
                                 </td>
                             </tr>
                         </table>

@@ -15,9 +15,16 @@
                     <button string="Move to Dispatch/Document" name="action_move_document" type="object" class="btn-primary" attrs="{'invisible': ['|', ('is_finish_booking', '=', False), ('state', 'in', ('dispatch_document','post_shipment','close'))]}" />
                     <button string="Post Shipment" name="action_post_shipment" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', 'dispatch_document')]}" />
                     <button string="Close" name="action_close" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', 'post_shipment')]}" />
+
+                    <button string="Order Form" name="action_document_order_form" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', 'dispatch_document')]}" />
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object" name="action_view_logistics_delivery" class="oe_stat_button" icon="fa-truck" attrs="{'invisible': ['|',('delivery_count', '=', 0),('state', '=', 'pre_shipment')]}" >
+                            <field name="delivery_count" widget="statinfo" string="Delivery"/>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <h1>
                             <field name="name" readonly="1" force_save="1"/>
@@ -469,6 +476,11 @@
         <field name='model'>jal.logistics</field>
         <field name='arch' type='xml'>
             <form>
+                <header>
+                    <button string="Start Booking" name="action_start_booking" type="object" class="btn-primary" attrs="{'invisible': ['|', ('state', '!=', 'pre_shipment'), ('booking_date', '!=', False)]}" />
+                    <button string="Confirm Booking" name="action_finish_booking" type="object" class="btn-primary" attrs="{'invisible': ['|', ('booking_date', '=', False), ('is_finish_booking', '=', True)]}" />
+                    <button string="Move to Dispatch/Document" name="action_move_document" type="object" class="btn-primary" attrs="{'invisible': ['|', ('is_finish_booking', '=', False), ('state', 'in', ('dispatch_document','post_shipment','close'))]}" />
+                </header>
                 <sheet>
                     <div class="oe_title">
                         <h1>
@@ -478,6 +490,7 @@
                     <group>
                         <group>
                             <field name='company_id' invisible="1"/>
+                            <field name='state' invisible="1"/>
                             <field name='is_finish_booking' invisible="1"/>
                             <field name='sale_id' readonly="1" force_save="1" required="1" options="{'no_create': True}" domain="[('state', '=', 'sale')]"/>
                         </group>
@@ -584,6 +597,10 @@
         <field name='model'>jal.logistics</field>
         <field name='arch' type='xml'>
             <form>
+                <header>
+                    <button string="Post Shipment" name="action_post_shipment" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', 'dispatch_document')]}" />
+                    <button string="Order Form" name="action_document_order_form" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', 'dispatch_document')]}" />
+                </header>
                 <sheet>
                     <div class="oe_title">
                         <h1>
@@ -593,6 +610,7 @@
                     <group>
                         <group>
                             <field name='company_id' invisible="1"/>
+                            <field name='state' invisible="1"/>
                             <field name='is_finish_booking' invisible="1"/>
                             <field name='sale_id' readonly="1" force_save="1" required="1" options="{'no_create': True}" domain="[('state', '=', 'sale')]"/>
                         </group>
@@ -844,6 +862,9 @@
         <field name='model'>jal.logistics</field>
         <field name='arch' type='xml'>
             <form>
+                <header>
+                    <button string="Close" name="action_close" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', 'post_shipment')]}" />
+                </header>
                 <sheet>
                     <div class="oe_title">
                         <h1>
@@ -852,6 +873,7 @@
                     </div>
                     <group>
                         <group>
+                            <field name='state' invisible="1"/>
                             <field name='company_id' invisible="1"/>
                             <field name='is_finish_booking' invisible="1"/>
                             <field name='sale_id' readonly="1" force_save="1" required="1" options="{'no_create': True}" domain="[('state', '=', 'sale')]"/>

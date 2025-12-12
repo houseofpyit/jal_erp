@@ -20,6 +20,7 @@
         'report/report_sale_domestic.xml',
         'report/report_sale_international.xml',
         'report/report_sale_proforma.xml',
+        'report/order_form_report.xml',
 
         'views/inherit_crm.xml',
         'views/inherit_sale.xml',
@@ -34,7 +35,7 @@
         'views/product_misc_mst.xml',
         'views/purchase_requisite.xml',
         'views/inherit_stock.xml',
-        # 'views/inherit_company.xml',
+        'views/inherit_company.xml',
         'views/master_menu.xml',
 
     ],

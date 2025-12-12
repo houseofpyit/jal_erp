@@ -3,23 +3,25 @@
     <data>
         <template id="report_purchase_order">
             <t t-call="web.basic_layout">
-                <div class="header">
+                <t t-foreach="docs" t-as="o">
+                    <div class="header">
                         <table>
                             <tr>
                                 <td>
-                                    <img src="/jal_transaction/static/description/jal.png" class="img" />
+                                    <t t-if="o.company_id.header_image">
+                                        <img class="img img-responsive" t-att-src="image_data_uri(o.company_id.header_image)" alt="Logo" style="width:900px; height:100px;"/>
+                                    </t>
                                 </td>
                             </tr>
                         </table>
                     </div>
-                <div class="page">
-                    <table width="100%">
-                        <tr>
-                            <td width="50%"><b>Shipping Address:</b></td>
-                            <td width="50%"><b>TO:</b></td>
-                        </tr>
-                        <tr>
-                            <t t-foreach="docs" t-as="o">
+                    <div class="page">
+                        <table width="100%">
+                            <tr>
+                                <td width="50%"><b>Shipping Address:</b></td>
+                                <td width="50%"><b>TO:</b></td>
+                            </tr>
+                            <tr>
                                 <td width="50%" style="vertical-align: top;font-size:13px;" >
                                     <b><span style="font-size:15px;" t-esc="o.company_id.name" /></b><br/>
                                     <span t-esc="o.company_id.street" /><br/>
@@ -68,143 +70,183 @@
                                         <span>Mobile: </span><span t-esc="o.partner_id.mobile"/>
                                     </t>
                                 </td>
-                            </t>
-                        </tr>
-                    </table>
-                    <table width="100%">
-                        <tr width="100%" colspan="2">
-                             <t t-if="o.state in ['draft', 'sent']">
-                                <span style="font-size:20px;color:#5796c6;"><b>Request for Quotation</b></span>
-                            </t>
-                            <t t-elif="o.state == 'purchase'">
-                                <span style="font-size:20px;color:#5796c6;"><b>Purchase Order</b></span>
-                            </t>
-                            <span style="font-size:20px;color:#5796c6;" t-esc="o.name"/>
-                        </tr>
-                        <tr width="100%">
-                            <td width="30%">
-                                <span style="font-size:16px;"><b>Purchase Representative:</b></span><br/>
-                                <span style="font-size:15px;" t-esc="o.user_id.name"/>
-                            </td>
-                            <td width="30%">
-                                <span style="font-size:16px;"><b>Order Date:</b></span><br/>
-                                <span style="font-size:15px;" t-if="o.date" t-esc="o.date.strftime('%d/%m/%Y')"/>
-                            </td>
-                            <td width="30%">
-                                <span style="font-size:16px;"><b>Order Deadline:</b></span><br/>
-                                <span style="font-size:15px;" t-if="o.date_planned" t-esc="o.date.strftime('%d/%m/%Y %I:%M %p')"/>
-                            </td>
-                        </tr>
-                    </table>
-                    <br/>
-                    <table width="100%" style="border:1px solid #000; border-collapse:collapse;">
-                        <tr>
-                            <th style="width:40%;border:1px solid #000; padding:3px;font-size:13px;">DESCRIPTION</th>
-                            <th style="width:15%;border:1px solid #000; padding:3px;font-size:13px;">TAXES</th>
-                            <th style="width:10%;border:1px solid #000; padding:3px;font-size:13px;">HSN</th>
-                            <th style="width:10%;border:1px solid #000; padding:3px;font-size:13px;">QTY</th>
-                            <th style="width:10%;border:1px solid #000; padding:3px;font-size:13px;">UNIT PRICE</th>
-                            <th style="width:10%;border:1px solid #000; padding:3px;font-size:13px;">AMOUNT</th>
-                        </tr>
-                        <t t-foreach="o.order_line" t-as="line">
-                            <t t-set="gst_name" t-value="''" />
-                            <t t-foreach="line.gst_ids" t-as="gst">
-                                <t t-set="gst_name" t-value="(gst_name + ', ' if gst_name else '') + gst.name" />
-                            </t>
-                            <tr>
-                                <td style="border:1px solid #000; padding:3px;font-size:13px;">
-                                    <span t-esc="line.product_id.display_name"/><br/>
-                                    <span t-esc="line.name"/>
-                                </td>
-                                <td style="border:1px solid #000; padding:3px;font-size:13px;">
-                                    <span t-esc="gst_name"/>
-                                </td>
-                                <td style="border:1px solid #000; padding:3px;font-size:13px;">
-                                    <span t-esc="line.hsn_id.name"/>
-                                </td>
-                                <td style="border:1px solid #000; padding:3px;text-align: right;font-size:13px;padding-right:7px;">
-                                    <span  t-esc="line.product_qty"/> <span t-esc="line.product_uom.name"/>
-                                </td>
-                                <td style="border:1px solid #000; padding:3px;text-align: right;font-size:13px;padding-right:7px;">
-                                    <span t-esc="line.price_unit"/>
-                                </td>
-                                <td style="border:1px solid #000; padding:3px;text-align: right;font-size:13px;padding-right:7px;">
-                                    <span t-esc="line.price_subtotal"/>
-                                </td>
-                            </tr>
-                        </t>
-                    </table>
-                    <div style="height:5px;"></div>
-                    <div style="float:right; width:35%;">
-                        <table style="width:100%; border-collapse:collapse; border:1px solid black;">
-                            <tr>
-                                <td style="padding:4px; border:1px solid black;font-size:13px;">
-                                    <span>Untaxed Amount</span>
-                                </td>
-                                <td style="padding:4px; border:1px solid black;text-align: right;font-size:13px;padding-right:7px;">
-                                    ₹ <span t-esc="'%.2f' % (o.tot_amt)"/>
-                                </td>
-                            </tr>
-                            <t t-if="o.tot_cgst">
-                                <tr>
-                                    <td style="padding:4px; border:1px solid black;font-size:13px;background-color:#f3f4f6;">
-                                        <span>CGST Amt</span>
-                                    </td>
-                                    <td style="padding:4px; border:1px solid black;text-align: right;font-size:13px;background-color:#f3f4f6;padding-right:7px;">
-                                        ₹ <span t-esc="'%.2f' % (o.tot_cgst)"/>
-                                    </td>
-                                </tr>
-                            </t>
-                            <t t-if="o.tot_sgst">
-                                <tr>
-                                    <td style="padding:4px; border:1px solid black;font-size:13px;background-color:#f3f4f6;">
-                                        <span>SGST Amt</span>
-                                    </td>
-                                    <td style="padding:4px; border:1px solid black;text-align: right;font-size:13px;background-color:#f3f4f6;padding-right:7px;">
-                                        ₹ <span t-esc="'%.2f' % (o.tot_sgst)"/>
-                                    </td>
-                                </tr>
-                            </t>
-                            <t t-if="o.tot_igst">
-                                <tr>
-                                    <td style="padding:4px; border:1px solid black;font-size:13px;background-color:#f3f4f6;">
-                                        <span>IGST Amt</span>
-                                    </td>
-                                    <td style="padding:4px; border:1px solid black;text-align: right;font-size:13px;background-color:#f3f4f6;padding-right:7px;">
-                                        ₹ <span t-esc="'%.2f' % (o.tot_igst)"/>
-                                    </td>
-                                </tr>
-                            </t>
-                            <tr>
-                                <td style="padding:4px; border:1px solid black;font-size:13px;background-color:#005fa9;">
-                                    <span style="color:white;">Total</span>
-                                </td>
-                                <td style="padding:4px; border:1px solid black;text-align: right;font-size:13px;background-color:#005fa9;padding-right:7px;">
-                                    <span style="color:white;">₹</span>
-                                    <!-- <span style="color:white;" t-esc="'%.2f' % (o.net_amt)"/> -->
-                                    <span style="color:white;" t-esc="'{:,.2f}'.format(float(o.net_amt))"/>
-                                </td>
                             </tr>
                         </table>
-                    </div>
                         <table width="100%">
-                            <tr colspan="2">
-                                <td>
-                                   <span><b>Total (In Words): </b></span>
-                                   <span t-esc="o.currency_id.amount_to_text(o.net_amt)"/>
-                                   <span style="font-weight:bold;"  />
+                            <tr width="100%" colspan="2">
+                                <t t-if="o.state in ['draft', 'sent']">
+                                    <span style="font-size:20px;color:#5796c6;"><b>Request for Quotation</b></span>
+                                </t>
+                                <t t-elif="o.state == 'purchase'">
+                                    <span style="font-size:20px;color:#5796c6;"><b>Purchase Order</b></span>
+                                </t>
+                                <span style="font-size:20px;color:#5796c6;" t-esc="o.name"/>
+                            </tr>
+                            <tr width="100%">
+                                <td width="30%">
+                                    <span style="font-size:16px;"><b>Purchase Representative:</b></span><br/>
+                                    <span style="font-size:15px;" t-esc="o.user_id.name"/>
+                                </td>
+                                <td width="30%">
+                                    <span style="font-size:16px;"><b>Order Date:</b></span><br/>
+                                    <span style="font-size:15px;" t-if="o.date" t-esc="o.date.strftime('%d/%m/%Y')"/>
+                                </td>
+                                <td width="30%">
+                                    <span style="font-size:16px;"><b>Order Deadline:</b></span><br/>
+                                    <span style="font-size:15px;" t-if="o.date_planned" t-esc="o.date.strftime('%d/%m/%Y %I:%M %p')"/>
                                 </td>
                             </tr>
-                            <tr>
-                                <td><span><b>Terms &amp; Conditions</b></span><br/>
-                                <span style="font-size:13px;" t-esc="o.notes" /></td>
-                            </tr>
-                            <tr>
-                                <td><span><b>Notes</b></span><br/>
-                                <span style="font-size:13px; padding-left:5px;" t-esc="o.remarks" /></td>
+                            <tr width="100%">
+                                <td width="30%">
+                                    <span style="font-size:16px;"><b>Payment Terms:</b></span><br/>
+                                    <span style="font-size:15px;" t-esc="o.payment_term_id.name"/>
+                                </td>
+                                <td width="30%">
+                                    <span style="font-size:16px;"><b>Fiscal Position:</b></span><br/>
+                                    <span style="font-size:15px;" t-esc="o.fiscal_position_id.name"/>
+                                </td>
+                                <td width="30%">
+                                    <span style="font-size:16px;"><b>Incoterm:</b></span><br/>
+                                    <span style="font-size:15px;" t-esc="o.incoterm_id.name"/>
+                                </td>
                             </tr>
                         </table>
-                </div>
+                        <br/>
+                        <table width="100%" style="border:1px solid #000; border-collapse:collapse;">
+                            <tr>
+                                <th style="width:40%;border:1px solid #000; padding:3px;font-size:13px;">DESCRIPTION</th>
+                                <th style="width:15%;border:1px solid #000; padding:3px;font-size:13px;">TAXES</th>
+                                <th style="width:10%;border:1px solid #000; padding:3px;font-size:13px;">HSN</th>
+                                <th style="width:10%;border:1px solid #000; padding:3px;font-size:13px;">QTY</th>
+                                <th style="width:10%;border:1px solid #000; padding:3px;font-size:13px;">UNIT PRICE</th>
+                                <th style="width:10%;border:1px solid #000; padding:3px;font-size:13px;">AMOUNT</th>
+                            </tr>
+                            <t t-foreach="o.order_line" t-as="line">
+                                <t t-set="gst_name" t-value="''" />
+                                <t t-foreach="line.gst_ids" t-as="gst">
+                                    <t t-set="gst_name" t-value="(gst_name + ', ' if gst_name else '') + gst.name" />
+                                </t>
+                                <tr>
+                                    <td style="border:1px solid #000; padding:3px;font-size:13px;">
+                                        <span t-esc="line.product_id.display_name"/><br/>
+                                        <span t-esc="line.name"/>
+                                    </td>
+                                    <td style="border:1px solid #000; padding:3px;font-size:13px;">
+                                        <span t-esc="gst_name"/>
+                                    </td>
+                                    <td style="border:1px solid #000; padding:3px;font-size:13px;">
+                                        <span t-esc="line.hsn_id.name"/>
+                                    </td>
+                                    <td style="border:1px solid #000; padding:3px;text-align: right;font-size:13px;padding-right:7px;">
+                                        <span  t-esc="line.product_qty"/> <span t-esc="line.product_uom.name"/>
+                                    </td>
+                                    <td style="border:1px solid #000; padding:3px;text-align: right;font-size:13px;padding-right:7px;">
+                                        <span t-esc="'{:,.2f}'.format(float(line.price_unit))"/>
+                                    </td>
+                                    <td style="border:1px solid #000; padding:3px;text-align: right;font-size:13px;padding-right:7px;">
+                                        <span t-esc="'{:,.2f}'.format(float(line.price_subtotal))"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </table>
+                        <div style="height:5px;"></div>
+                        <div style="float:right; width:35%;">
+                            <table style="width:100%; border-collapse:collapse; border:1px solid black;">
+                                <tr>
+                                    <td style="padding:4px; border:1px solid black;font-size:13px;">
+                                        <span>Untaxed Amount</span>
+                                    </td>
+                                    <td style="padding:4px; border:1px solid black;text-align: right;font-size:13px;padding-right:7px;">
+                                        <t t-if="o.currency_id.position == 'before'">
+                                            <span t-esc="o.currency_id.symbol"/> <span t-esc="'{:,.2f}'.format(float(o.tot_amt))"/>
+                                        </t>
+                                        <t t-if="o.currency_id.position == 'after'">
+                                        <span t-esc="'{:,.2f}'.format(float(o.tot_amt))"/> <span t-esc="o.currency_id.symbol"/>
+                                        </t>
+                                    </td>
+                                </tr>
+                                <t t-if="o.tot_cgst">
+                                    <tr>
+                                        <td style="padding:4px; border:1px solid black;font-size:13px;background-color:#f3f4f6;">
+                                            <span>CGST Amt</span>
+                                        </td>
+                                        <td style="padding:4px; border:1px solid black;text-align: right;font-size:13px;background-color:#f3f4f6;padding-right:7px;">
+                                            <t t-if="o.currency_id.position == 'before'">
+                                                <span t-esc="o.currency_id.symbol"/> <span t-esc="'{:,.2f}'.format(float(o.tot_cgst))"/>
+                                            </t>
+                                            <t t-if="o.currency_id.position == 'after'">
+                                                <span t-esc="'{:,.2f}'.format(float(o.tot_cgst))"/> <span t-esc="o.currency_id.symbol"/>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <t t-if="o.tot_sgst">
+                                    <tr>
+                                        <td style="padding:4px; border:1px solid black;font-size:13px;background-color:#f3f4f6;">
+                                            <span>SGST Amt</span>
+                                        </td>
+                                        <td style="padding:4px; border:1px solid black;text-align: right;font-size:13px;background-color:#f3f4f6;padding-right:7px;">
+                                            <t t-if="o.currency_id.position == 'before'">
+                                                <span t-esc="o.currency_id.symbol"/> <span t-esc="'{:,.2f}'.format(float(o.tot_sgst))"/>
+                                            </t>
+                                            <t t-if="o.currency_id.position == 'after'">
+                                                <span t-esc=" '{:,.2f}'.format(float(o.tot_cgst))"/> <span t-esc="o.currency_id.symbol"/>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <t t-if="o.tot_igst">
+                                    <tr>
+                                        <td style="padding:4px; border:1px solid black;font-size:13px;background-color:#f3f4f6;">
+                                            <span>IGST Amt</span>
+                                        </td>
+                                        <td style="padding:4px; border:1px solid black;text-align: right;font-size:13px;background-color:#f3f4f6;padding-right:7px;">
+                                            <t t-if="o.currency_id.position == 'before'">
+                                                <span t-esc="o.currency_id.symbol"/> <span t-esc="'{:,.2f}'.format(float(o.tot_igst))"/>
+                                            </t>
+                                            <t t-if="o.currency_id.position == 'after'">
+                                                <span t-esc="'{:,.2f}'.format(float(o.tot_igst))"/> <span t-esc="o.currency_id.symbol"/>
+                                            </t>     
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr>
+                                    <td style="padding:4px; border:1px solid black;font-size:13px;background-color:#005fa9;">
+                                        <span style="color:white;">Total</span>
+                                    </td>
+                                    <td style="padding:4px; border:1px solid black;text-align: right;font-size:13px;background-color:#005fa9;padding-right:7px;">
+                                        <!-- <span style="color:white;">₹</span> -->
+                                        <!-- <span style="color:white;" t-esc="'%.2f' % (o.net_amt)"/> -->
+                                        <!-- <span style="color:white;" t-esc="'{:,.2f}'.format(float(o.net_amt))"/> -->
+                                        <t t-if="o.currency_id.position == 'before'">
+                                            <span style="color:white;" t-esc="o.currency_id.symbol"/> <span style="color:white;" t-esc="'{:,.2f}'.format(float(o.net_amt))"/>
+                                        </t>
+                                        <t t-if="o.currency_id.position == 'after'">
+                                            <span style="color:white;" t-esc="'{:,.2f}'.format(float(o.net_amt))"/> <span style="color:white;" t-esc="o.currency_id.symbol"/>
+                                        </t>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                            <table width="100%">
+                                <tr colspan="2">
+                                    <td>
+                                    <span><b>Total (In Words): </b></span>
+                                    <span t-esc="o.amount_to_text(o.net_amt, o.currency_id.name)"/>
+                                    <span style="font-weight:bold;"  />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><span><b>Terms &amp; Conditions</b></span><br/>
+                                    <span style="font-size:13px;" t-esc="o.notes" /></td>
+                                </tr>
+                                <tr>
+                                    <td><span><b>Notes</b></span><br/>
+                                    <span style="font-size:13px; padding-left:5px;" t-esc="o.remarks" /></td>
+                                </tr>
+                            </table>
+                    </div>
+                </t>
             </t>
         </template>
     </data>

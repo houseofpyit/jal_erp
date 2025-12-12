@@ -26,6 +26,11 @@
                 <field name="uom_handling_type" invisible="1"/>
                 <field name="quality_result" readonly="1" attrs="{'column_invisible':[('parent.picking_type_code', '!=', 'incoming')]}"/>
             </xpath>
+            <xpath expr="//page[@name='operations']/field[@name='move_ids_without_package']/tree/field[@name='product_uom']" position="after">
+                <field name="quality_per" attrs="{'readonly': [('is_caustic','!=',True)],'column_invisible':[('parent.picking_type_code', '!=', 'incoming')]}"/>
+                <field name="actual_qty" attrs="{'readonly': [('is_caustic','!=',True)],'column_invisible':[('parent.picking_type_code', '!=', 'incoming')]}"/>
+                <field name="is_caustic" invisible="1"/>
+            </xpath>
         </field>
     </record>
 

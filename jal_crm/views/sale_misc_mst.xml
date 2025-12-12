@@ -144,7 +144,15 @@
                             <field name="bank_branch_ifsc" />
                             <field name="swift_code" />
                         </group>  
-                    </group>                  
+                    </group>   
+                    <group string="Additional Bank Details">
+                        <group>
+                            <field name="correspondent_bank" />
+                            <field name="swift_code1" />
+                            <field name="acc_no" />
+                            <field name="currency1_id" options="{'no_create': True}" />
+                        </group>    
+                    </group>               
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_ids"/>

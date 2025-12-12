@@ -6,6 +6,7 @@ class inheritedResCompany(models.Model):
    _inherit = "res.company"
 
    # ship_ids = fields.One2many('company.ship.add','mst_id',string="Ship Location")
+   header_image = fields.Binary(string="Header Image",attachment=True)
 
    def _convert_html_to_text(self, html):
       if not html:
