@@ -10,9 +10,13 @@
                 <button type="object" name="get_action_view_purchase_quality" class="oe_stat_button" icon="fa-list" attrs="{'invisible':[('purchase_quality_count','=', 0)]}" >
                     <field name="purchase_quality_count" widget="statinfo" string="Quality Test"/>
                 </button>
+                <button type="object" name="action_view_bill" class="oe_stat_button" icon="fa-list" >
+                    <field name="purchase_bill_count" widget="statinfo" string="Bill" attrs="{'invisible':[('purchase_bill_count','=', 0)]}"/>
+                </button>
             </xpath>
             <xpath expr="//button[@name='action_cancel']" position="after">
                 <button string="Send for Quality" name="create_purchase_quality" class="oe_highlight" attrs="{'invisible': ['|',('picking_type_code', '!=', 'incoming'),('send_quality', '=', True)]}" type="object"/>
+                <button string="Create Invoice" name="action_create_invoice" class="oe_highlight"  type="object" attrs="{'invisible':[('purchase_bill_count','!=', 0)]}"/>
             </xpath>
             <xpath expr="//field[@name='origin']" position="after">
                 <field name="booking_date" force_save="1" readonly="1"/>

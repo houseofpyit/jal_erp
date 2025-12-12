@@ -5,6 +5,7 @@ class inheritedPurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
     purchase_quality_count = fields.Integer("Purchase Quality count")
+    product_ids = fields.Many2many('product.product','ref_product',string="Products")
 
     @api.depends('picking_ids')
     def _compute_incoming_picking_count(self):
@@ -25,6 +26,24 @@ class inheritedPurchaseOrder(models.Model):
             actions['views'] = form_view + [(state, view) for state, view in actions.get('views', []) if view != 'form']
             actions['res_id'] = quality_rec.id
         return actions
+    
+    def action_fetch(self):
+        lines_to_add = []
+        for product in self.product_ids:
+            vals = {
+                'name': product.name,
+                'product_id': product.id,
+                'cost_id': product.cost_id.id,
+                'product_uom': product.uom_id.id,
+                'hsn_id': product.hsn_id.id,
+            }
+            lines_to_add.append((0, 0, vals))
+
+        self.order_line = [(5, 0, 0)] + lines_to_add
+        for line in self.order_line:
+            line._onchange_hsn_id()
+
+        self.product_ids = False
 
 class inheritedPurchaseOrderLine(models.Model):
     _inherit = "purchase.order.line"

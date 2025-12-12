@@ -11,9 +11,22 @@
                     <field name="purchase_quality_count" widget="statinfo" string="Quality Test"/>
                 </button>
             </xpath>
+            <xpath expr="//header/button[@name='action_bill']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
             <xpath expr="//tree/field[@name='product_qty']" position="after">
                 <field name="bucket" width="150px" attrs="{'readonly': [('uom_handling_type', '!=', 'multi')]}"/>
                 <field name="uom_handling_type" invisible="1"/>
+            </xpath>
+            <xpath expr="//page[@name='products']/field[@name='tax_country_id']" position="before">
+                <group>
+                    <group>
+                        <field name="product_ids" widget="many2many_tags"/>
+                    </group>
+                    <group>
+                        <button name="action_fetch" string="Load Product" class="btn-primary" type="object" />
+                    </group>
+                </group>
             </xpath>
         </field>
     </record>
