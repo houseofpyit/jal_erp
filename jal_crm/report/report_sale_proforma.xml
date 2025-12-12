@@ -254,10 +254,10 @@
                                         <t t-set="tot_weight" t-value="0.0" />
                                     </t> -->
                                     <tr>
-                                        <td style="text-align: center;border-right: 1px solid black;">
+                                        <td style="text-align: center;border-right: 1px solid black;border-bottom: 1px solid black;border-top: 1px solid black;">
                                             <span><span t-esc="srl"></span></span>
                                         </td>
-                                        <td style="text-align: left;border-right: 1px solid black;">
+                                        <td style="text-align: left;border-right: 1px solid black;border-bottom: 1px solid black;border-top: 1px solid black;">
                                             <!-- <span><span t-esc="item.product_tmpl_id.name"></span></span><br/> -->
                                             <t t-if="o.display_name_on_pi == 'product_name'">
                                                  <span><span t-esc="o.product_shipping_id.name"></span></span><br/>
@@ -275,7 +275,7 @@
                                                 <span>Mesh - <span t-esc="item.mesh_id.name"></span></span>
                                             </t>
                                         </td>
-                                        <td style="text-align: left; border-right: 1px solid black; padding: 0;padding-left:3px;">
+                                        <td style="text-align: left; border-right: 1px solid black; padding: 0;padding-left:3px;border-bottom: 1px solid black;border-top: 1px solid black;">
                                             <span t-esc="item.packing_name"></span>
                                             <t t-if="item.name">
                                                 <span style="font-weight: bold;"> Loading Description: </span><br/>
@@ -283,18 +283,18 @@
                                             </t>
                                         </td>
 
-                                        <td style="text-align: right;border-right: 1px solid black;">
+                                        <td style="text-align: right;border-right: 1px solid black;border-bottom: 1px solid black;border-top: 1px solid black;">
                                             <span t-esc="'%.0f' % item.bucket"/> <b><t t-if="item.packing_type">
                                                 <span t-esc="dict(item.fields_get(allfields=['packing_type'])['packing_type']['selection'])[item.packing_type]"/>
                                             </t></b>
                                         </td>
-                                        <td style="text-align: center;border-right: 1px solid black;">
+                                        <td style="text-align: center;border-right: 1px solid black;border-bottom: 1px solid black;border-top: 1px solid black;">
                                             <span style="padding-right:2px;" t-esc="item.product_uom_qty"/> <span t-esc="item.product_uom.name"/>
                                         </td>
-                                        <td style="text-align: right;border-right: 1px solid black;">
+                                        <td style="text-align: right;border-right: 1px solid black;border-bottom: 1px solid black;border-top: 1px solid black;">
                                             <span ><span t-esc="'{:,.2f}'.format(float(item.price_unit))"></span></span> <span t-esc="o.currency_id.name"/>
                                         </td>
-                                        <td style="text-align: right;">
+                                        <td style="text-align: right;border-bottom: 1px solid black;border-top: 1px solid black;">
                                             <span ><span t-esc="'{:,.2f}'.format(float(item.price_subtotal))"></span></span> <span t-esc="o.currency_id.name"/>
                                         </td>
                                     </tr>
