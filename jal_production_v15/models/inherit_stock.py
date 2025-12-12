@@ -29,7 +29,7 @@ class inheriteStockPicking(models.Model):
                         'order_id':order_line_rec.order_id.id,
                         'order_line_id':order_line_rec.id,
                         'product_id':line.product_id.id,
-                        'pcs':line.quantity_done,
+                        'pcs':line.actual_qty if line.is_caustic else line.quantity_done,
                         'cost_center_id': order_line_rec.cost_id.id,
                         'hsn_id': order_line_rec.hsn_id.id,
                         'rate':order_line_rec.price_unit,
