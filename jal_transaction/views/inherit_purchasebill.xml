@@ -10,6 +10,7 @@
                 <page name="attachment_det" string="Document Details">
                     <group>
                         <field name="attachment_ids" widget="many2many_binary"/>
+                        <field name="picking_id" readonly="1" force_save="1"/>
                     </group>
                 </page>
             </xpath>

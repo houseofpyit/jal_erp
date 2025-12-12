@@ -12,14 +12,83 @@ class inheriteStockPicking(models.Model):
     send_quality = fields.Boolean(string="Send For Quality")
     purchase_quality_count = fields.Integer("Purchase Quality count")
     booking_date = fields.Date(string="Booking Date",tracking=True)
+    purchase_bill_count = fields.Integer(string='Purchase Bill', compute='compute_calculate_bill' )
     
     def button_validate(self):
         for line in self.move_lines:
             if self.picking_type_code == 'incoming' and line.quality_result == 'wt_for_qt':
                 raise ValidationError(f"Product '{line.product_id.display_name}' is still waiting for quality test. Please complete the quality check before confirming.")
-
         res = super(inheriteStockPicking,self).button_validate()
         return res
+    
+    def action_create_invoice(self):
+        line_list = []
+        for line in self.move_ids_without_package:
+            order_line_rec = self.env['purchase.order.line'].search([('id','=',line.purchase_line_id.id),('product_id','=',line.product_id.id)])
+            line_list.append((0,0,{
+                        'order_id':order_line_rec.order_id.id,
+                        'order_line_id':order_line_rec.id,
+                        'product_id':line.product_id.id,
+                        'pcs':line.quantity_done,
+                        'cost_center_id': order_line_rec.cost_id.id,
+                        'hsn_id': order_line_rec.hsn_id.id,
+                        'rate':order_line_rec.price_unit,
+                        # 'pcs': order_line_rec.pcs,
+                        'amount': order_line_rec.price_subtotal,
+                        'gst_ids': [(6, 0, order_line_rec.gst_ids.ids)],
+                        'disc_amt': order_line_rec.disc_amt,
+                        'disc_per': order_line_rec.disc_per,
+                        'add_amt': order_line_rec.add_amt,
+                        'sgst_amt': order_line_rec.sgst_amt,
+                        'cgst_amt': order_line_rec.cgst_amt,
+                        'igst_amt': order_line_rec.igst_amt,
+                        'final_amt': order_line_rec.final_amt,
+                    }))
+
+            bill_chr = 'BILL'
+            bill_no = self.env['hop.purchasebill'].bill_chr_vld(bill_chr,self.env.company.id,date.today())
+            purchase_bill_rec =self.env['hop.purchasebill'].create({
+                'bill_chr': bill_chr,
+                'bill_no': bill_no,
+                'name': str(bill_chr)+ str(bill_no),
+                'party_id':self.partner_id.id,
+                'bill_number':self.vendor_bill_no,
+                'date':self.date,
+                'rd_urd':self.partner_id.rd_urd,
+                'picking_id':self.id,
+                'due_days':self.partner_id.due_days,
+                'line_id':line_list
+            })
+            for line in purchase_bill_rec.line_id:
+                line._onchange_calc_amt()
+            purchase_bill_rec._final_amt_calculate()
+
+   
+
+    def compute_calculate_bill(self):
+        for i in self:
+            i.purchase_bill_count = self.env['hop.purchasebill'].search_count([('picking_id', '=', i.id)])
+    def action_view_bill(self):
+        bill_rec = self.env['hop.purchasebill'].sudo().search([('picking_id', '=', self.id)])
+        if len(bill_rec) == 1:
+            return {
+            'name': 'Bill',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'res_model': 'hop.purchasebill',
+            'res_id': bill_rec.id,
+            'context': {'create': False}
+            }
+        else:
+            return {
+            'name': 'Bill',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'tree,form',
+            'res_model': 'hop.purchasebill',
+            'domain': [('id', 'in', bill_rec.ids)],
+            'context': {'create': False}
+            }
     
     def action_confirm(self):
         res = super(inheriteStockPicking,self).action_confirm()
