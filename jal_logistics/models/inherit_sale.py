@@ -52,6 +52,18 @@ class InheritSale(models.Model):
         #     log.state = 'pre_shipment'
         self.state = 'sale'
 
+    def action_cancel(self):
+        res = super(InheritSale, self).action_cancel()
+        mo_rec = self.env['jal.mrp.production'].search([('sale_id', '=', self.id)])
+        for mo in mo_rec:
+            mo.state = 'cancel'
+
+        logistics_rec = self.env['jal.logistics'].search([('sale_id', '=', self.id)])
+        for lo in logistics_rec:
+            lo.state = 'cancel'
+        return res
+        
+
     @api.depends('company_id.account_fiscal_country_id', 'fiscal_position_id.country_id', 'fiscal_position_id.foreign_vat')
     def _compute_tax_country_id(self):
         res = super(InheritSale, self)._compute_tax_country_id()
@@ -83,12 +95,15 @@ class InheritSale(models.Model):
 
     def action_view_logistics(self):
         logistics_rec = self.env['jal.logistics'].search([('sale_id', 'in', self.ids)])
+        tree_view = self.env.ref('jal_logistics.jal_logistics_tree').id
+        form_view = self.env.ref('jal_logistics.jal_logistics_form').id
         if len(logistics_rec) == 1:
             return {
                 'type': 'ir.actions.act_window',
                 'name': 'Logistics',
                 'view_mode': 'form',
                 'res_model': 'jal.logistics',
+                'views': [(form_view, 'form')],
                 'res_id': logistics_rec.id,
                 'context': {'create': False},
             }
@@ -98,6 +113,10 @@ class InheritSale(models.Model):
             'name': 'Logistics',
             'view_mode': 'tree,form',
             'res_model': 'jal.logistics',
+            'views': [
+                (tree_view, 'tree'),
+                (form_view, 'form'),
+            ],
             'domain': [('id', 'in', logistics_rec.ids)],
             'context': {'create': False},
         }

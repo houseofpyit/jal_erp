@@ -45,29 +45,28 @@ class inheriteStockPicking(models.Model):
                         'final_amt': order_line_rec.final_amt,
                     }))
 
-            bill_chr = 'BILL'
-            bill_no = self.env['hop.purchasebill'].bill_chr_vld(bill_chr,self.env.company.id,date.today())
-            purchase_bill_rec =self.env['hop.purchasebill'].create({
-                'bill_chr': bill_chr,
-                'bill_no': bill_no,
-                'name': str(bill_chr)+ str(bill_no),
-                'party_id':self.partner_id.id,
-                'bill_number':self.vendor_bill_no,
-                'date':self.date,
-                'rd_urd':self.partner_id.rd_urd,
-                'picking_id':self.id,
-                'due_days':self.partner_id.due_days,
-                'line_id':line_list
-            })
-            for line in purchase_bill_rec.line_id:
-                line._onchange_calc_amt()
-            purchase_bill_rec._final_amt_calculate()
-
-   
+        bill_chr = 'BILL'
+        bill_no = self.env['hop.purchasebill'].bill_chr_vld(bill_chr,self.env.company.id,date.today())
+        purchase_bill_rec =self.env['hop.purchasebill'].create({
+            'bill_chr': bill_chr,
+            'bill_no': bill_no,
+            'name': str(bill_chr)+ str(bill_no),
+            'party_id':self.partner_id.id,
+            'bill_number':self.vendor_bill_no,
+            'date':date.today(),
+            'rd_urd':self.partner_id.rd_urd,
+            'picking_id':self.id,
+            'due_days':self.partner_id.due_days,
+            'line_id':line_list
+        })
+        for line in purchase_bill_rec.line_id:
+            line._onchange_calc_amt()
+        purchase_bill_rec._final_amt_calculate()
 
     def compute_calculate_bill(self):
         for i in self:
             i.purchase_bill_count = self.env['hop.purchasebill'].search_count([('picking_id', '=', i.id)])
+
     def action_view_bill(self):
         bill_rec = self.env['hop.purchasebill'].sudo().search([('picking_id', '=', self.id)])
         if len(bill_rec) == 1:

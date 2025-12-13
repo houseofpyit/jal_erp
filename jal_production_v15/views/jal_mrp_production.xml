@@ -12,7 +12,7 @@
                     <button string="Get Quality" name="action_get_quality_btn" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'running')]}" groups="jal_mrp_production_v15.res_group_production_admin" confirm=""/> -->
                     <button string="Running" name="action_running_btn" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'draft')]}" confirm=""/>
                     <button string="Done" name="action_done_btn" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'!=', 'running')]}" confirm=""/>
-                    <field name="state" widget="statusbar"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,running,done"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -32,14 +32,14 @@
                             </div>
                         </group>
                         <group>
-                            <field name="date" />
+                            <field name="date" attrs="{'readonly': [('state','in',('done','cancel'))]}"/>
                             <field name="booking_date" force_save="1" readonly="1"/>
                         </group>
                     </group>
                     <notebook>
                         <page name="bom_det_mo" string="Bill of Materials" >
                             <separator string="Raw Material Products" colspan="4"/>
-                            <field name="line_ids" attrs="{'readonly': [('state','=','done')]}">
+                            <field name="line_ids" attrs="{'readonly': [('state','in',('done','cancel'))]}">
                                 <tree editable="bottom">
                                     <field name="product_id" options="{'no_create': True}" domain="[('is_raw_material','=',True)]"/>
                                     <field name="qty" />
@@ -47,7 +47,7 @@
                                 </tree>
                             </field>
                             <separator string="Packing Products" colspan="4"/>
-                            <field name="packing_line_ids" attrs="{'readonly': [('state','=','done')]}">
+                            <field name="packing_line_ids" attrs="{'readonly': [('state','in',('done','cancel'))]}">
                                 <tree editable="bottom">
                                     <field name="product_id" options="{'no_create': True}" domain="[('is_packing','=',True)]"/>
                                     <field name="qty" />

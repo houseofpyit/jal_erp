@@ -14,7 +14,7 @@ class JalLogistics(models.Model):
     user_id = fields.Many2one('res.users',string="User",default=lambda self: self.env.user.id)
     sale_id = fields.Many2one('sale.order',string="Proforma Invoice")
     # state = fields.Selection([('pending', 'Pending'),('pi_confirm', 'PI Confirm'),('booking_confirm', 'Booking Confirm'),('done', 'Done')], default='pending',tracking=True)
-    state = fields.Selection([('pre_shipment', 'Pre-Shipment'),('dispatch_document', 'Dispatch/Document'),('post_shipment', 'Post Shipment'),('close', 'Close')], default='pre_shipment',tracking=True)
+    state = fields.Selection([('pre_shipment', 'Pre-Shipment'),('dispatch_document', 'Dispatch/Document'),('post_shipment', 'Post Shipment'),('close', 'Close'),('cancel', 'Cancel')], default='pre_shipment',tracking=True)
     notes = fields.Html(string="Notes")
 
     # Pre-Shipment

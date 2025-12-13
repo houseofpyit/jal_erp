@@ -12,7 +12,7 @@ class JalMrpProduction(models.Model):
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
     date = fields.Date(copy=False,string="Date",default=fields.Date.context_today)
     sale_id = fields.Many2one('sale.order', string='Sale')
-    state = fields.Selection([('draft', 'Draft'),('running', 'Running'),('done', 'Done')], default='draft',tracking=True)
+    state = fields.Selection([('draft', 'Draft'),('running', 'Running'),('done', 'Done'),('cancel', 'Cancel')], default='draft',tracking=True)
     product_id = fields.Many2one('product.product',tracking=True)
     uom_id = fields.Many2one('uom.uom',string="Unit",tracking=True)
     qty = fields.Float(string = "Quantity",digits='BaseAmount',tracking=True)
