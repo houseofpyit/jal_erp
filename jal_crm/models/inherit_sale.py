@@ -70,8 +70,8 @@ class inheritedSaleOrder(models.Model):
    def default_get(self, fields):
       res = super(inheritedSaleOrder, self).default_get(fields)
       if self.env.context.get('default_business_type',False) == 'international':
-         res['currency_id'] = self.env.ref('base.EUR').id
-         res['jal_currency_id'] = self.env.ref('base.EUR').id
+         res['currency_id'] = self.env.ref('base.USD').id
+         res['jal_currency_id'] = self.env.ref('base.USD').id
       else:
          res['currency_id'] = self.env.company.currency_id.id
       return res
