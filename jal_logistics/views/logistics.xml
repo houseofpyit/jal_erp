@@ -230,7 +230,7 @@
                             <group>
                                 <group>
                                     <field name="epcg_liscence_used" widget="radio" options="{'horizontal': true}" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
-                                    <field name="epcg_liscence_number" attrs="{'required': [('epcg_liscence_used', '=', 'yes')],'readonly': [('state','in',('close','cancel'))}" options="{'no_quick_create': True}"/>
+                                    <field name="epcg_liscence_number" attrs="{'required': [('epcg_liscence_used', '=', 'yes')],'readonly': [('state','in',('close','cancel'))]}" options="{'no_quick_create': True}"/>
                                     <field name="epcg_liscence_date" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                     <field name="advanced_liscence_used" widget="radio" options="{'horizontal': true}" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                     <field name="advanced_liscence_number" attrs="{'required': [('advanced_liscence_used', '=', 'yes')],'readonly': [('state','in',('close','cancel'))]}" options="{'no_quick_create': True}"/>
