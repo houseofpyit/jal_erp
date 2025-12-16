@@ -17,6 +17,7 @@
                     <button string="Close" name="action_close" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', 'post_shipment')]}" />
 
                     <button string="Order Form" name="action_document_order_form" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', 'dispatch_document')]}" />
+                    <button string="Print PI" name="action_sale_profoma" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', 'pre_shipment')]}" />
                     <field name="state" widget="statusbar" statusbar_visible="pre_shipment,dispatch_document,post_shipment,close"/>
                 </header>
                 <sheet>
@@ -34,7 +35,8 @@
                         <group>
                             <field name='company_id' invisible="1"/>
                             <field name='is_finish_booking' invisible="1"/>
-                            <field name='sale_id' required="1" options="{'no_create': True}" domain="[('state', '=', 'sale')]" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
+                            <field name='partner_id' invisible="1"/>
+                            <field name='sale_id' required="1" options="{'no_create': True}" domain="[('state', '=', 'sale')]" readonly="1" force_save="1"/>
                             <!-- <field name='product_tmpl_id' options="{'no_create': True}" domain="[('is_finished_goods', '=', True)]" required="1" attrs="{'readonly': [('state','=','complete')]}"/>
                             <field name='shift_id' options="{'no_quick_create': True}" attrs="{'readonly': [('state','=','complete')]}" required="1"/> -->
                         </group>
@@ -44,7 +46,7 @@
                             <!-- <field name='employee_id' options="{'no_quick_create': True}" attrs="{'readonly': [('state','=','complete')]}"/> -->
                         </group>
                     </group>
-                    <notebook>
+                    <notebook attrs="{'invisible': [('booking_date', '=', False)]}">
                         <page string="Pre-Shipment" name="pre_shipment">
                             <group>
                                 <group string="Logistics">
@@ -79,13 +81,13 @@
                                     <field name="inspection_remarks" attrs="{'invisible': [('loading_type', '!=', 'Yes')],'readonly': [('state','in',('close','cancel'))]}"/>
                                 </group>
 
-                                <group string="Heading: Booking Documents">
+                                <group string="Booking Documents">
                                     <field name="attachment_invoice_pre_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                     <field name="attachment_packing_list_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                     <field name="attachment_iip1_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                     <field name="attachment_msds_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                 </group>
-                                <group string="Need to put attachments">
+                                <group string="Booking copy">
                                     <field name="attachment_booking_copy_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                     <field name="haz_type" widget="radio" options="{'horizontal': true}" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                     <field name="label_remark_id" options="{'no_quick_create': True}" context="{'default_label_type': 'haz'}" domain="[('label_type', '=', 'haz')]" attrs="{'invisible': [('haz_type', '!=', 'Yes')],'readonly': [('state','in',('close','cancel'))]}"/>
@@ -375,8 +377,9 @@
                             </group>
                             <field name="container_management_line_ids" attrs="{'readonly': [('state','in',('close','cancel'))]}">
                                 <tree editable="bottom" >
-                                    <field name="name"/>
+                                    <field name="dispatch_line_id" options="{'no_create': True,'no_open': True}" domain="[('mst_id', '=', mst_id)]"/>
                                     <field name="check_eta" width="150px"/>
+                                    <field name="mst_id" invisible="1"/>
                                     <field name="remarks"/>
                                 </tree>
                             </field>
@@ -480,6 +483,8 @@
                     <button string="Start Booking" name="action_start_booking" type="object" class="btn-primary" attrs="{'invisible': ['|', ('state', '!=', 'pre_shipment'), ('booking_date', '!=', False)]}" />
                     <button string="Confirm Booking" name="action_finish_booking" type="object" class="btn-primary" attrs="{'invisible': ['|', ('booking_date', '=', False), ('is_finish_booking', '=', True)]}" />
                     <button string="Move to Dispatch/Document" name="action_move_document" type="object" class="btn-primary" attrs="{'invisible': ['|', ('is_finish_booking', '=', False), ('state', 'in', ('dispatch_document','post_shipment','close'))]}" />
+
+                    <button string="Print PI" name="action_sale_profoma" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', 'pre_shipment')]}" />
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -502,64 +507,67 @@
                     <h2 style="color: #71639e; font-weight: bold;">Pre-Shipment</h2>
                         <group>
                             <group string="Logistics">
-                                <field name="booking_id" options="{'no_quick_create': True}" domain="[('acc_type','=','AGENT')]" context="{'default_acc_type': 'AGENT'}" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
-                                <field name="transport_id" options="{'no_quick_create': True}" domain="[('acc_type','=','TRANSPORT')]" context="{'default_acc_type': 'TRANSPORT'}" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
-                                <field name="cha_id" options="{'no_quick_create': True}" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
-                                <field name="shipping_id" options="{'no_quick_create': True}" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
-                                <field name="hbl_type" widget="radio" options="{'horizontal': true}" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
+                                <field name="booking_id" options="{'no_quick_create': True}" domain="[('acc_type','=','AGENT')]" context="{'default_acc_type': 'AGENT'}" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
+                                <field name="transport_id" options="{'no_quick_create': True}" domain="[('acc_type','=','TRANSPORT')]" context="{'default_acc_type': 'TRANSPORT'}" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
+                                <field name="cha_id" options="{'no_quick_create': True}" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
+                                <field name="shipping_id" options="{'no_quick_create': True}" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
+                                <field name="hbl_type" widget="radio" options="{'horizontal': true}" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
                                 <field name="booking_date" readonly="1" force_save="1"/>
-                                <field name="booking_received"  attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
+                                <field name="booking_received"  attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
                             </group>
                             <group string="Booking Details">
-                                <field name="total_containers"  attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
-                                <field name="shipping_line_id" options="{'no_quick_create': True}" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
-                                <field name="freight_per_container"  attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
-                                <field name="vessel_date"  attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
-                                <field name="container_stuffing_date"  attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
-                                <field name="port_id" options="{'no_quick_create': True}" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
+                                <field name="total_containers"  attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
+                                <field name="shipping_line_id" options="{'no_quick_create': True}" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
+                                <field name="freight_per_container"  attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
+                                <field name="vessel_date"  attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
+                                <field name="container_stuffing_date"  attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
+                                <field name="port_id" options="{'no_quick_create': True}" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
                             </group>
                             
                             <group string="Planning Details">
-                                <field name="loading_planner_id" options="{'no_quick_create': True}" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
-                                <field name="planning_index"  attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
-                                <field name="remarks"  attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
+                                <field name="loading_planner_id" options="{'no_quick_create': True}" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
+                                <field name="planning_index"  attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
+                                <field name="remarks"  attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
                             </group>
                             <group string="Loading Inspection">
-                                <field name="loading_type" widget="radio" options="{'horizontal': true}" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
-                                <field name="inspection_id"  options="{'no_quick_create': True}" attrs="{'invisible': [('loading_type', '!=', 'Yes')],'readonly': [('state','in',('close','cancel'))]}"/>
-                                <field name="inspection_type" widget="radio" options="{'horizontal': true}" attrs="{'invisible': [('loading_type', '!=', 'Yes')],'readonly': [('state','in',('close','cancel'))]}"/>
-                                <field name="inspection_name" attrs="{'invisible': [('loading_type', '!=', 'Yes')],'readonly': [('state','in',('close','cancel'))]}"/>
-                                <field name="inspection_date" attrs="{'invisible': [('loading_type', '!=', 'Yes')],'readonly': [('state','in',('close','cancel'))]}"/>
-                                <field name="inspection_remarks" attrs="{'invisible': [('loading_type', '!=', 'Yes')],'readonly': [('state','in',('close','cancel'))]}"/>
+                                <field name="loading_type" widget="radio" options="{'horizontal': true}" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
+                                <field name="inspection_id"  options="{'no_quick_create': True}" attrs="{'invisible': [('loading_type', '!=', 'Yes')],'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
+                                <field name="inspection_type" widget="radio" options="{'horizontal': true}" attrs="{'invisible': [('loading_type', '!=', 'Yes')],'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
+                                <field name="inspection_name" attrs="{'invisible': [('loading_type', '!=', 'Yes')],'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
+                                <field name="inspection_date" attrs="{'invisible': [('loading_type', '!=', 'Yes')],'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
+                                <field name="inspection_remarks" attrs="{'invisible': [('loading_type', '!=', 'Yes')],'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
                             </group>
 
-                            <group string="Heading: Booking Documents">
-                                <field name="attachment_invoice_pre_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
-                                <field name="attachment_packing_list_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
-                                <field name="attachment_iip1_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
-                                <field name="attachment_msds_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
+                            <group string="Booking Documents">
+                                <field name="attachment_invoice_pre_ids" widget="many2many_binary" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
+                                <field name="attachment_packing_list_ids" widget="many2many_binary" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
+                                <field name="attachment_iip1_ids" widget="many2many_binary" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
+                                <field name="attachment_msds_ids" widget="many2many_binary" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
                             </group>
-                            <group string="Need to put attachments">
-                                <field name="attachment_booking_copy_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
-                                <field name="haz_type" widget="radio" options="{'horizontal': true}" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
-                                <field name="label_remark_id" options="{'no_quick_create': True}" context="{'default_label_type': 'haz'}" domain="[('label_type', '=', 'haz')]" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
-                                <field name="dead_fish_type" widget="radio" options="{'horizontal': true}"  attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
-                                <field name="label_remark1_id" options="{'no_quick_create': True}" context="{'default_label_type': 'dead_fish'}" domain="[('label_type', '=', 'dead_fish')]" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
-                                <field name="un_printing_type" widget="radio" options="{'horizontal': true}"  attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
-                                <field name="label_remark2_id" options="{'no_quick_create': True}" context="{'default_label_type': 'un_print'}" domain="[('label_type', '=', 'un_print')]" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
+                            <group string="Booking copy">
+                                <field name="attachment_booking_copy_ids" widget="many2many_binary" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
+                                <field name="haz_type" widget="radio" options="{'horizontal': true}" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
+                                <field name="label_remark_id" options="{'no_quick_create': True}" context="{'default_label_type': 'haz'}" domain="[('label_type', '=', 'haz')]" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
+                                <field name="dead_fish_type" widget="radio" options="{'horizontal': true}"  attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
+                                <field name="label_remark1_id" options="{'no_quick_create': True}" context="{'default_label_type': 'dead_fish'}" domain="[('label_type', '=', 'dead_fish')]" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
+                                <field name="un_printing_type" widget="radio" options="{'horizontal': true}"  attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
+                                <field name="label_remark2_id" options="{'no_quick_create': True}" context="{'default_label_type': 'un_print'}" domain="[('label_type', '=', 'un_print')]" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
                             </group>
                             <group>
-                                <field name="hold_type" widget="radio" options="{'horizontal': true}" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
-                                <field name="remarks_hold" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
+                                <field name="hold_type" widget="radio" options="{'horizontal': true}" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
+                                <field name="remarks_hold" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
                             </group>
                         </group>
                         <group name="note_group" col="6" class="mt-2 mt-md-0">
                             <group colspan="4">
-                                <field name="notes" class="oe-bordered-editor" nolabel="1" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
+                                <field name="notes" class="oe-bordered-editor" nolabel="1" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
                             </group>
                             <div class="oe_clear"/>
                         </group>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>
@@ -570,12 +578,20 @@
         <field name='arch' type='xml'>
             <tree>
                 <field name='name'/>
-                <field name="date" />
+                <field name="date" optional="hide"/>
                 <field name='sale_id' />
-                <field name='booking_id' />
-                <field name='transport_id' />
-                <field name='loading_planner_id' />
-                <field name="state" widget="badge"/>
+                <field name='partner_id' />
+                <field name='port_id' string="Destination port"/>
+                <field name='total_containers' />
+                <field name='planning_index' />
+                <field name='booking_date' />
+                <field name='booking_received' />
+                <field name='loading_type' />
+                <field name='booking_id' optional="hide"/>
+                <field name='transport_id' optional="hide"/>
+                <field name='loading_planner_id' optional="hide"/>
+                <field name="state" widget="badge" optional="hide"/>
+                <field name="delivery_count" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -602,6 +618,11 @@
                     <button string="Order Form" name="action_document_order_form" type="object" class="btn-primary" attrs="{'invisible': [('state', '!=', 'dispatch_document')]}" />
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object" name="action_view_logistics_delivery" class="oe_stat_button" icon="fa-truck" attrs="{'invisible': ['|',('delivery_count', '=', 0),('state', '=', 'pre_shipment')]}" >
+                            <field name="delivery_count" widget="statinfo" string="Delivery"/>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <h1>
                             <field name="name" readonly="1" force_save="1"/>
@@ -826,6 +847,9 @@
                             <div class="oe_clear"/>
                         </group>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>
@@ -836,11 +860,16 @@
         <field name='arch' type='xml'>
             <tree>
                 <field name='name'/>
-                <field name="date" />
                 <field name='sale_id' />
-                <field name='epcg_liscence_number' />
-                <field name='invoice_number' />
-                <field name="state" widget="badge"/>
+                <field name='port_id' string="Destination port"/>
+                <field name='total_containers' />
+                <field name='loading_type' />
+                <field name='container_stuffing_date' />
+                <field name='vessel_date' />
+                <field name="date" optional="hide"/>
+                <field name='epcg_liscence_number' optional="hide"/>
+                <field name='invoice_number' optional="hide"/>
+                <field name="state" widget="badge" optional="hide"/>
             </tree>
         </field>
     </record>
@@ -955,7 +984,7 @@
                         </group>
                         <field name="container_management_line_ids" attrs="{'readonly': [('state','in',('close','cancel'))]}">
                             <tree editable="bottom" >
-                                <field name="name"/>
+                                <field name="dispatch_line_id" options="{'no_create': True,'no_open': True}"/>
                                 <field name="check_eta" width="150px"/>
                                 <field name="remarks"/>
                             </tree>
@@ -968,6 +997,9 @@
                             <div class="oe_clear"/>
                         </group>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>
@@ -976,19 +1008,30 @@
         <field name='name'>jal.logistics.post.shipment.tree</field>
         <field name='model'>jal.logistics</field>
         <field name='arch' type='xml'>
-            <tree      decoration-success="balance_type == 'yes'"
-    decoration-warning="bi_date2 != False and balance_type != 'yes'">
+            <tree   decoration-success="balance_type == 'yes'"
+                    decoration-warning="bi_date2 != False and balance_type != 'yes'">
                 <field name='name'/>
-                <field name="date" />
+                <field name="date" optional="hide"/>
                 <field name='sale_id' />
-                <field name='bill_number' />
-                <field name='bill_date' />
-                <field name='freight_inv_number' />
-                <field name='transport_inv_number' />
-                <field name='shipping_route' />
-                <field name='balance_type' />
-                <field name='bi_date2' />
-                <field name="state" widget="badge"/>
+                <field name='partner_id' />
+                <field name='port_id' string="Destination port"/>
+                <field name='total_containers' />
+                <field name='bl_status_type' />
+                <field name='etd' />
+                <field name='eta' />
+                <field name='transit_days' />
+                <field name='detention_type' />
+                <field name='late_bl_type' />
+                <field name='bl_correction_type' />
+                <field name='bill_number' optional="hide"/>
+                <field name='bill_date' optional="hide"/>
+                <field name='freight_inv_number' optional="hide"/>
+                <field name='transport_inv_number' optional="hide"/>
+                <field name='shipping_route' optional="hide"/>
+                <field name='balance_type' optional="hide"/>
+                <field name='bi_date2' optional="hide"/>
+                <field name="state" widget="badge" optional="hide"/>
+                <field name="delivery_count" invisible="1"/>
             </tree>
         </field>
     </record>

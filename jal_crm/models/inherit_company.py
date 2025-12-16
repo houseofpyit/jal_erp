@@ -1,6 +1,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import html2plaintext
+from markupsafe import Markup
 
 class inheritedResCompany(models.Model):
    _inherit = "res.company"
@@ -12,6 +13,12 @@ class inheritedResCompany(models.Model):
       if not html:
          return ""
       return html2plaintext(html or "")
+   
+   def convert_text_to_html(self,text):
+      self.ensure_one()
+      if not text:
+            return ''
+      return Markup(text.replace('\n', '<br/>'))
 
 # class Companyshipadd(models.Model):
 #    _name = "company.ship.add"

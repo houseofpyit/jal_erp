@@ -14,6 +14,9 @@
         'security/security_group.xml',
         'security/ir.model.access.csv',
 
+        'report/order_form_report.xml',
+        'report/paper_formate.xml',
+
         'views/logistics_misc_mst.xml',
         'views/logistics.xml',
         'views/inherit_sale.xml',

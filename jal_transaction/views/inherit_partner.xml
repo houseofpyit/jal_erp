@@ -13,6 +13,22 @@
             <xpath expr="//field[@name='party_group_id']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
+            <xpath expr="//field[@name='state_id']" position="attributes">
+                <attribute name="attrs">{'required': [('is_party', '=', True),('business_type', '!=', 'international')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='contact_person']" position="attributes">
+                <attribute name="attrs">{'required': [('business_type', '=', 'international')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='email']" position="attributes">
+                <attribute name="attrs">{'required': [('business_type', '=', 'international')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='mobile']" position="attributes">
+                <attribute name="attrs">{'required': [('business_type', '=', 'international')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='addr2']" position="after">
+                <field name="street3" placeholder="add3" class="o_address_street" widget="upper_case"/>
+                <field name="street4" placeholder="add4" class="o_address_street" widget="upper_case"/>
+            </xpath>
             <xpath expr="//field[@name='commission_rate']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>

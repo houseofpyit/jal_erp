@@ -99,16 +99,16 @@
                 <field name="palletized_type" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
                 <field name="business_type" invisible="1" attrs="{'readonly': [('state', '=', 'sale')]}"/>
                 <field name="display_name_on_pi" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
-                <field name="shipping_id" domain="[('display_name_on_pi','=', 'shipping_name')]" options="{'no_quick_create': True}" attrs="{'invisible': ['|',('display_name_on_pi', '=', 'product_name'),('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
-                <field name="product_shipping_id" domain="[('display_name_on_pi','=', 'product_name')]" options="{'no_quick_create': True}" attrs="{'invisible': ['|',('display_name_on_pi', '=', 'shipping_name'),('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
+                <field name="shipping_id" domain="[('display_name_on_pi','=', 'shipping_name')]" options="{'no_quick_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
+                <!-- <field name="product_shipping_id" domain="[('display_name_on_pi','=', 'product_name')]" options="{'no_quick_create': True}" attrs="{'invisible': ['|',('display_name_on_pi', '=', 'shipping_name'),('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/> -->
                 <field name="buyer_ref_details" attrs="{'readonly': [('state', '=', 'sale')]}"/>
                 <field name="product_expiry" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>
                 <field name="company_id" options="{'no_create': True}" attrs="{'readonly': [('state', '=', 'sale')]}"/>
             </xpath>
-            <!-- <xpath expr="//tree/field[@name='product_template_id']" position="before">
+            <xpath expr="//tree/field[@name='product_template_id']" position="before">
                 <field name="shipping_id" width="150px" attrs="{'column_invisible': [('parent.business_type', '!=', 'international')]}"/>
                 <field name="product_shipping_id" width="150px" attrs="{'column_invisible': [('parent.business_type', '!=', 'international')]}"/>
-            </xpath> -->
+            </xpath>
             <xpath expr="//tree" position="attributes">
                 <attribute name="editable"></attribute>
                 <!-- <tree string="Sales Order Lines" editable="bottom"></tree> -->
@@ -118,8 +118,8 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//field[@name='order_line']/form/group/group/field[@name='product_id']" position="after">
-                <!-- <field name="shipping_id" width="150px" domain="[('display_name_on_pi','=', 'shipping_name')]" options="{'no_quick_create': True}" attrs="{'invisible': [('parent.business_type', '!=', 'international')]}"/>
-                <field name="product_shipping_id" width="150px" domain="[('display_name_on_pi','=', 'product_name')]" options="{'no_quick_create': True}" attrs="{'invisible': [('parent.business_type', '!=', 'international')]}"/> -->
+                <!-- <field name="shipping_id" width="150px" domain="[('display_name_on_pi','=', 'shipping_name')]" options="{'no_quick_create': True}" attrs="{'invisible': [('parent.business_type', '!=', 'international')]}"/> -->
+                <field name="product_shipping_id" width="150px" domain="[('display_name_on_pi','=', 'product_name')]" options="{'no_quick_create': True}" attrs="{'invisible': [('parent.business_type', '!=', 'international')]}"/>
                 <field name="product_tmpl_id" string="Packing Type" options="{'no_create': True}" attrs="{'required': [('display_type', '=', False)]}" readonly="0" context="{'partner_id': parent.partner_id, 'quantity': product_uom_qty, 'pricelist': parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id, 'default_list_price': price_unit, 'default_description_sale': name}" domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" widget="product_configurator"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/form/group/group/field[@name='analytic_tag_ids']" position="after">
@@ -185,12 +185,40 @@
         </field>
     </record>
 
-    
+    <record id="view_quotation_tree_international" model="ir.ui.view">
+        <field name="name">sale.order.tree.international</field>
+        <field name="model">sale.order</field>
+        <field name="priority">4</field>
+        <field name="arch" type="xml">
+            <tree string="Quotation" class="o_sale_order" sample="1" decoration-info="state in ['draft', 'sent']" decoration-muted="state == 'cancel'" banner_route='/sales/sale_quotation_onboarding_panel'>
+                <field name="name" string="Number" readonly="1" decoration-bf="1"/>
+                <field name="create_date" string="Creation Date" widget="date" optional="show"/>
+                <field name="commitment_date" widget="date" optional="hide"/>
+                <field name="expected_date" widget="date" optional="hide"/>
+                <field name="partner_id" readonly="1"/>
+                <field name="country_id" />
+                <field name="port_id" />
+                <field name="lading_type" />
+                <field name="tot_pcs" string="Total Quantity (MT)" />
+                <field name="team_id" optional="hide"/>
+                <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show" readonly="1"/>
+                <field name="amount_untaxed" sum="Total Tax Excluded" widget="monetary" optional="hide"/>
+                <field name="amount_tax" sum="Tax Total" widget="monetary" optional="hide"/>
+                <field name="amount_total" sum="Total Tax Included" widget="monetary" decoration-bf="1" optional="show"/>
+                <field name="state" decoration-success="state == 'sale' or state == 'done'" decoration-info="state == 'draft' or state == 'sent'" widget="badge" optional="show"/>
+                <field name="invoice_status" optional="hide"/>
+                <field name="message_needaction" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
     <record id="action_quotations_with_onboarding_international" model="ir.actions.act_window">
         <field name="name">Quotations</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">sale.order</field>
-        <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="view_id" ref="jal_crm.view_quotation_tree_international"/>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
         <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
         <field name="context">{'default_business_type':'international'}</field>

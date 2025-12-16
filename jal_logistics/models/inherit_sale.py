@@ -37,11 +37,20 @@ class InheritSale(models.Model):
                     'line_ids': line_list,
                     'packing_line_ids': packing_line_list,
                 })
-        
+            
+        inspection = False
+        if self.inspection == 'yes':
+            inspection = 'Yes'
+        if self.inspection == 'no':
+            inspection = 'No'
         logistics_rec = self.env['jal.logistics'].sudo().create({
                 'sale_id': self.id,
                 'date':date.today(),
                 'company_id': self.company_id.id,
+                'shipping_id': self.shipping_id.id,
+                'partner_id': self.partner_id.id,
+                'hbl_type': 'yes' if self.lading_type == 'house_bl' else False,
+                'loading_type': inspection
             })
         
         return res

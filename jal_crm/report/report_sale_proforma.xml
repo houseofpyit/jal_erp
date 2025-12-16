@@ -5,7 +5,7 @@
             <t t-call="web.basic_layout">
                 <style>
                     td{
-                        font-size:13px;
+                        font-size:10px;
                         padding-left:8px;
                         padding-right:3px;
                     }
@@ -23,6 +23,7 @@
                                 <td>
                                     <t t-if="o.company_id.header_image">
                                         <img class="img img-responsive" t-att-src="image_data_uri(o.company_id.header_image)" alt="Logo" style="width:900px; height:100px;"/>
+                                        <!-- <center><img class="img img-responsive" t-att-src="image_data_uri(o.company_id.header_image)" alt="Logo" style="width:900px; height:100px;"/></center> -->
                                     </t>
                                 </td>
                             </tr>
@@ -32,7 +33,10 @@
                         <table style="width:100%;" v-align="top">
                             <tr>
                                 <td width="50%" style="padding-left:10px;">
-                                    <b><span style="font-size:20px;padding-right:5px;color:#5796c6;">PROFORMA INVOICE <span style="font-size:20px;color:#5796c6;" t-esc="o.name" /></span></b><br/>
+                                    <b><span style="font-size:20px;padding-right:5px;color:#5796c6;">PROFORMA INVOICE : <span style="font-size:20px;color:#5796c6;" t-esc="o.name" /></span></b><br/>
+                                    <b><span style="padding-right:5px;">Proforma Date : </span></b><t t-if="o.date">
+                                        <span t-esc="o.date.strftime('%d/%m/%Y')"/>
+                                    </t>
                                 </td>
                                 <td width="50%" style="padding-left:10px;text-align:right;">
                                     <b><span>PO : </span></b>
@@ -53,7 +57,7 @@
                                             VALIDITY:
                                         </span>
                                     </b>
-                                    <span t-esc="o.payment_term_id.name"/>
+                                    10 Days
                                 </td>
                             </tr>
                         </table>
@@ -69,32 +73,94 @@
                         </table>
                         <table style="width:100%;" >
                             <tr>
-                                <td width="15%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
-                                    <span>Bank :</span>
-                                    <span>A/C No. :</span><br/>
-                                    <span>RTGS/MICR Code : </span><br/>
-                                    <span>Branch :</span><br/>
-                                    <span>SWIFT Code : </span><br/>
-                                    <span>Currency : </span>
+                                <td width="50%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
+                                    <table style="width:100%; ">
+                                        <tr>
+                                            <td width="27%">
+                                                <span>Bank :</span>
+                                            </td>
+                                            <td width="73%">
+                                                <span t-esc="o.bank_id.name"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="27%">
+                                                <span>A/C No. :</span>
+                                            </td>
+                                            <td width="73%">
+                                                <span t-esc="o.bank_id.bank_ac_name"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="27%">
+                                                <span>RTGS/MICR Code :</span>
+                                            </td>
+                                            <td width="73%">
+                                                <span  t-esc="o.bank_id.bank_branch_ifsc" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="27%">
+                                                <span>Branch :</span>
+                                            </td>
+                                            <td width="73%">
+                                                <span t-esc="o.bank_id.branch"/>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td width="27%">
+                                                <span>SWIFT Code :</span>
+                                            </td>
+                                            <td width="73%">
+                                                <span t-esc="o.bank_id.swift_code"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="27%">
+                                                <span>Currency :</span>
+                                            </td>
+                                            <td width="73%">
+                                                <span  t-esc="o.bank_id.currency_id.name" />
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </td>
-                                <td width="35%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
-                                    <span style="padding-top:0px;" t-esc="o.bank_id.name" /><br/>
-                                    <span style="padding-top:0px;" t-esc="o.bank_id.bank_ac_name" /><br/>
-                                    <span style="padding-top:0px;" t-esc="o.bank_id.bank_ac_no" /><br/>
-                                    <span style="padding-top:0px;" t-esc="o.bank_id.bank_branch_ifsc"/><br/>
-                                    <span style="padding-top:0px;" t-esc="o.bank_id.currency_id.name"/>
-                                </td>
-                                <td width="20%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
-                                    <span>Correspondent Bank :</span><br/>
-                                    <span>Currency :</span><br/>
-                                    <span>Swift Code: </span><br/>
-                                    <span>Account Number : </span>
-                                </td>
-                                <td width="30%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
-                                    <span t-esc="o.bank_id.correspondent_bank" /><br/>
-                                    <span t-esc="o.bank_id.currency1_id.name" /><br/>
-                                    <span t-esc="o.bank_id.swift_code1"/>
-                                    <span t-esc="o.bank_id.acc_no" /><br/>
+                                <td width="50%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
+                                    <table style="width:100%; ">
+                                        <tr>
+                                            <td width="27%">
+                                                <span>Correspondent Bank :</span>
+                                            </td>
+                                            <td width="73%">
+                                                <span t-esc="o.bank_id.correspondent_bank"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="27%">
+                                                <span>Currency :</span>
+                                            </td>
+                                            <td width="73%">
+                                                <span t-esc="o.bank_id.currency1_id.name"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="27%">
+                                                <span>Swift Code :</span>
+                                            </td>
+                                            <td width="73%">
+                                                <span  t-esc="o.bank_id.swift_code1" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="27%">
+                                                <span>Account Number :</span>
+                                            </td>
+                                            <td width="73%">
+                                                <span t-esc="o.bank_id.acc_no"/>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </td>
                             </tr>
                         </table>
@@ -112,50 +178,104 @@
                         </table>
                         <table style="width:100%;" >
                             <tr>
-                                <td width="9%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
-                                    <span>Company :</span><br/>
-                                    <span>Address :</span><br/><br/>
-                                    <span>Country :</span><br/>
-                                    <span>Phone :</span><br/>
-                                    <span>Email :</span>
-                                    <!-- <span>GST No.</span> -->
+                                <td width="50%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
+                                    <table style="width:100%; ">
+                                        <tr>
+                                            <td width="14%">
+                                                <span>Company :</span>
+                                            </td>
+                                            <td width="86%">
+                                                <span t-esc="o.partner_id.name"/><br/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="14%">
+                                                <span style="padding-left:0px;">
+                                                    Address :
+                                                </span>
+                                            </td>
+                                            <td width="86%">
+                                                <span t-esc="o.partner_id.street"/>
+                                                <span t-esc="o.partner_id.street2"/>
+                                                <span t-esc="o.partner_id.street3"/>
+                                                <span t-esc="o.partner_id.street4"/>
+                                                <span t-esc="o.partner_id.city"/>
+                                                <t t-if="o.partner_id.state_id">
+                                                    , &#160;<span t-esc="o.partner_id.state_id.name"/>
+                                                </t>
+                                                <t t-if="o.partner_id.zip">
+                                                    - &#160;<span t-esc="o.partner_id.zip"/>
+                                                </t>
+                                                &#160;<span t-esc="o.partner_id.country_id.name"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="14%">
+                                                <span>Phone :</span>
+                                            </td>
+                                            <td width="86%">
+                                                <span  t-esc="o.partner_id.phone" style="padding-right:3px;"/><span t-esc="o.partner_id.mobile" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="14%">
+                                                <span>Email :</span>
+                                            </td>
+                                            <td width="86%">
+                                                <span  t-esc="o.partner_id.email" />
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </td>
-                                <td width="41%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
-                                    <span t-esc="o.partner_id.name" /><br/>
-                                    <span t-esc="o.partner_id.street" style="padding-right:3px;"/>
-                                    <span t-esc="o.partner_id.street2" style="padding-right:3px;"/>
-                                    <span t-esc="o.partner_id.city" /><t t-if="o.partner_id.state_id">
-                                        ,<span t-esc="o.partner_id.state_id.name" />
-                                    </t><t t-if="o.partner_id.zip">
-                                        ,<span t-esc="o.partner_id.zip" />
-                                    </t><br/>
-                                    <span  t-esc="o.partner_id.country_id.name" /><br/>
-                                    <span  t-esc="o.partner_id.phone" style="padding-right:3px;"/><span t-esc="o.partner_id.mobile" /><br/>
-                                    <span t-esc="o.partner_id.email" />
-                                    <!-- <span t-esc="o.partner_id.vat" /> -->
-                                </td>
-                                <td width="9%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
+                                <td width="50%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
                                     <t t-if="o.buyer_notify_id">
-                                        <span>Company :</span><br/>
-                                        <span>Address :</span><br/><br/>
-                                        <span>Country :</span><br/>
-                                        <span>Phone :</span><br/>
-                                        <span>Email :</span>
-                                    </t>
-                                </td>
-                                 <td width="41%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
-                                    <t t-if="o.buyer_notify_id">
-                                        <span t-esc="o.buyer_notify_id.name" /><br/>
-                                        <span t-esc="o.buyer_notify_id.street" style="padding-right:3px;"/>
-                                        <span t-esc="o.buyer_notify_id.street2" style="padding-right:3px;"/>
-                                        <span t-esc="o.buyer_notify_id.city" /><t t-if="o.partner_id.state_id">
-                                            ,<span t-esc="o.buyer_notify_id.state_id.name" />
-                                        </t><t t-if="o.buyer_notify_id.zip">
-                                            ,<span t-esc="o.buyer_notify_id.zip" />
-                                        </t><br/>
-                                        <span  t-esc="o.buyer_notify_id.country_id.name" /><br/>
-                                        <span  t-esc="o.buyer_notify_id.phone" style="padding-right:3px;"/><span t-esc="o.partner_id.mobile" /><br/>
-                                        <span t-esc="o.buyer_notify_id.email" /><br/>
+                                        <table style="width:100%; ">
+                                            <tr>
+                                                <td width="14%">
+                                                    <span>Company :</span>
+                                                </td>
+                                                <td width="86%">
+                                                    <span t-esc="o.buyer_notify_id.name"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="14%">
+                                                    <span style="padding-left:0px;">
+                                                        Address :
+                                                    </span>
+                                                </td>
+                                                <td width="86%">
+                                                    <span t-esc="o.buyer_notify_id.street"/>
+                                                    <span t-esc="o.buyer_notify_id.street2"/>
+                                                    <span t-esc="o.buyer_notify_id.street3"/>
+                                                    <span t-esc="o.buyer_notify_id.street4"/>
+                                                    <span t-esc="o.buyer_notify_id.city"/>
+                                                    <t t-if="o.buyer_notify_id.state_id">
+                                                        , &#160;<span t-esc="o.buyer_notify_id.state_id.name"/>
+                                                    </t>
+                                                    <t t-if="o.buyer_notify_id.zip">
+                                                        - &#160;<span t-esc="o.buyer_notify_id.zip"/>
+                                                    </t>
+                                                    &#160;<span t-esc="o.buyer_notify_id.country_id.name"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="14%">
+                                                    <span>Phone :</span>
+                                                </td>
+                                                <td width="86%">
+                                                    <span  t-esc="o.buyer_notify_id.phone" style="padding-right:3px;"/><span t-esc="o.buyer_notify_id.mobile" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="14%">
+                                                    <span>Email :</span>
+                                                </td>
+                                                <td width="86%">
+                                                    <span  t-esc="o.buyer_notify_id.email" />
+                                                </td>
+                                            </tr>
+                                        </table>
                                     </t>
                                 </td>
                             </tr>
@@ -163,36 +283,80 @@
                         <table style="width:100%;" >
                             <tr>
                                 <td style="padding-bottom:5px;padding-top:5px;width:50%;">
-                                    <b><span style="padding-bottom:5px;">DELIVERY AND PAYMENT TERMS</span></b>
+                                    <b><span style="padding-bottom:5px;">Delivery and Payment Terms</span></b>
                                 </td>
                                 <td style="padding-bottom:5px;padding-top:5px;width:50%;">
-                                    <b><span style="padding-bottom:5px;">TRANSPORT DETAILS</span></b>
+                                    <b><span style="padding-bottom:5px;">Transport Details</span></b>
                                 </td>
                             </tr>
                         </table>
                         <table style="width:100%;" >
                             <tr>
-                                <td width="15%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
-                                    <span>INCOTERMS :</span><br/>
-                                    <span>DELIVERY TERMS :</span><br/><br/>
-                                    <span>PAYMENT TERMS :</span>
+                                <td width="50%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
+                                    <table style="width:100%; ">
+                                        <tr>
+                                            <td width="20%">
+                                                <span>Incoterms :</span>
+                                            </td>
+                                            <td width="80%">
+                                                <span t-esc="o.incoterm_id.name"/>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td width="20%">
+                                                <span>Delivery Terms :</span>
+                                            </td>
+                                            <td width="80%">
+                                                <span t-esc="o.terms_id.name"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="20%">
+                                                <span>Payment Terms :</span>
+                                            </td>
+                                            <td width="80%">
+                                                <span  t-esc="o.payment_term_id.note" />
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </td>
-                                <td width="35%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
-                                    <span t-esc="o.incoterm_id.name" /><br/>
-                                    <span t-esc="o.terms_id.name" /><br/><br/>
-                                    <span t-esc="o.payment_term_id.name"/>
-                                </td>
-                                <td width="28%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
-                                    <span>PORT OF LOADING : </span><br/>
-                                    <span>PORT OF DISCHARGE : </span><br/>
-                                    <span>COUNTRY OF FINAL DESTINATION :</span><br/>
-                                    <span>COUNTRY OF ORIGIN OF GOODS :</span>
-                                </td>
-                                <td width="23%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
-                                    <span t-esc="o.partner_id.country_id.name" /><br/>
-                                    <span t-esc="o.port_id.name" /><br/>
-                                    <span t-esc="o.port_id.country_id.name" /><br/>
-                                    <span t-esc="o.country_id.name" />
+                                <td width="50%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
+                                    <table style="width:100%; ">
+                                        <tr>
+                                            <td width="40%">
+                                                <span>Port of Loading :</span>
+                                            </td>
+                                            <td width="60%">
+                                                <span>Any Port of India</span>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td width="40%">
+                                                <span>Port of Discharge :</span>
+                                            </td>
+                                            <td width="60%">
+                                                <span t-esc="o.port_id.name"/>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="40%">
+                                                <span>Country of Final Destination :</span>
+                                            </td>
+                                            <td width="60%">
+                                                <span  t-esc="o.port_id.country_id.name" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="40%">
+                                                <span>Country of Origin :</span>
+                                            </td>
+                                            <td width="60%">
+                                                <span  t-esc="o.company_id.country_id.name" />
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </td>
                             </tr>
                         </table>
@@ -200,7 +364,7 @@
                             <t t-if="o.buyer_ref_details">
                             <tr>
                                 <td colspan="2" style="padding-bottom:5px;padding-top:5px;">
-                                        <b><span style="padding-bottom:5px;">BUYER REFERENCE DETAILS</span></b>
+                                        <b><span style="padding-bottom:5px;">Buyer Reference Details</span></b>
                                     </td>
                                     <td colspan="2" style="padding-bottom:5px;padding-top:5px;"></td>
                                 </tr>
@@ -208,8 +372,7 @@
                             <t t-if="o.buyer_ref_details">
                             <tr>
                                 <td width="25%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
-                                        <span><span t-esc="o.buyer_ref_details"></span></span>  
-                                        
+                                        <span t-esc="o.company_id.convert_text_to_html(o.buyer_ref_details)"/>
                                     </td>
                                     <td width="25%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
                                         
@@ -222,18 +385,18 @@
 
                         <table width="100%" style="border: 1px solid black;border-top:none;">
                             <tr>
-                                <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:13px;text-align:center;background-color:#005fa9;color:white;">SRL</th>
+                                <th style="width:5%;border-bottom: 1px solid black;border-right: 1px solid black;font-size:11px;text-align:center;background-color:#005fa9;color:white;">SRL</th>
                                  <t t-if="o.display_name_on_pi == 'product_name'">
-                                        <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:13px;text-align:center;background-color:#005fa9;color:white;">PRODUCT</th>
+                                        <th style="width:15%;border-bottom: 1px solid black;border-right: 1px solid black;font-size:11px;text-align:center;background-color:#005fa9;color:white;">PRODUCT</th>
                                     </t>
                                     <t t-else="o.display_name_on_pi == 'shipping_name'">
-                                        <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:13px;text-align:center;background-color:#005fa9;color:white;">SHIPPING</th>
+                                        <th style="width:15%;border-bottom: 1px solid black;border-right: 1px solid black;font-size:11px;text-align:center;background-color:#005fa9;color:white;">SHIPPING</th>
                                     </t>
-                                <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:13px;text-align:center;background-color:#005fa9;color:white;">PACKING DESCRIPTION</th>
-                                <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:13px;text-align:center;background-color:#005fa9;color:white;">PACKING</th>
-                                <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:13px;text-align:center;background-color:#005fa9;color:white;">QTY UNIT</th>
-                                <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:13px;text-align:center;background-color:#005fa9;color:white;">UNIT PRICE</th>
-                                <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:13px;text-align:center;background-color:#005fa9;color:white;">TOTAL PRICE</th>
+                                <th style="width:30%;border-bottom: 1px solid black;border-right: 1px solid black;font-size:11px;text-align:center;background-color:#005fa9;color:white;">PACKING DESCRIPTION</th>
+                                <th style="width:10%;border-bottom: 1px solid black;border-right: 1px solid black;font-size:11px;text-align:center;background-color:#005fa9;color:white;">PACKING UNIT</th>
+                                <th style="width:10%;border-bottom: 1px solid black;border-right: 1px solid black;font-size:11px;text-align:center;background-color:#005fa9;color:white;">QTY UNIT</th>
+                                <th style="width:10%;border-bottom: 1px solid black;border-right: 1px solid black;font-size:11px;text-align:center;background-color:#005fa9;color:white;">UNIT PRICE</th>
+                                <th style="width:10%;border-bottom: 1px solid black;border-right: 1px solid black;font-size:11px;text-align:center;background-color:#005fa9;color:white;">TOTAL PRICE</th>
                             </tr>
                             <t t-set="srl" t-value="0" />
                             <t t-set="tot_pcs" t-value="0" />
@@ -260,7 +423,7 @@
                                         <td style="text-align: left;border-right: 1px solid black;border-bottom: 1px solid black;border-top: 1px solid black;">
                                             <!-- <span><span t-esc="item.product_tmpl_id.name"></span></span><br/> -->
                                             <t t-if="o.display_name_on_pi == 'product_name'">
-                                                 <span><span t-esc="o.product_shipping_id.name"></span></span><br/>
+                                                 <span><span t-esc="item.product_shipping_id.name"></span></span><br/>
                                              </t>
                                              <t t-else="o.display_name_on_pi == 'shipping_name'">
                                                  <span><span t-esc="o.shipping_id.name"></span></span><br/>
@@ -272,14 +435,17 @@
                                                 <span>Grade - <span t-esc="item.grade_id.name"></span></span><br/>
                                             </t>
                                             <t t-if="item.mesh_id">
-                                                <span>Mesh - <span t-esc="item.mesh_id.name"></span></span>
+                                                <span>Mesh - <span t-esc="item.mesh_id.name"></span></span><br/>
+                                            </t>
+                                            <t t-if="item.product_form_type">
+                                                <span>Form - <span t-esc="dict(item.fields_get(allfields=['product_form_type'])['product_form_type']['selection'])[item.product_form_type]"></span></span>
                                             </t>
                                         </td>
                                         <td style="text-align: left; border-right: 1px solid black; padding: 0;padding-left:3px;border-bottom: 1px solid black;border-top: 1px solid black;">
                                             <span t-esc="item.packing_name"></span>
                                             <t t-if="item.name">
-                                                <span style="font-weight: bold;"> Loading Description: </span><br/>
-                                                <span t-esc="item.name"/>
+                                                <center><span style="font-weight: bold;"> Loading Description </span></center>
+                                                <span t-esc="o.company_id.convert_text_to_html(item.name)"/>
                                             </t>
                                         </td>
 
@@ -331,20 +497,26 @@
                         <table style="width:100%; border-collapse:collapse;">
                             <tr>
                                 <td style="width:65%; vertical-align:top;">
-                                    <span style="padding-right:3px;"><b>PALLETIZED CARGO :</b></span>
-                                    <span t-esc="o.palletized_type"/> <br/>
+                                    <span style="padding-right:3px;"><b>Palletized Cargo :</b></span>
+                                    <t t-if="o.palletized_type">
+                                        <span t-esc="dict(o.fields_get(allfields=['palletized_type'])['palletized_type']['selection'])[o.palletized_type]"/>
+                                    </t>
+                                    <br/>
 
-                                    <span style="padding-right:3px;"><b>PRE-SHIPMENT INSPECTION :</b></span>
-                                    <span t-esc="o.inspection"/> <br/>
+                                    <span style="padding-right:3px;"><b>Pre-Shipment Inspection :</b></span>
+                                    <t t-if="o.inspection">
+                                        <span t-esc="dict(o.fields_get(allfields=['inspection'])['inspection']['selection'])[o.inspection]"/>
+                                    </t>
+                                    <br/>
 
                                     <t t-if="o.freight > 0">
-                                        <span style="padding-right:3px;"><b>TOTAL FREIGHT :</b></span>
+                                        <span style="padding-right:3px;"><b>Total Freight :</b></span>
                                         <span t-esc="o.freight"/> <br/>
 
-                                        <span style="padding-right:3px;"><b>TOTAL INSURANCE :</b></span>
+                                        <span style="padding-right:3px;"><b>Total Insurance :</b></span>
                                         <span t-esc="o.insurance"/> <br/>
 
-                                        <span style="padding-right:3px;"><b>TOTAL FOB :</b></span>
+                                        <span style="padding-right:3px;"><b>Total FOB :</b></span>
                                         <span t-esc="o.fob_rates"/>
                                     </t>
                                 </td>

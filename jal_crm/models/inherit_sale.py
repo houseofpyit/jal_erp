@@ -37,7 +37,7 @@ class inheritedSaleOrder(models.Model):
    fob_rates = fields.Float(string="FOB Rates (Amount)",tracking=True)
    inspection = fields.Selection([
         ("yes", "Yes"),  
-        ("no", "no")],string="Pre-Shipment Inspection",tracking=True)
+        ("no", "No")],string="Pre-Shipment Inspection",tracking=True)
    lading_type = fields.Selection([('house_bl','House BL'),
                               ('master_bl','Master BL')],string="Bill of Lading Type",tracking=True)
    purchase_req_count = fields.Integer(string="Purchase Requisition Count", copy=False)
@@ -192,6 +192,9 @@ class inheritedSaleOrderLine(models.Model):
    pouch_type = fields.Selection([
       ("pouch", "Pouch"), 
       ("bottle", "Bottle")],string="Pouch Type")
+   product_form_type = fields.Selection([
+      ("granules", "Granules"), 
+      ("tablet", "Tablet")],string="Product Form")
    
    @api.onchange('product_tmpl_id')
    def _onchange_product_tmpl_id(self):

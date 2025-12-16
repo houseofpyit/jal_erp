@@ -62,18 +62,6 @@
         <field name="binding_type">report</field>
     </record>   
 
-    <record id="action_order_form_report" model="ir.actions.report">
-        <field name="name">Order Form Proforma</field>
-        <field name="model">sale.order</field>
-        <field name="report_type">qweb-pdf</field>
-        <field name="report_name">jal_crm.order_form_report</field>
-        <field name="report_file">jal_crm.order_form_report</field>
-        <field name="paperformat_id" ref="jal_crm.paper_formate_sale_header_order_form" />
-        <field name="print_report_name">'%s - %s' % (object.partner_id.name, object.name)</field>
-        <field name="binding_model_id" ref=""/>
-        <field name="binding_type">report</field>
-    </record> 
-
     <record id="sale.action_report_saleorder" model="ir.actions.report">
         <field name="binding_model_id" ref="model_sale_order"/>
         <field name="binding_model_id" ref=""/>

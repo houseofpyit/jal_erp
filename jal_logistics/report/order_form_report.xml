@@ -21,8 +21,8 @@
                         <table>
                             <tr>
                                 <td>
-                                    <t t-if="o.company_id.header_image">
-                                        <img class="img img-responsive" t-att-src="image_data_uri(o.company_id.header_image)" alt="Logo" style="width:900px; height:100px;"/>
+                                    <t t-if="o.sale_id.company_id.header_image">
+                                        <img class="img img-responsive" t-att-src="image_data_uri(o.sale_id.company_id.header_image)" alt="Logo" style="width:900px; height:100px;"/>
                                     </t>
                                 </td>
                             </tr>
@@ -32,32 +32,35 @@
                         <table style="width:100%;" v-align="top">
                             <tr>
                                 <td width="50%" style="padding-left:10px;">
-                                    <b><span style="font-size:20px;padding-right:5px;color:#5796c6;">PROFORMA INVOICE <span style="font-size:20px;color:#5796c6;" t-esc="o.name" /></span></b><br/>
+                                    <b><span style="font-size:20px;padding-right:5px;color:#5796c6;">PROFORMA INVOICE : <span style="font-size:20px;color:#5796c6;" t-esc="o.sale_id.name" /></span></b><br/>
+                                    <b><span style="padding-right:5px;">Proforma Date : </span></b><t t-if="o.sale_id.date">
+                                        <span t-esc="o.date.strftime('%d/%m/%Y')"/>
+                                    </t>
                                 </td>
                                 <td width="50%" style="padding-left:10px;text-align:right;">
                                     <b><span>PO : </span></b>
-                                    <span t-esc="o.po_no"/>
+                                    <span t-esc="o.sale_id.po_no"/>
                                     <b>
                                         <span style="padding-left:5px; display:inline-block; width:80px; text-align:right;">
                                             PO Date:
                                         </span>
                                     </b>
-                                    <t t-if="o.po_date">
-                                        <span t-esc="o.po_date.strftime('%d/%m/%Y')"/>
+                                    <t t-if="o.sale_id.po_date">
+                                        <span t-esc="o.sale_id.po_date.strftime('%d/%m/%Y')"/>
                                     </t>
                                     <br/>
                                     <b><span>QUOTE : </span></b>
-                                    <span t-esc="o.name"/>
+                                    <span t-esc="o.sale_id.name"/>
                                     <b>
                                         <span style="padding-left:5px; display:inline-block; width:80px; text-align:right;">
                                             VALIDITY:
                                         </span>
                                     </b>
-                                    <span t-esc="o.payment_term_id.name"/>
+                                    10 Days
                                 </td>
                             </tr>
                         </table>
-                        <table style="width:100%;" >
+                        <!-- <table style="width:100%;" >
                             <tr>
                                 <td style="padding-bottom:5px;padding-top:5px;width:50%;">
                                     <b><span style="padding-bottom:5px;">BENEFICIARY'S BANK DETAILS</span></b>
@@ -71,18 +74,18 @@
                             <tr>
                                 <td width="15%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
                                     <span>Bank :</span>
-                                    <span>A/C No. :</span><br/>
+                                    <span>A/C No.sale_id. :</span><br/>
                                     <span>RTGS/MICR Code : </span><br/>
                                     <span>Branch :</span><br/>
                                     <span>SWIFT Code : </span><br/>
                                     <span>Currency : </span>
                                 </td>
                                 <td width="35%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
-                                    <span style="padding-top:0px;" t-esc="o.bank_id.name" /><br/>
-                                    <span style="padding-top:0px;" t-esc="o.bank_id.bank_ac_name" /><br/>
-                                    <span style="padding-top:0px;" t-esc="o.bank_id.bank_ac_no" /><br/>
-                                    <span style="padding-top:0px;" t-esc="o.bank_id.bank_branch_ifsc"/><br/>
-                                    <span style="padding-top:0px;" t-esc="o.bank_id.currency_id.name"/>
+                                    <span style="padding-top:0px;" t-esc="o.sale_id.bank_id.name" /><br/>
+                                    <span style="padding-top:0px;" t-esc="o.sale_id.bank_id.bank_ac_name" /><br/>
+                                    <span style="padding-top:0px;" t-esc="o.sale_id.bank_id.bank_ac_no" /><br/>
+                                    <span style="padding-top:0px;" t-esc="o.sale_id.bank_id.bank_branch_ifsc"/><br/>
+                                    <span style="padding-top:0px;" t-esc="o.sale_id.bank_id.currency_id.name"/>
                                 </td>
                                 <td width="20%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
                                     <span>Correspondent Bank :</span><br/>
@@ -91,10 +94,10 @@
                                     <span>Account Number : </span>
                                 </td>
                                 <td width="30%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
-                                    <span t-esc="o.bank_id.correspondent_bank" /><br/>
-                                    <span t-esc="o.bank_id.currency1_id.name" /><br/>
-                                    <span t-esc="o.bank_id.swift_code1"/>
-                                    <span t-esc="o.bank_id.acc_no" /><br/>
+                                    <span t-esc="o.sale_id.bank_id.correspondent_bank" /><br/>
+                                    <span t-esc="o.sale_id.bank_id.currency1_id.name" /><br/>
+                                    <span t-esc="o.sale_id.bank_id.swift_code1"/>
+                                    <span t-esc="o.sale_id.bank_id.acc_no" /><br/>
                                 </td>
                             </tr>
                         </table>
@@ -116,9 +119,9 @@
                                     <span>PAYMENT TERMS :</span>
                                 </td>
                                 <td width="35%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
-                                    <span t-esc="o.incoterm_id.name" /><br/>
-                                    <span t-esc="o.terms_id.name" /><br/><br/>
-                                    <span t-esc="o.payment_term_id.name"/>
+                                    <span t-esc="o.sale_id.incoterm_id.name" /><br/>
+                                    <span t-esc="o.sale_id.terms_id.name" /><br/><br/>
+                                    <span t-esc="o.sale_id.payment_term_id.name"/>
                                 </td>
                                 <td width="28%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
                                     <span>PORT OF LOADING : </span><br/>
@@ -127,15 +130,15 @@
                                     <span>COUNTRY OF ORIGIN OF GOODS :</span>
                                 </td>
                                 <td width="23%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
-                                    <span t-esc="o.partner_id.country_id.name" /><br/>
-                                    <span t-esc="o.port_id.name" /><br/>
-                                    <span t-esc="o.port_id.country_id.name" /><br/>
-                                    <span t-esc="o.country_id.name" />
+                                    <span t-esc="o.sale_id.partner_id.country_id.name" /><br/>
+                                    <span t-esc="o.sale_id.port_id.name" /><br/>
+                                    <span t-esc="o.sale_id.port_id.country_id.name" /><br/>
+                                    <span t-esc="o.sale_id.country_id.name" />
                                 </td>
                             </tr>
                         </table>
                         <table style="width:100%;" >
-                            <t t-if="o.buyer_ref_details">
+                            <t t-if="o.sale_id.buyer_ref_details">
                             <tr>
                                 <td colspan="2" style="padding-bottom:5px;padding-top:5px;">
                                         <b><span style="padding-bottom:5px;">BUYER REFERENCE DETAILS</span></b>
@@ -143,10 +146,10 @@
                                     <td colspan="2" style="padding-bottom:5px;padding-top:5px;"></td>
                                 </tr>
                             </t>
-                            <t t-if="o.buyer_ref_details">
+                            <t t-if="o.sale_id.buyer_ref_details">
                             <tr>
                                 <td width="25%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
-                                        <span><span t-esc="o.buyer_ref_details"></span></span>  
+                                        <span><span t-esc="o.sale_id.buyer_ref_details"></span></span>  
                                         
                                     </td>
                                     <td width="25%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
@@ -156,38 +159,76 @@
                                     <td width="25%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;"></td>
                                 </tr>
                             </t>
-                        </table>
+                        </table> -->
 
+                        <table style="width:100%;" >
+                            <tr>
+                                <td width="20%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
+                                    <span>Loading Inspection :</span>
+                                    <span>Container stuffing date :</span><br/>
+                                    <span>Shipping Name : </span>
+                                </td>
+                                <td width="80%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
+                                    <span t-esc="o.loading_type" /><br/>
+                                    <t t-if="o.container_stuffing_date">
+                                        <span t-esc="o.container_stuffing_date.strftime('%d/%m/%Y')"/>
+                                    </t><br/>
+                                    <span style="padding-top:0px;" t-esc="o.shipping_id.name" />
+                                </td>
+                            </tr>
+                        </table>
+                        <table style="width:100%;" >
+                            <tr>
+                                <td width="20%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
+                                    <span>HAZ Label :</span><br/>
+                                    <span>Remark :</span><br/>
+                                    <span>Dead Fish Label : </span><br/>
+                                    <span>Remark :</span><br/>
+                                    <span>UN Printing Label : </span><br/>
+                                    <span>Remark :</span>
+                                </td>
+                                <td width="80%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
+                                    <span style="padding-top:0px;" t-esc="o.haz_type" /><br/>
+                                    <span t-esc="o.label_remark_id.name" /><br/>
+                                    <span t-esc="o.haz_type"/><br/>
+                                    <span t-esc="o.label_remark1_id.name" /><br/>
+                                    <span t-esc="o.dead_fish_type" /><br/>
+                                    <span t-esc="o.label_remark2_id.name" />
+                                </td>
+                            </tr>
+                        </table>
+                        
+                        <div style="height:5px;"></div>
                         <table width="100%" style="border: 1px solid black;border-top:none;">
                             <tr>
-                                <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:13px;text-align:center;background-color:#005fa9;color:white;">SRL</th>
-                                 <t t-if="o.display_name_on_pi == 'product_name'">
-                                        <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:13px;text-align:center;background-color:#005fa9;color:white;">PRODUCT</th>
+                                <th style="width:5%;border-bottom: 1px solid black;border-right: 1px solid black;font-size:11px;text-align:center;background-color:#005fa9;color:white;">SRL</th>
+                                 <t t-if="o.sale_id.display_name_on_pi == 'product_name'">
+                                        <th style="width:15%;border-bottom: 1px solid black;border-right: 1px solid black;font-size:11px;text-align:center;background-color:#005fa9;color:white;">PRODUCT</th>
                                     </t>
-                                    <t t-else="o.display_name_on_pi == 'shipping_name'">
-                                        <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:13px;text-align:center;background-color:#005fa9;color:white;">SHIPPING</th>
+                                    <t t-else="o.sale_id.display_name_on_pi == 'shipping_name'">
+                                        <th style="width:15%;border-bottom: 1px solid black;border-right: 1px solid black;font-size:11px;text-align:center;background-color:#005fa9;color:white;">SHIPPING</th>
                                     </t>
-                                <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:13px;text-align:center;background-color:#005fa9;color:white;">PACKING DESCRIPTION</th>
-                                <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:13px;text-align:center;background-color:#005fa9;color:white;">PACKING</th>
-                                <th style="border-bottom: 1px solid black;border-right: 1px solid black;font-size:13px;text-align:center;background-color:#005fa9;color:white;">QTY UNIT</th>
+                                <th style="width:30%;border-bottom: 1px solid black;border-right: 1px solid black;font-size:11px;text-align:center;background-color:#005fa9;color:white;">PACKING DESCRIPTION</th>
+                                <th style="width:10%;border-bottom: 1px solid black;border-right: 1px solid black;font-size:11px;text-align:center;background-color:#005fa9;color:white;">PACKING UNIT</th>
+                                <th style="width:10%;border-bottom: 1px solid black;border-right: 1px solid black;font-size:11px;text-align:center;background-color:#005fa9;color:white;">QTY UNIT</th>
                             </tr>
                             <t t-set="srl" t-value="0" />
                             <t t-set="tot_pcs" t-value="0" />
                             
-                            <t t-foreach="o.order_line" t-as="item">
+                            <t t-foreach="o.sale_id.order_line" t-as="item">
                                 <t t-if="item.product_tmpl_id">
                                     <t t-set="srl" t-value="srl + 1" />
                                     <t t-set="tot_pcs" t-value="tot_pcs + item.product_uom_qty" />
-
                                     <tr>
-                                        <td style="text-align: center;border-right: 1px solid black;">
+                                        <td style="text-align: center;border-right: 1px solid black;border-bottom: 1px solid black;border-top: 1px solid black;">
                                             <span><span t-esc="srl"></span></span>
                                         </td>
-                                        <td style="text-align: left;border-right: 1px solid black;">
-                                            <t t-if="o.display_name_on_pi == 'product_name'">
-                                                 <span><span t-esc="o.product_shipping_id.name"></span></span><br/>
+                                        <td style="text-align: left;border-right: 1px solid black;border-bottom: 1px solid black;border-top: 1px solid black;">
+                                            <!-- <span><span t-esc="item.product_tmpl_id.name"></span></span><br/> -->
+                                            <t t-if="o.sale_id.display_name_on_pi == 'product_name'">
+                                                 <span><span t-esc="item.product_shipping_id.name"></span></span><br/>
                                              </t>
-                                             <t t-else="o.display_name_on_pi == 'shipping_name'">
+                                             <t t-else="o.sale_id.display_name_on_pi == 'shipping_name'">
                                                  <span><span t-esc="o.shipping_id.name"></span></span><br/>
                                              </t>
                                             <t t-if="item.product_tmpl_id.hsn_id">
@@ -197,23 +238,26 @@
                                                 <span>Grade - <span t-esc="item.grade_id.name"></span></span><br/>
                                             </t>
                                             <t t-if="item.mesh_id">
-                                                <span>Mesh - <span t-esc="item.mesh_id.name"></span></span>
+                                                <span>Mesh - <span t-esc="item.mesh_id.name"></span></span><br/>
+                                            </t>
+                                            <t t-if="item.product_form_type">
+                                                <span>Form - <span t-esc="dict(item.fields_get(allfields=['product_form_type'])['product_form_type']['selection'])[item.product_form_type]"></span></span>
                                             </t>
                                         </td>
-                                        <td style="text-align: left; border-right: 1px solid black; padding: 0;padding-left:3px;">
+                                        <td style="text-align: left; border-right: 1px solid black; padding: 0;padding-left:3px;border-bottom: 1px solid black;border-top: 1px solid black;">
                                             <span t-esc="item.packing_name"></span>
                                             <t t-if="item.name">
-                                                <span style="font-weight: bold;"> Loading Description: </span><br/>
-                                                <span t-esc="item.name"/>
+                                                <center><span style="font-weight: bold;"> Loading Description </span></center>
+                                                <span t-esc="o.company_id.convert_text_to_html(item.name)"/>
                                             </t>
                                         </td>
 
-                                        <td style="text-align: right;border-right: 1px solid black;">
+                                        <td style="text-align: right;border-right: 1px solid black;border-bottom: 1px solid black;border-top: 1px solid black;">
                                             <span t-esc="'%.0f' % item.bucket"/> <b><t t-if="item.packing_type">
                                                 <span t-esc="dict(item.fields_get(allfields=['packing_type'])['packing_type']['selection'])[item.packing_type]"/>
                                             </t></b>
                                         </td>
-                                        <td style="text-align: center;border-right: 1px solid black;">
+                                        <td style="text-align: center;border-right: 1px solid black;border-bottom: 1px solid black;border-top: 1px solid black;">
                                             <span style="padding-right:2px;" t-esc="item.product_uom_qty"/> <span t-esc="item.product_uom.name"/>
                                         </td>
                                     </tr>
@@ -232,22 +276,22 @@
                         <table style="width:100%; border-collapse:collapse;">
                             <tr>
                                 <td style="width:65%; vertical-align:top;">
-                                    <span style="padding-right:3px;"><b>PALLETIZED CARGO :</b></span>
-                                    <span t-esc="o.palletized_type"/> <br/>
+                                    <!-- <span style="padding-right:3px;"><b>PALLETIZED CARGO :</b></span>
+                                    <span t-esc="o.sale_id.palletized_type"/> <br/>
 
                                     <span style="padding-right:3px;"><b>PRE-SHIPMENT INSPECTION :</b></span>
-                                    <span t-esc="o.inspection"/> <br/>
+                                    <span t-esc="o.sale_id.inspection"/> <br/>
 
-                                    <t t-if="o.freight > 0">
+                                    <t t-if="o.sale_id.freight > 0">
                                         <span style="padding-right:3px;"><b>TOTAL FREIGHT :</b></span>
-                                        <span t-esc="o.freight"/> <br/>
+                                        <span t-esc="o.sale_id.freight"/> <br/>
 
                                         <span style="padding-right:3px;"><b>TOTAL INSURANCE :</b></span>
-                                        <span t-esc="o.insurance"/> <br/>
+                                        <span t-esc="o.sale_id.insurance"/> <br/>
 
                                         <span style="padding-right:3px;"><b>TOTAL FOB :</b></span>
-                                        <span t-esc="o.fob_rates"/>
-                                    </t>
+                                        <span t-esc="o.sale_id.fob_rates"/>
+                                    </t> -->
                                 </td>
                             </tr>
                         </table>
@@ -255,13 +299,13 @@
                         <table style="width:100%;" >
                             <tr>
                                 <td>    
-                                    <b><span>TERMS &amp; CONDITIONS</span></b><br/>
-                                    <span t-esc="o.note" />
+                                    <!-- <b><span>TERMS &amp; CONDITIONS</span></b><br/>
+                                    <span t-esc="o.sale_id.note" /> -->
                                 </td>
                                 <td style="text-align:right;">    
                                     <b><span>APPROVED BY</span></b><br/>
-                                    <t t-if="o.company_id.logo">
-                                        <img class="img img-responsive" t-att-src="image_data_uri(o.company_id.logo)" alt="Logo" style="width:130px; height:100px;" />
+                                    <t t-if="o.sale_id.company_id.logo">
+                                        <img class="img img-responsive" t-att-src="image_data_uri(o.sale_id.company_id.logo)" alt="Logo" style="width:130px; height:100px;" />
                                     </t>
                                 </td>
                             </tr>

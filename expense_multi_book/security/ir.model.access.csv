@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hop_summary_line,hop_summary_line,model_hop_summary_line,,1,1,1,1
+
+
+
+
+

@@ -47,6 +47,9 @@
             <xpath expr="//tree/field[@name='hsn_id']" position="attributes">
                 <attribute name="attrs">{'column_invisible': [('parent.business_type', '=', 'international')]}</attribute>
             </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="context">{'default_acc_type':'SALE_PARTY','form_view_ref':'master.party_mst_form','show_address': 1,'default_business_type':business_type}</attribute>
+            </xpath> 
 
             <xpath expr="//field[@name='order_line']/form/group/group/field[@name='disc_per']" position="attributes">
                 <attribute name="attrs">{'invisible': [('parent.business_type', '=', 'international')]}</attribute>

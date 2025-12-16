@@ -10,6 +10,8 @@ class inheritedPartner(models.Model):
    
    business_type = fields.Selection([("international", "International"), ("domestic", "Domestic"), ("trading", "Trading")],string="Business Type",tracking=True,default=lambda self: self.env.context.get('default_business_type',False))
    team_id = fields.Many2one('crm.team',string="Sales Team",domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",tracking=True,default=_get_default_team)
+   street3 = fields.Char("Street3",tracking=True)
+   street4 = fields.Char("Street4",tracking=True)
 
    # @api.onchange('team_id')
    # def _onchange_team_id(self):

@@ -20,6 +20,7 @@ class JalLogistics(models.Model):
     # Pre-Shipment
     booking_id = fields.Many2one('res.partner',string="Booking Agent",tracking=True)
     transport_id = fields.Many2one('res.partner',string="Transport Agent",tracking=True)
+    partner_id = fields.Many2one('res.partner',string="Customer",tracking=True)
     cha_id = fields.Many2one('cha.mst',string="CHA",tracking=True)
     shipping_id = fields.Many2one('product.shipping.mst',string="Shipping Name",tracking=True)
     hbl_type = fields.Selection([('Yes', 'Yes'),('No', 'No')], string='HBL',tracking=True)
@@ -52,11 +53,11 @@ class JalLogistics(models.Model):
     remarks_hold = fields.Text(string='Hold Remark',tracking=True)
 
     haz_type = fields.Selection([('Yes', 'Yes'),('No', 'No')], string='HAZ Label',tracking=True)
-    label_remark_id = fields.Many2one('label.remark.mst',string='HAZ Remark',tracking=True)
+    label_remark_id = fields.Many2one('label.remark.mst',string='Remark',tracking=True)
     dead_fish_type = fields.Selection([('Yes', 'Yes'),('No', 'No')], string='Dead Fish Label',tracking=True)
-    label_remark1_id = fields.Many2one('label.remark.mst',string='HAZ Remark',tracking=True)
+    label_remark1_id = fields.Many2one('label.remark.mst',string='Remark',tracking=True)
     un_printing_type = fields.Selection([('Yes', 'Yes'),('No', 'No')], string='UN Printing Label',tracking=True)
-    label_remark2_id = fields.Many2one('label.remark.mst',string='HAZ Remark',tracking=True)
+    label_remark2_id = fields.Many2one('label.remark.mst',string='Remark',tracking=True)
 
     # Dispatch
     attachment_batch_ids = fields.Many2many('ir.attachment','attachment_batch_id',string="Batch Label")
@@ -147,9 +148,12 @@ class JalLogistics(models.Model):
     bi_date2 = fields.Date(string='BI date',tracking=True)
 
     bl_status_type = fields.Selection([
-            ('scan_bl_pending', 'Scan BL Pending'),
-            ('linder_draft_in_progress', 'Linder Draft in Progress'),
-            ('surrender_draft_in_progress', 'Surrender Draft in Progress'),
+            ('bl_status_1', 'Liner Draft Pending'),
+            ('bl_status_2', 'Liner Draft shared with Sales team, Approval pending'),
+            ('bl_status_3', 'Liner Draft approved, Scanned Bl Pending'),
+            ('bl_status_4', 'Scanned Bl received, surrender pending'),
+            ('bl_status_5', 'Surrender/courier pending'),
+            ('bl_status_6', 'Order Completed'),
         ], string='Status',tracking=True)
 
     bl_type = fields.Selection([
@@ -206,6 +210,7 @@ class JalLogistics(models.Model):
     def compute_logistics_delivery_count(self):
         for order in self:
             order.delivery_count = len(order.sale_id.picking_ids)
+            order.partner_id = order.sale_id.partner_id.id
 
     def action_view_logistics_delivery(self):
         return self.sale_id._get_action_view_picking(self.sale_id.picking_ids)
@@ -306,18 +311,29 @@ class JalLogistics(models.Model):
         self.state = 'dispatch_document'
 
     def action_post_shipment(self):
+        line_list = []
+        for line in self.dispatch_line_ids:
+            line_list.append((0,0,{
+                    'dispatch_line_id': line.id,
+                    }))
+            
+        self.container_management_line_ids = line_list
         self.state = 'post_shipment'
 
     def action_close(self):
         self.state = 'close'
 
     def action_document_order_form(self):
-        return self.env.ref('jal_crm.action_order_form_report').report_action(self.sale_id.id)
+        return self.env.ref('jal_logistics.action_order_form_report').report_action(self.id)
+    
+    def action_sale_profoma(self):
+        return self.env.ref('jal_crm.action_fromate_sale_proforma').report_action(self.sale_id.id)
 
 class LogisticsDispatchLine(models.Model):
     _name = 'logistics.dispatch.line'
     _description = 'Logistics Dispatch Line'
     _order = "id desc"
+    _rec_name = "container_no"
 
     mst_id = fields.Many2one('jal.logistics',string="Mst",ondelete='cascade')
 
@@ -365,7 +381,7 @@ class DispatchPackingLine(models.Model):
 
     mst_id = fields.Many2one('logistics.dispatch.line',string="Mst",ondelete='cascade')
 
-    sale_line_id = fields.Many2one('sale.order.line',string="Stuffing Description")
+    sale_line_id = fields.Many2one('sale.order.line',string="Container Details")
     sale_id = fields.Many2one(related='mst_id.mst_id.sale_id',string="Proforma Invoice")
     qty = fields.Float(string="No. of Units.")
 
@@ -404,7 +420,7 @@ class PalletizedLine(models.Model):
     mst_id = fields.Many2one('logistics.dispatch.line',string="Mst",ondelete='cascade')
 
     sale_id = fields.Many2one(related='mst_id.mst_id.sale_id',string="Proforma Invoice")
-    sale_line_id = fields.Many2one('sale.order.line',string="Bucket Type")
+    sale_line_id = fields.Many2one('sale.order.line',string="Stuffing Description")
     line_ids = fields.One2many('layer.line','mst_id',string="Line Layer")
 
 
@@ -425,7 +441,7 @@ class LogisticsContainerManagementLine(models.Model):
 
     mst_id = fields.Many2one('jal.logistics',string="Mst",ondelete='cascade')
 
-    name = fields.Char(string="Container No")
+    dispatch_line_id = fields.Many2one('logistics.dispatch.line',string="Container No")
     check_eta = fields.Date(string="Check ETA")
     remarks = fields.Char(string="Remarks")
     

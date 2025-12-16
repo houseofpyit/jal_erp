@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="inherit_hop_gen_purchase_form_view" model="ir.ui.view">
+        <field name="name">hop.gen.purchase.view.form.inherit</field>
+        <field name="model">hop.gen.purchase</field>
+        <field name="inherit_id" ref="transaction.gen_purchase_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet" position="before">
+                <div class="alert alert-danger" role="alert" style="margin-bottom:0px;" attrs="{'invisible': ['|',('is_mismatch_amt', '=', False),('single_multi_book','=','Single_Book')]}">
+                    <bold><a class="alert-link" role="button"><field name="tot_taxable" force_save="1" readonly="True"/></a></bold> Product Amount and Summary Amount Does Not Match, Please review the product details...
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='rnd_off']" position="after">
+                <field name="purchase_id" invisible="1" />
+            </xpath>
+            <xpath expr="//field[@name='rd_urd']" position="after">
+                <field name="gst_no" />
+                <field name="is_mismatch_amt" invisible="1"/>
+            </xpath>
+            <xpath expr="//tree/field[@name='product_id']" position="after">
+                <field name="cost_id" options="{'no_create': True}" width="100px" optional="show"/>
+                <field name="book_id" width="100px" optional="show" options="{'no_quick_create': True}" attrs="{'column_invisible': [('parent.single_multi_book', '!=', 'Multi_Book')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='book_id']" position="before">
+                <field name="single_multi_book" />
+            </xpath>
+            <xpath expr="//page[@name='gen_purchase_detail']" position="after">
+                <page name="summary_details" string="Summary Details" attrs="{'invisible': [('single_multi_book', '!=', 'Multi_Book')]}">
+                    <field name="summary_ids">
+                        <tree editable="1" create="0" delete="0">
+                            <field name="book_id" width="100px" options="{'no_quick_create': True}" optional="show"/>
+                            <field name="name" readonly="0" force_save="1" invisible="1"/>
+                            <field name="bill_no" readonly="0" force_save="1" invisible="1"/>
+                            <field name="bill_chr" readonly="0" force_save="1" invisible="1"/>
+                            <field name="date" readonly="0" force_save="1" invisible="1"/>
+                            <field name="party_id" readonly="0" force_save="1" invisible="1"/>
+                            <field name="bill_number" readonly="0" force_save="1" invisible="1"/>
+                            <field name="total_amount" width="100px" optional="show" sum="Total Amount" force_save="1" readonly="1"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
