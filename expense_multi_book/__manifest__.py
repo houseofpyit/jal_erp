@@ -8,7 +8,7 @@
     'maintainer': "",
     'website': "",
     'category': 'Tools',
-    'depends': ['base','transaction'],
+    'depends': ['base','transaction','hop_account'],
     'data': [
         'data/purchase_led_data.xml',
         'security/ir.model.access.csv',

@@ -55,6 +55,16 @@
                                 </tree>
                             </field>
                         </page>
+                        <page string="MT Bucket">
+                            <field name="mt_line_ids" attrs="{'readonly': [('state','=','complete')]}">
+                                <tree editable="bottom">
+                                    <field name="product_id" domain="[('is_finished_goods', '=', True)]" required="1" options="{'no_create': True}" />
+                                    <field name="qty" />
+                                    <field name="bucket" />
+                                    <field name="uom_id" readonly="1" force_save="1"/>
+                                </tree>
+                            </field>
+                        </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">

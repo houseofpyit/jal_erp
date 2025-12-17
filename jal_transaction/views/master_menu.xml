@@ -36,4 +36,11 @@
         action="action_cost_center_budget"
         sequence="7"/>
 
+    <menuitem 
+        id="master.account_mst_menu" 
+        name="Account Master" 
+        parent="master.master_main_menu" 
+        groups="jal_transaction.res_group_account_master"
+        sequence="3" />
+
 </odoo>

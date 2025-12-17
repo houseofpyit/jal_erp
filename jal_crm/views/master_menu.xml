@@ -567,6 +567,7 @@
         id="main_menu_purchase_requisite" 
         name="Purchase Requisition" 
         web_icon="jal_crm,static/description/pur_req.png"
+        groups="jal_crm.res_group_purchase_req_user,jal_crm.res_group_purchase_req_manager,jal_crm.res_group_purchase_req_admin"
         sequence="20"/>
 
     <menuitem 

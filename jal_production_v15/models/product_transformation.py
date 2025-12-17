@@ -17,6 +17,7 @@ class ProductTransformation(models.Model):
     date = fields.Date(copy=False,string="Date",default=fields.Date.context_today)
     packing_line_ids = fields.One2many('product.transformation.pack.line', 'mst_id')
     finished_line_ids = fields.One2many('product.transformation.finish.line', 'mst_id')
+    mt_line_ids = fields.One2many('product.mt.bucket.line', 'mst_id')
     state = fields.Selection([('draft', 'Draft'),('complete', 'Complete')], default='draft',tracking=True)
     packing_type = fields.Selection([("bucket", "Bucket"), ("pouch", "Pouch"),("tablet", "Tablet")],string="Packing Type",tracking=True)
     product_id = fields.Many2one('product.product', string='Product',tracking=True)
@@ -103,56 +104,60 @@ class ProductTransformation(models.Model):
         self.state = 'complete'
 
     def _create_stock_picking_receipts(self):
-        if not self.finished_line_ids:
-            raise ValidationError("No finished products to receive!")
 
-        for line in self.finished_line_ids:
-            if not line.product_id:
-                raise ValidationError(
-                     _("Please select a product for finished lines before proceeding.")
-                )
-            
-            if line.qty <= 0:
-                raise ValidationError(
-                    f"Finished Goods in Quantity must be greater than 0 for product: {line.product_id.display_name}"
-                )
+        def _validate_lines(lines, line_type):
+            if not lines:
+                raise ValidationError(_(f"No {line_type} lines found. Please add at least one line."))
 
-        main_location = self.env['stock.location'].sudo().search([('main_store_location', '=', True)], limit=1)
+            for line in lines:
+                if not line.product_id:
+                    raise ValidationError(_(f"Please select a product in {line_type} lines before proceeding."))
+
+                if line.qty <= 0:
+                    raise ValidationError(_(f"Quantity must be greater than 0 for product: {line.product_id.display_name}"))
+
+        _validate_lines(self.finished_line_ids, "Finished Goods")
+        _validate_lines(self.mt_line_ids, "MT Bucket")
+
+        main_location = self.env['stock.location'].sudo().search(
+            [('main_store_location', '=', True)], limit=1
+        )
         if not main_location:
-            raise ValidationError("Main Store Location not found!")
+            raise ValidationError(_("Main Store Location is not configured."))
 
-        src_location = self.env['stock.location'].sudo().search([('usage', '=', 'supplier')], limit=1)
+        src_location = self.env['stock.location'].sudo().search(
+            [('usage', '=', 'supplier')], limit=1
+        )
         if not src_location:
-            raise ValidationError("No Vendor/Partner location found!")
+            raise ValidationError(_("Vendor (Supplier) location not found."))
 
-        picking_type = self.env['stock.picking.type'].sudo().search([('code', '=', 'incoming')], limit=1)
+        picking_type = self.env['stock.picking.type'].sudo().search(
+            [('code', '=', 'incoming')], limit=1
+        )
         if not picking_type:
-            raise ValidationError("Incoming Picking Type not found!")
+            raise ValidationError(_("Incoming Picking Type is not configured."))
 
         move_list = []
 
-        for line in self.finished_line_ids:
-            move_vals = {
-                'name': line.product_id.display_name,
-                'product_id': line.product_id.id,
-                'product_uom_qty': line.qty,
-                'demand_bucket': line.bucket,
-                'done_bucket': line.bucket,
-                'product_uom': line.uom_id.id,
-                'location_id': src_location.id,
-                'location_dest_id': main_location.id,
-                # 'move_line_ids': [(0, 0, {
-                #     'product_id': line.product_id.id,
-                #     'qty_done': line.qty,
-                #     'done_bucket': line.bucket,
-                #     'product_uom_id': line.uom_id.id,
-                #     'location_id': src_location.id,
-                #     'location_dest_id': main_location.id,
-                #     'date': fields.Datetime.now(),
-                # })],
-            }
-            move_list.append((0, 0, move_vals))
-        
+        def _prepare_moves(lines):
+            for line in lines:
+                move_list.append((0, 0, {
+                    'name': line.product_id.display_name,
+                    'product_id': line.product_id.id,
+                    'product_uom_qty': line.qty,
+                    'product_uom': line.uom_id.id,
+                    'location_id': src_location.id,
+                    'location_dest_id': main_location.id,
+                    'demand_bucket': line.bucket,
+                    'done_bucket': line.bucket,
+                }))
+
+        _prepare_moves(self.finished_line_ids)
+        _prepare_moves(self.mt_line_ids)
+
+        if not move_list:
+            raise ValidationError(_("No valid stock moves to create receipt."))
+
         picking = self.env['stock.picking'].sudo().create({
             'location_id': src_location.id,
             'location_dest_id': main_location.id,
@@ -303,3 +308,23 @@ class ProductTransformationFinishLine(models.Model):
         for rec in self:
             if rec.product_id:
                 rec.uom_id = rec.product_id.uom_po_id.id
+
+class ProductMTBucketLine(models.Model):
+    _name = 'product.mt.bucket.line'
+    _description = "Product MT Bucket Line"
+
+    mst_id = fields.Many2one('product.transformation',string="Mst",ondelete='cascade')
+    product_id = fields.Many2one('product.product',required=True)
+    uom_id = fields.Many2one('uom.uom',string="Unit")
+    qty = fields.Float(string = "Quantity",digits='BaseAmount')
+    bucket = fields.Float(string='Packing Unit')
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
+
+    @api.onchange('product_id')
+    def onchange_product_id(self):
+        for rec in self:
+            if rec.product_id:
+                rec.uom_id = rec.product_id.uom_po_id.id
+
+
+                

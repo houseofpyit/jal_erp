@@ -51,6 +51,7 @@
             id="logistics_configuration_main_menu"
             name="Configuration"
             parent="jal_logistics.logistics_main_menu"
+            groups="jal_logistics.res_group_logistics_user,jal_logistics.res_group_logistics_admin"
             sequence="6"/>
 
             <menuitem

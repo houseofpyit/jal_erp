@@ -19,6 +19,7 @@
             id="por_config_mst_main"
             name="Configuration"
             parent="jal_production_v15.production_main_menu"
+            groups="jal_production_v15.res_group_production_user,jal_production_v15.res_group_production_admin"
             sequence="2"/>
 
             <menuitem
@@ -32,6 +33,7 @@
             id="production_exel_wiz_mst_main"
             name="Report"
             parent="jal_production_v15.production_main_menu"
+            groups="jal_production_v15.res_group_production_user,jal_production_v15.res_group_production_admin"
             sequence="3"/>
             
             <menuitem
@@ -67,12 +69,14 @@
             name="Purchase Quality"
             action="action_jal_purchase_quality"
             parent="jal_production_v15.quality_main_menu"
+            groups="jal_production_v15.res_group_quality_user,jal_production_v15.res_group_quality_admin"
             sequence="2"/>
 
         <menuitem
             id="qua_config_mst_main"
             name="Configuration"
             parent="jal_production_v15.quality_main_menu"
+            groups="jal_production_v15.res_group_quality_user,jal_production_v15.res_group_quality_admin"
             sequence="2"/>
 
             <menuitem
@@ -94,6 +98,7 @@
             id="mrp_production_main_menu"
             name="MO"
             parent="jal_production_v15.production_main_menu"
+            groups="jal_production_v15.res_group_production_user,jal_production_v15.res_group_production_admin"
             sequence="15"/>
 
         <menuitem
@@ -121,6 +126,7 @@
         id="main_menu_material_requisite" 
         name="Material Requisition"
         web_icon="jal_production_v15,static/description/materia.png" 
+        groups="jal_production_v15.res_group_material_requisition_user,jal_production_v15.res_group_material_requisition_admin"
         sequence="21"/>
 
     <menuitem 
@@ -326,6 +332,7 @@
     <menuitem
         id="product_transformation_menu_main_menu"
         name="Product Transformation"
+        groups="jal_production_v15.res_group_product_transformation_user,jal_production_v15.res_group_product_transformation_admin"
         sequence="12"/>
 
     <menuitem
@@ -338,7 +345,7 @@
     <menuitem
         id="constipation_material_menu"
         name="Material Constipation"
-        parent="stock.menu_stock_root"
+        parent="main_menu_material_requisite"
         action="action_constipation_material"
         sequence="3"/>
 

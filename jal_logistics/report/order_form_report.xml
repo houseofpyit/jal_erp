@@ -17,7 +17,7 @@
                     }
                 </style>
                 <t t-foreach="docs" t-as="o">
-                    <div class="header">
+                    <!-- <div class="header">
                         <table>
                             <tr>
                                 <td>
@@ -27,13 +27,20 @@
                                 </td>
                             </tr>
                         </table>
-                    </div>
+                    </div> -->
                     <div class="page">
+                        <table style="width:100%;" v-align="top">
+                            <tr>
+                                <td>
+                                    <center><b><h2><span style="">Order Form</span></h2></b></center>
+                                </td>
+                            </tr>
+                        </table>
                         <table style="width:100%;" v-align="top">
                             <tr>
                                 <td width="50%" style="padding-left:10px;">
                                     <b><span style="font-size:20px;padding-right:5px;color:#5796c6;">PROFORMA INVOICE : <span style="font-size:20px;color:#5796c6;" t-esc="o.sale_id.name" /></span></b><br/>
-                                    <b><span style="padding-right:5px;">Proforma Date : </span></b><t t-if="o.sale_id.date">
+                                    <b><span style="padding-right:5px;">Date : </span></b><t t-if="o.sale_id.date">
                                         <span t-esc="o.date.strftime('%d/%m/%Y')"/>
                                     </t>
                                 </td>
@@ -104,7 +111,7 @@
                         <table style="width:100%;" >
                             <tr>
                                 <td style="padding-bottom:5px;padding-top:5px;width:50%;">
-                                    <b><span style="padding-bottom:5px;">DELIVERY AND PAYMENT TERMS</span></b>
+                                    <b><span style="padding-bottom:5px;">    AND PAYMENT TERMS</span></b>
                                 </td>
                                 <td style="padding-bottom:5px;padding-top:5px;width:50%;">
                                     <b><span style="padding-bottom:5px;">TRANSPORT DETAILS</span></b>
@@ -164,16 +171,32 @@
                         <table style="width:100%;" >
                             <tr>
                                 <td width="20%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
-                                    <span>Loading Inspection :</span>
+                                    <span>Loading Inspection :</span><br/>
                                     <span>Container stuffing date :</span><br/>
-                                    <span>Shipping Name : </span>
+                                    <span>Shipping Name : </span><br/>
+                                    <t t-if="o.loading_type == 'Yes'">
+                                        <span>Inspection Company :</span><br/>
+                                        <span>Inspection Scheduled : </span><br/>
+                                        <span>Inspector Name : </span><br/>
+                                        <span>Inspection Date : </span><br/>
+                                        <span>Inspection Remarks : </span>
+                                    </t>
                                 </td>
                                 <td width="80%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
                                     <span t-esc="o.loading_type" /><br/>
                                     <t t-if="o.container_stuffing_date">
                                         <span t-esc="o.container_stuffing_date.strftime('%d/%m/%Y')"/>
                                     </t><br/>
-                                    <span style="padding-top:0px;" t-esc="o.shipping_id.name" />
+                                    <span style="padding-top:0px;" t-esc="o.shipping_id.name" /><br/>
+                                    <t t-if="o.loading_type == 'Yes'">
+                                        <span style="padding-top:0px;" t-esc="o.inspection_id.name" /><br/>
+                                        <span style="padding-top:0px;" t-esc="o.inspection_type" /><br/>
+                                        <span style="padding-top:0px;" t-esc="o.inspection_name" /><br/>
+                                        <t t-if="o.inspection_date">
+                                            <span t-esc="o.inspection_date.strftime('%d/%m/%Y')"/>
+                                        </t><br/>
+                                    </t>
+                                    <span style="padding-top:0px;" t-esc="o.company_id.convert_text_to_html(o.inspection_remarks)" />
                                 </td>
                             </tr>
                         </table>
@@ -247,7 +270,7 @@
                                         <td style="text-align: left; border-right: 1px solid black; padding: 0;padding-left:3px;border-bottom: 1px solid black;border-top: 1px solid black;">
                                             <span t-esc="item.packing_name"></span>
                                             <t t-if="item.name">
-                                                <center><span style="font-weight: bold;"> Loading Description </span></center>
+                                                <center><span style="font-weight: bold;color:#005fa9;"> Loading Description </span></center>
                                                 <span t-esc="o.company_id.convert_text_to_html(item.name)"/>
                                             </t>
                                         </td>
@@ -296,11 +319,11 @@
                             </tr>
                         </table>
                         <div style="height:5px;"></div>
-                        <table style="width:100%;" >
+                        <!-- <table style="width:100%;" >
                             <tr>
                                 <td>    
-                                    <!-- <b><span>TERMS &amp; CONDITIONS</span></b><br/>
-                                    <span t-esc="o.sale_id.note" /> -->
+                                    <b><span>TERMS &amp; CONDITIONS</span></b><br/>
+                                    <span t-esc="o.sale_id.note" />
                                 </td>
                                 <td style="text-align:right;">    
                                     <b><span>APPROVED BY</span></b><br/>
@@ -309,6 +332,173 @@
                                     </t>
                                 </td>
                             </tr>
+                        </table> -->
+
+                        <table width="100%" style="border: 1px solid black;border-top:none;">
+                            <t t-foreach="o.dispatch_line_ids" t-as="line">
+
+                                <table width="100%" style="border: 1px solid black;">
+                                    <tr>
+                                        <td width="50%" style="border: 1px solid black;border-top:none;">
+                                            <table>
+                                                <tr>
+                                                    <td width="50%">
+                                                        <span>Container No :</span>
+                                                    </td>
+                                                    <td width="50%">
+                                                        <span t-esc="line.container_no"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="50%">
+                                                        <span>Seal No :</span>
+                                                    </td>
+                                                    <td width="50%">
+                                                        <span t-esc="line.seal_no"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="50%">
+                                                        <span>Itek Seal No :</span>
+                                                    </td>
+                                                    <td width="50%">
+                                                        <span t-esc="line.itek_seal_no"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="50%">
+                                                        <span>Container Size :</span>
+                                                    </td>
+                                                    <td width="50%">
+                                                        <span t-esc="line.container_size"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="50%">
+                                                        <span>Total drums/container :</span>
+                                                    </td>
+                                                    <td width="50%">
+                                                        <span t-esc="line.total_drums"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="50%">
+                                                        <span>LR No :</span>
+                                                    </td>
+                                                    <td width="50%">
+                                                        <span t-esc="line.lr_no"/>
+                                                    </td>
+                                                </tr>
+                                                
+                                            </table>
+                                        </td>
+
+                                        <td width="50%" style="">
+                                            <table>
+                                                <tr>
+                                                    <td width="50%">
+                                                        <span>Truck No :</span>
+                                                    </td>
+                                                    <td width="50%">
+                                                        <span t-esc="line.truck_no"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="50%">
+                                                        <span>Transport Name :</span>
+                                                    </td>
+                                                    <td width="50%">
+                                                        <span t-esc="line.transport_id.name"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="50%">
+                                                        <span>Maximum Allowed Load (Kg) :</span>
+                                                    </td>
+                                                    <td width="50%">
+                                                        <span t-esc="line.load_kg"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="50%">
+                                                        <span>Tare Wt. (Kg) :</span>
+                                                    </td>
+                                                    <td width="50%">
+                                                        <span t-esc="line.tare_wt"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="50%">
+                                                        <span>Weighment Slip No :</span>
+                                                    </td>
+                                                    <td width="50%">
+                                                        <span t-esc="line.total_gross"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="50%">
+                                                        <span>Label directly inside container :</span>
+                                                    </td>
+                                                    <td width="50%">
+                                                        <t t-if="line.label_type == 'yes'">
+                                                            <span>Yes</span>
+                                                        </t>
+                                                        <t t-if="line.label_type == 'no'">
+                                                            <span>No</span>
+                                                        </t>
+                                                    </td>
+                                                </tr>
+                                                <t t-if="line.label_type == 'yes'">
+                                                    <tr>
+                                                        <td width="50%">
+                                                            <span>Remarks :</span>
+                                                        </td>
+                                                        <td width="50%">
+                                                            <span t-esc="line.label_remark"/>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                                <tr>
+                                                    <td width="50%">
+                                                        <span>Product Expiry :</span>
+                                                    </td>
+                                                    <td width="50%">
+                                                        <span t-esc="line.product_expiry"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="50%">
+                                                        <span>Batch number :</span>
+                                                    </td>
+                                                    <td width="50%">
+                                                        <span t-esc="line.batch_number"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <t t-if="line.line_ids">
+                                    <table width="100%" style="border: 1px solid black;border-top:none;">
+                                        <tr>
+                                            <th style="padding-left:8px;width:90%;border-bottom: 1px solid black;border-right: 1px solid black;font-size:11px;text-align:left;background-color:#005fa9;color:white;">Container Details</th>
+                                            <th style="width:10%;border-bottom: 1px solid black;border-right: 1px solid black;font-size:11px;text-align:center;background-color:#005fa9;color:white;">No. of Units.</th>
+                                        </tr>
+                                        
+                                        <t t-foreach="line.line_ids" t-as="item">
+                                            <tr>
+                                                <td style="text-align: left;border-right: 1px solid black;border-bottom: 1px solid black;border-top: 1px solid black;">
+                                                    <span t-esc="item.sale_line_id.packing_name"/>
+                                                </td>
+                                                <td style="text-align: center;border-right: 1px solid black;border-bottom: 1px solid black;border-top: 1px solid black;">
+                                                    <span t-esc="item.qty"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </table>
+                                </t>
+                                <div style="height:5px;"></div>
+                            </t>
                         </table>
                     </div>
                 </t>

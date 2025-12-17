@@ -179,13 +179,15 @@ class Production1ReportExelWiz(models.TransientModel):
         
         if not production_rec:
             raise ValidationError("No Data Found.")
+        
+        StockMoveLine = self.env['stock.move.line'].sudo()
 
         # ==========================
         # Dynamic Product List
         # ==========================
         raw_products = list(set(production_rec.line_ids.mapped('product_id')))
-        raw_products = sorted(raw_products, key=lambda p: p.name)
-        
+        raw_products = sorted(raw_products, key=lambda p: p.display_name)
+        raw_products += list(set(production_rec.mapped('product_tmpl_id')))
         # Headers        
 
         sheet.write(0, 0, "", header_style)   # first column blank
@@ -193,7 +195,7 @@ class Production1ReportExelWiz(models.TransientModel):
         col = 1
         for p in raw_products:
             # Merge 1 row (row 0), 4 columns (col → col+3)
-            sheet.write_merge(0, 0, col, col + 3, p.name, header_style)
+            sheet.write_merge(0, 0, col, col + 3, p.display_name, header_style)
 
             # Set column widths
             sheet.col(col).width = 5000
@@ -209,9 +211,12 @@ class Production1ReportExelWiz(models.TransientModel):
 
         col = 1
         headers1 = ["Opening", "Receiving", "Consumption", "Closing"]
-
+        headers2 = ["Opening", "Production", "Dispatch", "Closing"]
+        
         for p in raw_products:
-            for h in headers1:
+            headers = headers2 if p == raw_products[-1] else headers1
+
+            for h in headers:
                 sheet.write(1, col, h, header_style)
                 col += 1
 
@@ -233,17 +238,59 @@ class Production1ReportExelWiz(models.TransientModel):
                 # FILTER product lines for this date
                 prod_lines = date_recs.line_ids.filtered(lambda l: l.product_id.id == prod.id)
 
-                # === CALCULATIONS ===
                 opening = 0
-                receiving = 0
-                consumption = sum(prod_lines.mapped('qty'))         
                 closing = 0
+                receiving = 0
+                consumption = 0
+                production = 0
+                dispatch = 0
 
-                # === WRITE TO SHEET ===
-                sheet.write(row, col,     opening,     data_style)
-                sheet.write(row, col + 1, receiving,   data_style)
-                sheet.write(row, col + 2, consumption, data_style)
-                sheet.write(row, col + 3, closing,     data_style)
+                # =========================
+                # RECEIVING (Incoming Pickings)
+                # =========================
+                incoming_moves = StockMoveLine.search([
+                    ('product_id', '=', prod.id),
+                    ('picking_id.picking_type_code', '=', 'incoming'),
+                    ('picking_id.state', '=', 'done'),
+                    ('picking_id.date_done', '=', prod_date),
+                ])
+                
+                receiving = sum(incoming_moves.mapped('qty_done'))
+
+                # =========================
+                # NORMAL PRODUCTS
+                # =========================
+                if prod != raw_products[-1]:
+                    consumption = sum(prod_lines.mapped('qty'))
+
+                    sheet.write(row, col,     opening,     data_style)
+                    sheet.write(row, col + 1, receiving,   data_style)
+                    sheet.write(row, col + 2, consumption, data_style)
+                    sheet.write(row, col + 3, closing,     data_style)
+
+                # =========================
+                # LAST PRODUCT (FINISHED GOODS)
+                # =========================
+                else:
+                    finished_lines = date_recs.finished_line_ids.filtered(
+                        lambda f: f.mst_id.product_tmpl_id.id == prod.id
+                    )
+
+                    production = sum(finished_lines.mapped('bucket_qty'))
+
+                    # Optional: Dispatch (outgoing)
+                    outgoing_moves = StockMoveLine.search([
+                        ('product_id', '=', prod.id),
+                        ('picking_id.picking_type_code', '=', 'outgoing'),
+                        ('picking_id.state', '=', 'done'),
+                        ('picking_id.date_done', '=', prod_date),
+                    ])
+                    dispatch = sum(outgoing_moves.mapped('qty_done'))
+
+                    sheet.write(row, col,     opening,    data_style)
+                    sheet.write(row, col + 1, production, data_style)
+                    sheet.write(row, col + 2, dispatch,   data_style)
+                    sheet.write(row, col + 3, closing,    data_style)
 
                 col += 4
 

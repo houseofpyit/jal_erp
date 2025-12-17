@@ -8,9 +8,10 @@
     'maintainer': "",
     'website': "",
     'category': 'Tools',
-    'depends': ['base','jal_crm','transaction'],
+    'depends': ['base','jal_crm','transaction','master'],
     'data': [
         'security/user_manager.xml',
+        'security/security_group.xml',
         'security/ir.model.access.csv',
 
         'report/report_purchase_order.xml',

@@ -34,7 +34,7 @@
                             <tr>
                                 <td width="50%" style="padding-left:10px;">
                                     <b><span style="font-size:20px;padding-right:5px;color:#5796c6;">PROFORMA INVOICE : <span style="font-size:20px;color:#5796c6;" t-esc="o.name" /></span></b><br/>
-                                    <b><span style="padding-right:5px;">Proforma Date : </span></b><t t-if="o.date">
+                                    <b><span style="padding-right:5px;">Date : </span></b><t t-if="o.date">
                                         <span t-esc="o.date.strftime('%d/%m/%Y')"/>
                                     </t>
                                 </td>
@@ -283,10 +283,10 @@
                         <table style="width:100%;" >
                             <tr>
                                 <td style="padding-bottom:5px;padding-top:5px;width:50%;">
-                                    <b><span style="padding-bottom:5px;">Delivery and Payment Terms</span></b>
+                                    <b><span style="padding-bottom:5px;">DELIVERY AND PAYMENT TERMS</span></b>
                                 </td>
                                 <td style="padding-bottom:5px;padding-top:5px;width:50%;">
-                                    <b><span style="padding-bottom:5px;">Transport Details</span></b>
+                                    <b><span style="padding-bottom:5px;">TRANSPORT DETAILS</span></b>
                                 </td>
                             </tr>
                         </table>
@@ -444,7 +444,7 @@
                                         <td style="text-align: left; border-right: 1px solid black; padding: 0;padding-left:3px;border-bottom: 1px solid black;border-top: 1px solid black;">
                                             <span t-esc="item.packing_name"></span>
                                             <t t-if="item.name">
-                                                <center><span style="font-weight: bold;"> Loading Description </span></center>
+                                                <center><span style="font-weight: bold;color:#005fa9;"> Loading Description </span></center>
                                                 <span t-esc="o.company_id.convert_text_to_html(item.name)"/>
                                             </t>
                                         </td>
