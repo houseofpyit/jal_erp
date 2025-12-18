@@ -104,9 +104,67 @@ class JalProduction(models.Model):
         self.finished_line_ids = [(5, 0, 0)] + final_lines
 
     def action_complete_btn(self):
-        # self._create_stock_picking_receipts()
+        self._create_stock_picking_receipts()
         self._create_stock_picking_out()
         self.state = 'complete'
+
+    def _create_stock_picking_receipts(self):
+        for line in self.finished_line_ids:
+            if not line.product_id and ((line.extra_qty or 0) > 0 or (line.extra_weight or 0) > 0):
+                raise ValidationError(_("Please select a product for finished lines before proceeding."))
+
+        main_location = self.env['stock.location'].sudo().search([('main_store_location', '=', True)], limit=1)
+        if not main_location:
+            raise ValidationError("Main Store Location not found!")
+
+        src_location = self.env['stock.location'].sudo().search([('usage', '=', 'supplier')], limit=1)
+        if not src_location:
+            raise ValidationError("No Vendor/Partner location found!")
+
+        picking_type = self.env['stock.picking.type'].sudo().search([('code', '=', 'incoming')], limit=1)
+        if not picking_type:
+            raise ValidationError("Incoming Picking Type not found!")
+
+        move_list = []
+
+        for line in self.finished_line_ids:
+            if line.extra_qty > 0 or line.extra_weight > 0:
+                move_vals = {
+                    'name': line.product_id.display_name,
+                    'product_id': line.product_id.id,
+                    'product_uom_qty': line.extra_qty,
+                    'demand_bucket': line.extra_weight,
+                    'done_bucket': line.extra_weight,
+                    'product_uom': line.uom_id.id,
+                    'location_id': src_location.id,
+                    'location_dest_id': main_location.id,
+                    'move_line_ids': [(0, 0, {
+                        'product_id': line.product_id.id,
+                        'qty_done': line.extra_qty,
+                        'done_bucket': line.extra_weight,
+                        'product_uom_id': line.uom_id.id,
+                        'location_id': src_location.id,
+                        'location_dest_id': main_location.id,
+                        'date': fields.Datetime.now(),
+                    })],
+                }
+                move_list.append((0, 0, move_vals))
+        
+        picking = self.env['stock.picking'].sudo().create({
+            'location_id': src_location.id,
+            'location_dest_id': main_location.id,
+            'picking_type_id': picking_type.id,
+            'production_id': self.id,
+            'origin': f"{self.name} - Receipt",
+            'move_ids_without_package': move_list,
+            'scheduled_date': fields.Datetime.now(),
+        })
+
+        picking.action_confirm()
+        picking.action_assign()
+        self.env.context = dict(self.env.context, skip_backorder=True)
+        picking.action_set_quantities_to_reservation()
+        picking.button_validate()
 
     # def _create_stock_picking_receipts(self):
     #     if not self.finished_line_ids:
@@ -329,18 +387,19 @@ class JalProduction(models.Model):
                 if remaining_qty <= 0 and remaining_bucket <= 0:
                     break
 
-        picking = StockPicking.create({
-            'location_id': main_location.id,
-            'location_dest_id': des_location.id,
-            'picking_type_id': picking_type.id,
-            'production_id': self.id,
-            'origin': f"{self.name} - Outgoing",
-            'move_line_ids_without_package': move_list,
-            'scheduled_date': fields.Datetime.now(),
-        })
-        picking.action_confirm()
-        self.env.context = dict(self.env.context, skip_backorder=True)
-        picking.button_validate()
+        if move_list:
+            picking = StockPicking.create({
+                'location_id': main_location.id,
+                'location_dest_id': des_location.id,
+                'picking_type_id': picking_type.id,
+                'production_id': self.id,
+                'origin': f"{self.name} - Outgoing",
+                'move_line_ids_without_package': move_list,
+                'scheduled_date': fields.Datetime.now(),
+            })
+            picking.action_confirm()
+            self.env.context = dict(self.env.context, skip_backorder=True)
+            picking.button_validate()
 
     @api.model
     def create(self, vals):
@@ -401,6 +460,8 @@ class JalFinishedProductionLine(models.Model):
     bucket_qty = fields.Integer(string="No of Drum")
     wastage_qty = fields.Integer(string="Wastage Qty")
     wastage_weight = fields.Float(string="Wastage Weight")
+    extra_qty = fields.Integer(string="Extra Qty")
+    extra_weight = fields.Float(string="Extra Weight")
     grade_id = fields.Many2one('product.attribute.value',string="Grade",domain="[('attribute_id.attribute_type','=','grade')]")
     mesh_id = fields.Many2one('product.attribute.value',string="Mesh",domain="[('attribute_id.attribute_type','=','mesh')]")
     bucket_id = fields.Many2one('product.attribute.value',string="Bucket",domain="[('attribute_id.attribute_type','=','bucket')]")

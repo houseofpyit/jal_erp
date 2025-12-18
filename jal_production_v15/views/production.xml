@@ -68,7 +68,9 @@
                                     <field name="bucket_qty" sum="No of Drum"/>
                                     <field name="qty" sum="Weight"/>
                                     <field name="wastage_qty" sum="Wastage Qty"/>
-                                    <field name="wastage_weight" sum="Wastage Weight"/>    
+                                    <field name="wastage_weight" sum="Wastage Weight"/>  
+                                    <field name="extra_qty" sum="Extra Qty"/>
+                                    <field name="extra_weight" sum="Extra Weight"/>    
                                     <field name="uom_id" readonly="1" force_save="1"/>
                                 </tree>
                             </field>

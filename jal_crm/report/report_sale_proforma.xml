@@ -390,7 +390,7 @@
                                         <th style="width:15%;border-bottom: 1px solid black;border-right: 1px solid black;font-size:11px;text-align:center;background-color:#005fa9;color:white;">PRODUCT</th>
                                     </t>
                                     <t t-else="o.display_name_on_pi == 'shipping_name'">
-                                        <th style="width:15%;border-bottom: 1px solid black;border-right: 1px solid black;font-size:11px;text-align:center;background-color:#005fa9;color:white;">SHIPPING</th>
+                                        <th style="width:15%;border-bottom: 1px solid black;border-right: 1px solid black;font-size:11px;text-align:center;background-color:#005fa9;color:white;">PRODUCT</th>
                                     </t>
                                 <th style="width:30%;border-bottom: 1px solid black;border-right: 1px solid black;font-size:11px;text-align:center;background-color:#005fa9;color:white;">PACKING DESCRIPTION</th>
                                 <th style="width:10%;border-bottom: 1px solid black;border-right: 1px solid black;font-size:11px;text-align:center;background-color:#005fa9;color:white;">PACKING UNIT</th>
