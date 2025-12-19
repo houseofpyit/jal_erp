@@ -332,6 +332,7 @@
     <menuitem
         id="product_transformation_menu_main_menu"
         name="Product Transformation"
+        web_icon="jal_production_v15,static/description/transformation.png"
         groups="jal_production_v15.res_group_product_transformation_user,jal_production_v15.res_group_product_transformation_admin"
         sequence="12"/>
 
