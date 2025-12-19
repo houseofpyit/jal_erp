@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hop_op_stock_mst_form_view_inherit_transaction" model="ir.ui.view">
+        <field name="name">hop.op.stock.mst.form.view.inherit.transaction</field>
+        <field name="model">hop.op.stock.mst</field>
+        <field name="inherit_id" ref="master.op_stock_mst_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/header" position="inside">
+                <button string="Complete" name="action_complete_btn" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'=', 'complete')]}" />
+                <field name="state" widget="statusbar"/>
+            </xpath>
+            <xpath expr="//tree/field[@name='pcs']" position="after">
+                <field name="bucket" width="150px" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

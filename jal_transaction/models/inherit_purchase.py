@@ -5,6 +5,47 @@ from num2words import num2words
 class inheritedPurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
+    purbill_status = fields.Selection([
+        ('no_bill', 'Nothing to Bill'),
+        ('waiting_bill', 'Waiting Bills'),
+        ('fully_bill', 'Fully Billed'),
+    ], string='Billing Status', copy=False, default='no_bill')
+    is_purbill = fields.Boolean("Is Purchase Bill",compute='compute_is_purbill')
+
+    @api.depends('picking_ids','picking_ids.purchase_bill_count','order_line.product_qty')
+    def compute_is_purbill(self):
+        PurchaseBillLine = self.env['hop.purchasebill.line']
+        
+        for rec in self:
+            if not rec.picking_ids:
+                rec.purbill_status = 'no_bill'
+                rec.is_purbill = False
+                continue
+
+            if any(p.purchase_bill_count == 0 for p in rec.picking_ids):
+                rec.purbill_status = 'waiting_bill'
+                rec.is_purbill = True
+                continue
+
+            fully_billed = True
+
+            for line in rec.order_line:
+                billed_qty = sum(PurchaseBillLine.search([('order_id', '=', rec.id),('product_id', '=', line.product_id.id)]).mapped('pcs'))
+
+                ordered_qty = sum(rec.order_line.filtered(lambda l: l.product_id == line.product_id).mapped('product_qty'))
+
+                if billed_qty != ordered_qty:
+                    fully_billed = False
+                    break
+
+            if fully_billed:
+                rec.purbill_status = 'fully_bill'
+            else:
+                rec.purbill_status = 'waiting_bill'
+
+            rec.is_purbill = True
+
+
     def action_bill(self):
         res = super(inheritedPurchaseOrder, self).action_bill()
         for line in self.order_line:

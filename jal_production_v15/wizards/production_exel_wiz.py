@@ -248,13 +248,15 @@ class Production1ReportExelWiz(models.TransientModel):
                 # =========================
                 # RECEIVING (Incoming Pickings)
                 # =========================
+                start_dt = prod_date.strftime('%Y-%m-%d 00:00:00')
+                end_dt = prod_date.strftime('%Y-%m-%d 23:59:59')
                 incoming_moves = StockMoveLine.search([
                     ('product_id', '=', prod.id),
                     ('picking_id.picking_type_code', '=', 'incoming'),
                     ('picking_id.state', '=', 'done'),
-                    ('picking_id.date_done', '=', prod_date),
+                    ('picking_id.date_done', '>=', start_dt),
+                    ('picking_id.date_done', '<=', end_dt),
                 ])
-                
                 receiving = sum(incoming_moves.mapped('qty_done'))
 
                 # =========================
@@ -279,11 +281,15 @@ class Production1ReportExelWiz(models.TransientModel):
                     production = sum(finished_lines.mapped('bucket_qty'))
 
                     # Optional: Dispatch (outgoing)
+                    start_dt = prod_date.strftime('%Y-%m-%d 00:00:00')
+                    end_dt = prod_date.strftime('%Y-%m-%d 23:59:59')
                     outgoing_moves = StockMoveLine.search([
                         ('product_id', '=', prod.id),
                         ('picking_id.picking_type_code', '=', 'outgoing'),
                         ('picking_id.state', '=', 'done'),
                         ('picking_id.date_done', '=', prod_date),
+                        ('picking_id.date_done', '>=', start_dt),
+                        ('picking_id.date_done', '<=', end_dt),
                     ])
                     dispatch = sum(outgoing_moves.mapped('qty_done'))
 
