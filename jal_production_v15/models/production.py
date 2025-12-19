@@ -150,21 +150,22 @@ class JalProduction(models.Model):
                 }
                 move_list.append((0, 0, move_vals))
         
-        picking = self.env['stock.picking'].sudo().create({
-            'location_id': src_location.id,
-            'location_dest_id': main_location.id,
-            'picking_type_id': picking_type.id,
-            'production_id': self.id,
-            'origin': f"{self.name} - Receipt",
-            'move_ids_without_package': move_list,
-            'scheduled_date': fields.Datetime.now(),
-        })
+        if move_list:
+            picking = self.env['stock.picking'].sudo().create({
+                'location_id': src_location.id,
+                'location_dest_id': main_location.id,
+                'picking_type_id': picking_type.id,
+                'production_id': self.id,
+                'origin': f"{self.name} - Receipt",
+                'move_ids_without_package': move_list,
+                'scheduled_date': fields.Datetime.now(),
+            })
 
-        picking.action_confirm()
-        picking.action_assign()
-        self.env.context = dict(self.env.context, skip_backorder=True)
-        picking.action_set_quantities_to_reservation()
-        picking.button_validate()
+            picking.action_confirm()
+            picking.action_assign()
+            self.env.context = dict(self.env.context, skip_backorder=True)
+            picking.action_set_quantities_to_reservation()
+            picking.button_validate()
 
     # def _create_stock_picking_receipts(self):
     #     if not self.finished_line_ids:
