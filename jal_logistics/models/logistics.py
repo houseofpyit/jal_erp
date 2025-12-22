@@ -37,6 +37,7 @@ class JalLogistics(models.Model):
     vessel_date = fields.Date(string="Vessel cut-off date",tracking=True)
     container_stuffing_date = fields.Date(string="Container stuffing date",tracking=True)
     port_id = fields.Many2one('sale.port.mst',string="Port of Loading",tracking=True)
+    destination_free_days = fields.Float(string='Destination Free Days')
     loading_type = fields.Selection([('Yes', 'Yes'),('No', 'No')], string='Loading Inspection',tracking=True)
     inspection_id = fields.Many2one('inspection.mst',string="Inspection Company",tracking=True)
     inspection_type = fields.Selection([('Yes', 'Yes'),('No', 'No')], string='Inspection Scheduled',tracking=True)
@@ -65,6 +66,8 @@ class JalLogistics(models.Model):
     attachment_packing_ids = fields.Many2many('ir.attachment','attachment_packing_id',string="Packing Photo")
     attachment_container_ids = fields.Many2many('ir.attachment','attachment_container_id',string="Container Photo")
     attachment_lr_ids = fields.Many2many('ir.attachment','attachment_lr_id',string="LR Copy of the Container")
+    product_expiry = fields.Selection(related='sale_id.product_expiry', string="Product Expiry")
+    batch_number = fields.Char(string='Batch number')
 
     dispatch_line_ids = fields.One2many('logistics.dispatch.line','mst_id',string="Line Dispatch")
 
@@ -202,9 +205,17 @@ class JalLogistics(models.Model):
     management_remarks = fields.Char(string="Remarks")
     is_finish_booking = fields.Boolean(string="Is Finish Booking")
 
-    container_management_line_ids = fields.One2many('logistics.container.management.line','mst_id',string="Line Container Management")
+    container_management_line_ids = fields.One2many('logistics.container.management.line','mst_id',string="Line Container Management" )  
 
     delivery_count = fields.Integer(string='Delivery Orders', compute="compute_logistics_delivery_count")
+
+    @api.onchange('container_management_line_ids','container_management_line_ids.check_eta')
+    def _onchange_container_management_line_ids(self):
+        for rec in self:
+            if rec.container_management_line_ids:
+                eta_date_line = rec.container_management_line_ids[-1]
+                if eta_date_line.check_eta:
+                    rec.eta = eta_date_line.check_eta
 
     @api.depends('sale_id','state')
     def compute_logistics_delivery_count(self):
@@ -373,7 +384,9 @@ class LogisticsDispatchLine(models.Model):
     @api.onchange('line_ids','line_ids.qty')
     def _onchange_line_ids(self):
         self.total_drums = sum(self.line_ids.mapped('qty'))
-
+        if self.mst_id.sale_id.palletized_type == "Yes":
+            self.palletized_type = "yes"
+    
 class DispatchPackingLine(models.Model):
     _name = 'dispatch.packing.line'
     _description = 'Dispatch Packing Line'

@@ -18,7 +18,7 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//field[@name='state']" position="attributes">
-                <attribute name="statusbar_visible">draft,create_pi,sale</attribute>
+                <attribute name="statusbar_visible">draft,create_pi,sale,close_order</attribute>
             </xpath>
             <xpath expr="//button[@name='action_cancel']" position="before">
                 <button name="action_create_pi" string="Create PI" class="btn-primary" type="object" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
@@ -222,7 +222,58 @@
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
         <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
         <field name="context">{'default_business_type':'international'}</field>
-        <field name="domain">[('business_type', '=', 'international')]</field>
+        <field name="domain">[('business_type', '=', 'international'),('state','=','draft')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a new quotation, the first step of a new sale!
+            </p><p>
+            Once the quotation is confirmed by the customer, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_create_pi_with_international" model="ir.actions.act_window">
+        <field name="name">Create PI</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_id" ref="jal_crm.view_quotation_tree_international"/>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="context">{'default_business_type':'international'}</field>
+        <field name="domain">[('state','=','create_pi')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a new quotation, the first step of a new sale!
+            </p><p>
+            Once the quotation is confirmed by the customer, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_confirm_pi_with_international" model="ir.actions.act_window">
+        <field name="name">Confirm PI</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_id" ref="jal_crm.view_quotation_tree_international"/>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="context">{'default_business_type':'international'}</field>
+        <field name="domain">[('state','=','sale')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a new quotation, the first step of a new sale!
+            </p><p>
+            Once the quotation is confirmed by the customer, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
+            </p>
+        </field>
+    </record>
+
+     <record id="action_close_order_with_international" model="ir.actions.act_window">
+        <field name="name">Close Order</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_id" ref="jal_crm.view_quotation_tree_international"/>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="context">{'default_business_type':'international'}</field>
+        <field name="domain">[('state','=','close_order')]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
             Create a new quotation, the first step of a new sale!

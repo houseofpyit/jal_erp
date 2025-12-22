@@ -350,6 +350,36 @@
         action="action_constipation_material"
         sequence="3"/>
 
+    <menuitem
+        id="jal_product_packing_menu"
+        name="Packing Product"
+        parent="stock.menu_stock_root"
+        action="jal_packing_product_template_action"/>
+
+    <menuitem
+        id="jal_raw_material_menu"
+        name="Raw Material"
+        parent="stock.menu_stock_root"
+        action="jal_raw_material_product_template_action"/>
+
+    <menuitem
+        id="jal_finish_products_menu"
+        name="Finish Products"
+        parent="stock.menu_stock_root"
+        action="jal_finish_product_template_action"/>
+
+    <menuitem
+        id="jal_spares_products_menu"
+        name="Spares"
+        parent="stock.menu_stock_root"
+        action="jal_spares_product_template_action"/>
+
+    <menuitem
+        id="jal_caustics_products_menu"
+        name="Caustics Products"
+        parent="stock.menu_stock_root"
+        action="jal_caustics_product_template_action"/>
+
             
 </odoo>
 

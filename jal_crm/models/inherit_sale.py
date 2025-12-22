@@ -28,7 +28,8 @@ class inheritedSaleOrder(models.Model):
    state = fields.Selection(selection_add=[ ('draft','Quotation'),
                                             ('quotation_confirm','Quotation confirm'),
                                             ('create_pi','Create PI'),
-                                            ('sale', 'Confirm PI')],tracking=True)
+                                            ('sale', 'Confirm PI'),
+                                            ('close_order','Close Order')],tracking=True)
    po_no = fields.Char(string="PO",tracking=True)
    po_date = fields.Date(string="PO Date",tracking=True)
    reference = fields.Char(string="Reference",tracking=True)

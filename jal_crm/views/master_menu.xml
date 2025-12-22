@@ -28,7 +28,7 @@
             name="CRM"
             action="crm_lead_action_pipeline_international"
             parent="jal_crm.international_main_menu"
-            sequence="2"/>
+            sequence="5"/>
 
         <menuitem
             id="sale_international_main"
@@ -38,10 +38,32 @@
             sequence="1"/>
 
         <menuitem
+            id="create_pi_international_main"
+            name="Create PI"
+            action="jal_crm.action_create_pi_with_international"
+            parent="jal_crm.international_main_menu"
+            sequence="2"/>
+
+        <menuitem
+            id="confirm_pi_international_main"
+            name="Confirm PI"
+            action="jal_crm.action_confirm_pi_with_international"
+            parent="jal_crm.international_main_menu"
+            sequence="3"/>
+
+          <menuitem
+            id="close_order_international_main"
+            name="Close Order"
+            action="jal_crm.action_close_order_with_international"
+            parent="jal_crm.international_main_menu"
+            sequence="4"/>
+
+
+        <menuitem
             id="stock_international_main"
             name="Product"
             parent="jal_crm.international_main_menu"
-            sequence="3"/>
+            sequence="6"/>
 
             <menuitem
                 id="product_international_main"
@@ -62,13 +84,13 @@
             name="Contacts"
             action="contacts.action_contacts"
             parent="jal_crm.international_main_menu"
-            sequence="4"/>
+            sequence="7"/>
 
         <menuitem
             id="international_configuration_main_menu"
             name="Configuration"
             parent="jal_crm.international_main_menu"
-            sequence="5"/>
+            sequence="8"/>
 
             <menuitem
                 id="international_configuration_menu"
@@ -133,7 +155,7 @@
             id="international_packing_list_main_menu"
             name="Packing Master"
             parent="jal_crm.international_main_menu"
-            sequence="6"
+            sequence="10"
             active="False"/>
 
             <menuitem

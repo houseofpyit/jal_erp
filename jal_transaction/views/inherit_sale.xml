@@ -101,4 +101,15 @@
         </field>
     </record>
 
+    <record id="sale_order_tree_view_inherit_jal" model="ir.ui.view">
+        <field name="name">sale.order.tree.view.inherit.jal</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="jal_crm.view_quotation_tree_international"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tot_pcs']" position="after">
+                <field name="total_mt_amt" />
+            </xpath>
+        </field>
+    </record>
+
 </odoo>                            

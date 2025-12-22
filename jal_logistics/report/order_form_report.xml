@@ -171,9 +171,9 @@
                         <table style="width:100%;" >
                             <tr>
                                 <td width="20%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
-                                    <span>Loading Inspection :</span><br/>
                                     <span>Container stuffing date :</span><br/>
                                     <span>Shipping Name : </span><br/>
+                                    <span>Loading Inspection :</span><br/>
                                     <t t-if="o.loading_type == 'Yes'">
                                         <span>Inspection Company :</span><br/>
                                         <span>Inspection Scheduled : </span><br/>
@@ -183,11 +183,11 @@
                                     </t>
                                 </td>
                                 <td width="80%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
-                                    <span t-esc="o.loading_type" /><br/>
                                     <t t-if="o.container_stuffing_date">
                                         <span t-esc="o.container_stuffing_date.strftime('%d/%m/%Y')"/>
                                     </t><br/>
                                     <span style="padding-top:0px;" t-esc="o.shipping_id.name" /><br/>
+                                    <span t-esc="o.loading_type" /><br/>
                                     <t t-if="o.loading_type == 'Yes'">
                                         <span style="padding-top:0px;" t-esc="o.inspection_id.name" /><br/>
                                         <span style="padding-top:0px;" t-esc="o.inspection_type" /><br/>
@@ -208,7 +208,9 @@
                                     <span>Dead Fish Label : </span><br/>
                                     <span>Remark :</span><br/>
                                     <span>UN Printing Label : </span><br/>
-                                    <span>Remark :</span>
+                                    <span>Remark :</span><br/>
+                                    <span>Product Expiry :</span><br/>
+                                    <span>Batch number :</span>
                                 </td>
                                 <td width="80%" style="padding-top:5px;padding-bottom:5px;border-bottom: 1px solid black;">
                                     <span style="padding-top:0px;" t-esc="o.haz_type" /><br/>
@@ -216,7 +218,9 @@
                                     <span t-esc="o.haz_type"/><br/>
                                     <span t-esc="o.label_remark1_id.name" /><br/>
                                     <span t-esc="o.dead_fish_type" /><br/>
-                                    <span t-esc="o.label_remark2_id.name" />
+                                    <span t-esc="o.label_remark2_id.name" /><br/>
+                                    <span t-esc="o.product_expiry"/><br/>
+                                    <span t-esc="o.batch_number"/>
                                 </td>
                             </tr>
                         </table>
@@ -458,22 +462,22 @@
                                                         </td>
                                                     </tr>
                                                 </t>
-                                                <tr>
+                                                <!-- <tr>
                                                     <td width="50%">
                                                         <span>Product Expiry :</span>
                                                     </td>
                                                     <td width="50%">
                                                         <span t-esc="line.product_expiry"/>
                                                     </td>
-                                                </tr>
-                                                <tr>
+                                                </tr> -->
+                                                <!-- <tr>
                                                     <td width="50%">
                                                         <span>Batch number :</span>
                                                     </td>
                                                     <td width="50%">
                                                         <span t-esc="line.batch_number"/>
                                                     </td>
-                                                </tr>
+                                                </tr> -->
                                             </table>
                                         </td>
                                     </tr>

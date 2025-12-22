@@ -497,6 +497,11 @@
                         <table style="width:100%; border-collapse:collapse;">
                             <tr>
                                 <td style="width:65%; vertical-align:top;">
+                                    <span style="padding-right:3px;"><b>Product Expiry:</b></span>
+                                    <t t-if="o.product_expiry">
+                                        <span t-esc="dict(o.fields_get(allfields=['product_expiry'])['product_expiry']['selection'])[o.product_expiry]"/>
+                                    </t>
+                                    <br/>
                                     <span style="padding-right:3px;"><b>Palletized Cargo :</b></span>
                                     <t t-if="o.palletized_type">
                                         <span t-esc="dict(o.fields_get(allfields=['palletized_type'])['palletized_type']['selection'])[o.palletized_type]"/>
