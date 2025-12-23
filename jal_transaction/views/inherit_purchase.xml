@@ -10,6 +10,10 @@
                 <field name="cost_id" width="150px"  options="{'no_open': True, 'no_create': True}"/>
                 <field name="cost_budget" width="150px" readonly="1" force_save="1" />
             </xpath>
+            <xpath expr="//field[@name='effective_date']" position="after">
+                <field name="purbill_status" invisible="1"/>
+                <field name="is_purbill" invisible="1"/>
+            </xpath>
         </field>
     </record>
 
@@ -23,7 +27,6 @@
             </xpath>
             <xpath expr="//field[@name='state']" position="after">
                 <field name="purbill_status" optional="show" widget="badge" decoration-success="purbill_status == 'fully_bill'" decoration-info="purbill_status == 'waiting_bill'"/>
-                <field name="is_purbill" invisible="1"/>
             </xpath>
         </field>
     </record>

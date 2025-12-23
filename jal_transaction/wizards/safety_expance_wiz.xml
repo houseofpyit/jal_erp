@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="safety_expance_wiz_view" model="ir.ui.view">
+        <field name="name">safety.expance.wiz.form.view</field>
+        <field name="model">safety.expance.wiz</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <group>
+                    <group>
+                        <field name="from_date" required="1"/>
+                        <field name="product_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                    </group>
+                    <group>
+                        <field name="to_date" required="1"/>
+                        <field name="cost_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Generate" name="generate_xls_report" type="object" class="oe_highlight" />
+                    <button string="Cancel" class="btn btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_safety_expance_wiz" model="ir.actions.act_window">
+        <field name="name">Safety Expance Exel</field>
+        <field name="res_model">safety.expance.wiz</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

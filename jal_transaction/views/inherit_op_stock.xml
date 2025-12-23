@@ -13,6 +13,9 @@
             <xpath expr="//tree/field[@name='pcs']" position="after">
                 <field name="bucket" width="150px" />
             </xpath>
+            <xpath expr="//tree/field[@name='pcs']" position="attributes">
+                <attribute name="string">Quantity</attribute>
+            </xpath>
         </field>
     </record>
 

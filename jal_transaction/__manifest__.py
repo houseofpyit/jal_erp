@@ -17,6 +17,8 @@
         'report/report_purchase_order.xml',
         'report/paper_formate.xml',
 
+        'wizards/safety_expance_wiz.xml',
+
         'views/inherit_sale.xml',
         'views/inherit_salebill.xml',
         'views/inherit_salebillreturn.xml',

@@ -40,7 +40,7 @@ class inheritedSaleOrderLine(models.Model):
     )
     is_des = fields.Boolean(string="Has Description", compute="_compute_packing_name", store=True)
 
-    @api.onchange('grade_id','mesh_id','product_tmpl_id')
+    @api.onchange('grade_id','mesh_id','product_tmpl_id','lid_id')
     def _onchange_grade_id(self):
         # if not (self.grade_id and self.mesh_id and self.lid_id and self.product_tmpl_id):
         #     self.product_id = False

@@ -69,4 +69,4 @@ class inheritedOpStockMst(models.Model):
 class inheritedOpStockMstLine(models.Model):
    _inherit = "hop.op.stock.line"
 
-   bucket = fields.Float('Bucket')
+   bucket = fields.Float('Packing Unit')

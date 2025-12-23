@@ -21,9 +21,13 @@
                 <attribute name="statusbar_visible">draft,create_pi,sale</attribute>
             </xpath>
             <xpath expr="//button[@name='action_cancel']" position="before">
-                <button name="action_create_pi" string="Create PI" class="btn-primary" type="object" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                <button name="action_create_pi" string="Create" class="btn-primary" type="object" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
                 <button name="action_confirm" id="action_confirm" data-hotkey="v" string="Confirm PI" class="btn-primary" type="object" attrs="{'invisible': [('state', '!=', 'create_pi')]}"/>
                 <button name="create_purchase_requisite" string="Send Purchase Request" class="btn-primary" type="object" attrs="{'invisible': ['|',('state', '!=', 'sale'),('purchase_req_count', '!=', 0)]}"/>
+
+                <button name="action_acc_aprove" string="Account Approve" type="object" class="btn-primary" attrs="{ 'invisible': [ '|', ('state', '!=', 'create_pi'), ('acc_user_id', '!=', False)]}"/>
+                <button name="action_dis_aprove" string="Dispatch Approve" type="object" class="btn-primary" attrs="{ 'invisible': [ '|', ('acc_user_id', '=', False), ('dis_user_id', '!=', False)]}"/>
+                <button name="action_team_aprove" string="Sales Team Approve" type="object" class="btn-primary" attrs="{ 'invisible': [ '|', ('dis_user_id', '=', False), ('team_user_id', '!=', False)]}"/>
             </xpath>
             <xpath expr="//button[@name='action_confirm'][1]" position="attributes">
                 <attribute name="invisible">1</attribute>
@@ -91,6 +95,44 @@
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="buyer_notify_id"  options="{'no_quick_create': True}" attrs="{'readonly': [('state', '=', 'sale')]}"/>
+            </xpath>
+            <xpath expr="//page[@name='order_lines']" position="after">
+                <page string="Approved Details" name="approved_details">
+                    <group string="Account Approved">
+                        <group>
+                            <field name="acc_user_id" readonly="1" force_save="1"/>
+                        </group>
+                        <group>
+                            <field name="acc_date" readonly="1" force_save="1"/>
+                        </group>
+                        <group>
+                            <field name="acc_comment" readonly="1" force_save="1"/>
+                        </group>
+                    </group>
+                    <group string="Dispatch Approved">
+                        <group>
+                            <field name="dis_user_id" readonly="1" force_save="1"/>
+                        </group>
+                        <group>
+                            <field name="dis_date" readonly="1" force_save="1"/>
+                        </group>
+                        <group>
+                            <field name="dis_comment" readonly="1" force_save="1"/>
+                        </group>
+                    </group>
+                    <group string="Sales Team Approved">
+                        <group>
+                            <field name="team_user_id" readonly="1" force_save="1"/>
+                        </group>
+                        <group>
+                            <field name="team_date" readonly="1" force_save="1"/>
+                        </group>
+                        <group>
+                            <field name="team_comment" readonly="1" force_save="1"/>
+                        </group>
+                    </group>
+
+                </page>
             </xpath>
             <xpath expr="//field[@name='payment_term_id']" position="after">
                 <field name="terms_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', '=', 'sale')]}"/>

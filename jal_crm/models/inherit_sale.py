@@ -57,6 +57,18 @@ class inheritedSaleOrder(models.Model):
       ('5', '5 Years'),
    ], string="Product Expiry")
 
+   acc_user_id = fields.Many2one('res.users',string="Account User",tracking=True)
+   dis_user_id = fields.Many2one('res.users',string="Dispatch User",tracking=True)
+   team_user_id = fields.Many2one('res.users',string="Saleteam User",tracking=True)
+
+   acc_date = fields.Datetime(string="Date",tracking=True)
+   dis_date = fields.Datetime(string="Date",tracking=True)
+   team_date = fields.Datetime(string="Date",tracking=True)
+
+   acc_comment = fields.Text(string="Comment",tracking=True)
+   dis_comment = fields.Text(string="Comment",tracking=True)
+   team_comment = fields.Text(string="Comment",tracking=True)
+
    # @api.onchange('team_id')
    # def _onchange_team_id(self):
    #    self.business_type = self.team_id.business_type
@@ -140,7 +152,37 @@ class inheritedSaleOrder(models.Model):
          'res_id': pur_rec.id,
          'context': {'create': False}
          }
-   
+
+   def action_acc_aprove(self):
+      return {
+         'type': 'ir.actions.act_window',
+         'name': 'Account Approve',
+         'view_mode': 'form',
+         'res_model': 'sale.aprove.wiz',
+         'target': 'new',
+         'context': {'default_aprove_type': 'account'},
+         }
+
+   def action_dis_aprove(self):
+      return {
+         'type': 'ir.actions.act_window',
+         'name': 'Dispatch Approve',
+         'view_mode': 'form',
+         'res_model': 'sale.aprove.wiz',
+         'target': 'new',
+         'context': {'default_aprove_type': 'dispatch'},
+         }
+
+   def action_team_aprove(self):
+      return {
+         'type': 'ir.actions.act_window',
+         'name': 'Saleteam Approve',
+         'view_mode': 'form',
+         'res_model': 'sale.aprove.wiz',
+         'target': 'new',
+         'context': {'default_aprove_type': 'saleteam'},
+         }
+
    def action_quotation_confirm(self):
       self.state = 'quotation_confirm'
 

@@ -19,3 +19,5 @@ access_scoops_mst,scoops_mst,model_scoops_mst,,1,1,1,1
 access_outer_cartoons_mst,outer_cartoons_mst,model_outer_cartoons_mst,,1,1,1,1
 access_box_color_mst,box_color_mst,model_box_color_mst,,1,1,1,1
 access_name_mst,name_mst,model_name_mst,,1,1,1,1
+
+access_sale_aprove_wiz,sale_aprove_wiz,model_sale_aprove_wiz,,1,1,1,1

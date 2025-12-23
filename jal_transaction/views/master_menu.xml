@@ -43,4 +43,11 @@
         groups="jal_transaction.res_group_account_master"
         sequence="3" />
 
+    <menuitem 
+        id="safety_expance_wizt_menu" 
+        name="Safety Expance Exel" 
+        parent="master.account_mst_menu" 
+        action="action_safety_expance_wiz"
+        sequence="10" />
+
 </odoo>

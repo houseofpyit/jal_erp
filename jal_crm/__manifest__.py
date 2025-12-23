@@ -16,6 +16,8 @@
         'security/record_rule.xml',
         'security/security_group.xml',
 
+        'wizards/sale_aprove_wiz.xml',
+
         'report/paper_formate.xml',
         'report/report_sale_domestic.xml',
         'report/report_sale_international.xml',
