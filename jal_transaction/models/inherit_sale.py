@@ -4,6 +4,19 @@ from odoo.exceptions import UserError, ValidationError
 class inheritSaleOrder(models.Model):
     _inherit = "sale.order"
 
+    total_mt_amt = fields.Float(string="Total MT Amount")
+
+    @api.depends('order_line')
+    def _final_amt_calculate(self):
+        res = super(inheritSaleOrder, self)._final_amt_calculate()
+        for i in self:
+            total_mt_amt = 0
+            for line in i.order_line:
+                if line.product_uom.factor:
+                    total_mt_amt += (line.product_uom_qty / line.product_uom.factor) / 1000
+            i.total_mt_amt = total_mt_amt
+        return res
+
     @api.onchange('freight','net_amt','insurance','order_line')
     def _onchange_freight(self):
         for rec in self:

@@ -33,6 +33,7 @@ class EPCGLiscence(models.Model):
 
     name = fields.Char(string='Liscence Number',tracking=True)
     date = fields.Date(string='Date',default=fields.Date.context_today,tracking=True)
+    expiry_date = fields.Date(string='Expiry Date',tracking=True)
 
     @api.model
     def create(self, vals):
@@ -54,6 +55,7 @@ class AdvancedLiscence(models.Model):
 
     name = fields.Char(string='Liscence Number',tracking=True)
     date = fields.Date(string='Date',default=fields.Date.context_today,tracking=True)
+    expiry_date = fields.Date(string='Expiry Date',tracking=True)
 
 class PalletSizeMst(models.Model):
     _name = 'pallet.size.mst'
