@@ -65,7 +65,7 @@
                                     <field name="vessel_date"  attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                     <field name="container_stuffing_date"  attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                     <field name="port_id" options="{'no_quick_create': True}" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
-                                    <field name="destination_free_days"/>
+                                    <field name="destination_free_days" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                 </group>
                                 
                                 <group string="Planning Details">
@@ -523,7 +523,7 @@
                                 <field name="vessel_date"  attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
                                 <field name="container_stuffing_date"  attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
                                 <field name="port_id" options="{'no_quick_create': True}" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
-                                <field name="destination_free_days"/>
+                                <field name="destination_free_days" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
                             </group>
                             
                             <group string="Planning Details">

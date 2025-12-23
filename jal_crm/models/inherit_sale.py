@@ -58,17 +58,13 @@ class inheritedSaleOrder(models.Model):
       ('5', '5 Years'),
    ], string="Product Expiry")
 
-   acc_user_id = fields.Many2one('res.users',string="Account User",tracking=True)
-   dis_user_id = fields.Many2one('res.users',string="Dispatch User",tracking=True)
-   team_user_id = fields.Many2one('res.users',string="Saleteam User",tracking=True)
+   is_acc_approve = fields.Boolean(string="Is Account Approve",tracking=True)
+   is_dis_approve = fields.Boolean(string="Is Dispatch Approve",tracking=True)
+   is_team_approve = fields.Boolean(string="Is Saleteam Approve",tracking=True)
 
-   acc_date = fields.Datetime(string="Date",tracking=True)
-   dis_date = fields.Datetime(string="Date",tracking=True)
-   team_date = fields.Datetime(string="Date",tracking=True)
-
-   acc_comment = fields.Text(string="Comment",tracking=True)
-   dis_comment = fields.Text(string="Comment",tracking=True)
-   team_comment = fields.Text(string="Comment",tracking=True)
+   is_acc_approve_pi = fields.Boolean(string="Is Account Approve PI",tracking=True)
+   is_team_approve_pi = fields.Boolean(string="Is Saleteam Approve PI",tracking=True)
+   sale_approve_ids = fields.One2many('sale.approve.line','mst_id',string="Sale Approve Line")
 
    # @api.onchange('team_id')
    # def _onchange_team_id(self):
@@ -183,6 +179,9 @@ class inheritedSaleOrder(models.Model):
          'target': 'new',
          'context': {'default_aprove_type': 'saleteam'},
          }
+   
+   def action_close_order(self):
+      self.state = 'close_order'
 
    def action_quotation_confirm(self):
       self.state = 'quotation_confirm'
@@ -376,3 +375,13 @@ class inheritedSaleOrderLine(models.Model):
 
    #       rec.packing_name = desc or ""
    #       rec.is_des = bool(desc)
+class SaleApproveLine(models.Model):
+   _name = "sale.approve.line"
+
+   mst_id = fields.Many2one('sale.order',string="Sale")
+
+   aprove_type = fields.Selection([("account", "Account"), ("dispatch", "Dispatch"), ("saleteam", "Sale Team")],string="Approve Type")
+   user_id = fields.Many2one('res.users',string="User")
+   date = fields.Datetime(string="Date")
+   comment = fields.Text(string="Comment")
+

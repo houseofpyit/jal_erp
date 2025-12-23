@@ -13,18 +13,25 @@ class SaleAproveWiz(models.TransientModel):
         active_model = self.env.context.get('active_model')
         active_id = self.env.context.get('active_id')
         sale_order = self.env[active_model].browse(active_id)
+        line_list = []
         if sale_order:
-            if self.aprove_type == 'account':
-                sale_order.acc_user_id = self.env.user.id
-                sale_order.acc_date = fields.Datetime.now()
-                sale_order.acc_comment = self.name
-
-            if self.aprove_type == 'dispatch':
-                sale_order.dis_user_id = self.env.user.id
-                sale_order.dis_date = fields.Datetime.now()
-                sale_order.dis_comment = self.name
+            line_list.append((0,0,{
+                'user_id': self.env.user.id,
+                'date':fields.Datetime.now(),
+                'comment':self.name,
+                'aprove_type':self.aprove_type,
+                }))
             
+            sale_order.sale_approve_ids = line_list
+            if self.aprove_type == 'account':
+                if sale_order.is_acc_approve:
+                    sale_order.is_acc_approve_pi = True
+                else:
+                    sale_order.is_acc_approve = True
+            if self.aprove_type == 'dispatch':
+                sale_order.is_dis_approve = True
             if self.aprove_type == 'saleteam':
-                sale_order.team_user_id = self.env.user.id
-                sale_order.team_date = fields.Datetime.now()
-                sale_order.team_comment = self.name
+                if sale_order.is_team_approve:
+                    sale_order.is_team_approve_pi = True
+                else:
+                    sale_order.is_team_approve = True

@@ -8,7 +8,7 @@
     'maintainer': "",
     'website': "",
     'category': 'Tools',
-    'depends': ['base','jal_crm','transaction','master'],
+    'depends': ['base','jal_crm','transaction','master','hop_account'],
     'data': [
         'security/user_manager.xml',
         'security/security_group.xml',
@@ -18,6 +18,7 @@
         'report/paper_formate.xml',
 
         'wizards/safety_expance_wiz.xml',
+        'wizards/sale_advance_receipt_wizard.xml',
 
         'views/inherit_sale.xml',
         'views/inherit_salebill.xml',
@@ -30,6 +31,7 @@
         'views/inherit_purchase.xml',
         'views/inherit_crm.xml',
         'views/inherit_op_stock.xml',
+        'views/inherit_hop_receipt.xml',
         'views/master_menu.xml',
 
     ],

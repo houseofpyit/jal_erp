@@ -44,6 +44,15 @@ class inheritSaleOrder(models.Model):
         res.name = 'New'
         res.order_no = None
         return res
+    
+    def action_advance_receipt(self):
+        return {
+            'name': 'Advance Receipt',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'sale.advance.receipt.wiz',
+            'target':'new',
+        }
 
 class inheritSaleOrderLine(models.Model):
     _inherit = "sale.order.line"

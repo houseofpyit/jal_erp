@@ -258,7 +258,7 @@ class QualityGradeLine(models.Model):
     mesh_id = fields.Many2one('product.attribute.value',string="Mesh",domain="[('attribute_id.attribute_type','=','mesh')]")
     bucket_id = fields.Many2one('product.attribute.value',string="Bucket",domain="[('attribute_id.attribute_type','=','bucket')]")
     no_of_drum = fields.Integer(string="No of Drum")
-    weight = fields.Float(string="Weight")
+    weight = fields.Float(string="Weight",digits=(2, 3))
     product_id = fields.Many2one('product.product')
     product_tmpl_id = fields.Many2one('product.template', string='Packing Type')
     uom_id = fields.Many2one('uom.uom',string="Unit")

@@ -8,6 +8,7 @@ access_sale_term_conditions,sale_term_conditions,model_sale_term_conditions,,1,1
 access_sale_inspection_mst,sale_inspection_mst,model_sale_inspection_mst,,1,1,1,1
 access_jal_purchase_requisite,jal_purchase_requisite,model_jal_purchase_requisite,,1,1,1,1
 access_jal_purchase_requisite_line,jal_purchase_requisite_line,model_jal_purchase_requisite_line,,1,1,1,1
+access_sale_approve_line,sale_approve_line,model_sale_approve_line,,1,1,1,1
 
 access_packing_mst,packing_mst,model_packing_mst,,1,1,1,1
 access_capacity_mst,capacity_mst,model_capacity_mst,,1,1,1,1

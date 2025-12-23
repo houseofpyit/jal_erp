@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="inherit_hop_receipt_form_view_transaction" model="ir.ui.view">
+        <field name="name">hop.receipt.view.form.inherit.transaction</field>
+        <field name="model">hop.receipt</field>
+        <field name="inherit_id" ref="hop_account.hop_receipt_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='cost_center_id']" position="after">
+                <field name="sale_id" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

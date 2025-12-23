@@ -299,6 +299,62 @@ class JalLogistics(models.Model):
                     'message': "You cannot set Duty Drawback Claimed to 'Yes' because EPCG Licence Used is already 'Yes'.",                    }
             }
         
+    @api.onchange('booking_received', 'vessel_date', 'container_stuffing_date')
+    def _onchange_booking_received(self):
+        if self.booking_received:
+            if not self.booking_date:
+                self.booking_received = False
+                return {
+                    'warning': {
+                        'title': _("Validation Error"),
+                        'message': _("Please select Booking Date before entering Booking Received.")
+                    }
+                }
+            if self.booking_received < self.booking_date:
+                self.booking_received = False
+                return {
+                    'warning': {
+                        'title': _("Validation Error"),
+                        'message': _("Booking Received Date cannot be earlier than Booking Date.")
+                    }
+                }
+
+        if self.vessel_date:
+            if not self.booking_received:
+                self.vessel_date = False
+                return {
+                    'warning': {
+                        'title': _("Validation Error"),
+                        'message': _("Please select Booking Received Date before entering Vessel cut-off Date.")
+                    }
+                }
+            if self.vessel_date < self.booking_received:
+                self.vessel_date = False
+                return {
+                    'warning': {
+                        'title': _("Validation Error"),
+                        'message': _("Vessel cut-off Date cannot be earlier than Booking Received Date.")
+                    }
+                }
+
+        if self.container_stuffing_date:
+            if not self.vessel_date:
+                self.container_stuffing_date = False
+                return {
+                    'warning': {
+                        'title': _("Validation Error"),
+                        'message': _("Please select Vessel cut-off Date before entering Container stuffing date.")
+                    }
+                }
+            if self.container_stuffing_date < self.vessel_date:
+                self.container_stuffing_date = False
+                return {
+                    'warning': {
+                        'title': _("Validation Error"),
+                        'message': _("Container Stuffing Date cannot be earlier than Vessel cut-off Date.")
+                    }
+                }
+            
     def action_start_booking(self):
         self.booking_date = date.today()
 

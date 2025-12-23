@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sale_advance_receipt_wiz_view_form" model="ir.ui.view">
+        <field name="name">sale.advance.receipt.wiz.view.form</field>
+        <field name="model">sale.advance.receipt.wiz</field>
+        <field name="arch" type="xml">
+            <form string="Receipt">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="mode" required="1"/>
+                            <field name="bank_id" required="1" options="{'no_create': True,'no_open': True}" domain="[('acc_type','=',trn_char)]"/>
+                            <field name="cheque" attrs="{'invisible': [('mode', '=', 'CASH')]}"/>
+                            <field name="chq_bank_id" options="{'no_create': True,'no_open': True}" invisible='1'/>
+                            <field name="cheque_date" attrs="{'invisible': [('mode', '=', 'CASH')]}"/>
+                            </group>
+                            <group>
+                                <field name="date" />
+                                <field name="party_id" readonly="1" force_save="1"/>
+                                <field name="trn_char" invisible="1"/>
+                                <field name="total_amt" readonly="1" force_save="1"/>
+                                <field name="due_amt" readonly="1" force_save="1"/>
+                                <field name="pay_amt" />
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_advance_receipt" string="Receipt" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="sale_advance_receipt_wiz_action" model="ir.actions.act_window">
+        <field name="name">Create Receipt/Receipt</field>
+        <field name="res_model">sale.advance.receipt.wiz</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

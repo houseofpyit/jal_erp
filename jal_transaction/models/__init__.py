@@ -8,3 +8,4 @@ from . import inherit_product
 from . import cost_center_budget
 from . import inherit_purchase
 from . import inherit_op_stock
+from . import inherit_hop_receipt

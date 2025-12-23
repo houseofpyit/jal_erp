@@ -156,12 +156,12 @@ class inheriteStockPicking(models.Model):
 class InheritStockMove(models.Model):
     _inherit = "stock.move"
 
-    demand_bucket = fields.Float(string="Demand (Bucket/Bags/Pouch)")
+    demand_bucket = fields.Float(string="Demand (Bucket/Bags/Pouch)",digits=(2, 3))
     done_bucket = fields.Float(string="Done (Bucket/Bags/Pouch)")
     uom_handling_type = fields.Selection(related='product_id.uom_handling_type',string="UoM Handling Type",store=False)
     is_caustic = fields.Boolean(related='product_id.is_caustic',string="Caustic Product")
     quality_per = fields.Float(string="Quality (%)")
-    actual_qty = fields.Float(string="Actual Qty")
+    actual_qty = fields.Float(string="Actual Qty",digits=(2, 3))
     quality_result = fields.Selection([
         ('wt_for_qt','Waiting For Quality'),
         ('pass','Pass'),

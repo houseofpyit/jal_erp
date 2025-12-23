@@ -1,1 +1,1 @@
-from . import safety_expance_wiz
+from . import safety_expance_wiz,sale_advance_receipt_wizard

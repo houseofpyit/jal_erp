@@ -10,7 +10,7 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//button[@name='action_cancel']" position="before">
-                <button name="action_confirm_pi" string="Confirm PI" class="btn-primary" type="object" attrs="{'invisible': ['|','|','|',('state', '!=', 'create_pi'),('acc_user_id', '=', False),('dis_user_id', '=', False),('team_user_id', '=', False)]}" groups="jal_logistics.res_group_logistics_admin"/>
+                <button name="action_confirm_pi" string="Confirm PI" class="btn-primary" type="object" attrs="{'invisible': ['|','|','|',('state', '!=', 'create_pi'),('is_acc_approve', '=', False),('is_dis_approve', '=', False),('is_team_approve', '=', False)]}" groups="jal_logistics.res_group_logistics_admin"/>
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button name="action_view_mo" type="object" class="oe_stat_button" icon="fa-industry" attrs="{'invisible': [('mo_count', '=', 0)]}">

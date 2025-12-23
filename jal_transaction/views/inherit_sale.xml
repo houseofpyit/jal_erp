@@ -95,6 +95,9 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="jal_crm.sale_order_form_view_inherit"/>
         <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_close_order']" position="after">
+                <button name="action_advance_receipt" string="Advance Receipt" class="btn-primary" type="object" attrs="{'invisible': [('state', '!=', 'create_pi')]}"/>
+            </xpath>
             <xpath expr="//field[@name='order_line']/form/group/group/field[@name='product_tmpl_id']" position="after">
                 <field name="hsn_id" options="{'no_quick_create': True}" attrs="{'invisible': [('parent.business_type', '=', 'international')]}"/>
             </xpath>
