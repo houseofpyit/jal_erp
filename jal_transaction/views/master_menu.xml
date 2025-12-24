@@ -50,4 +50,11 @@
         action="action_safety_expance_wiz"
         sequence="10" />
 
+    <menuitem 
+        id="purchase_order_report_wiz_menu" 
+        name="Purchase Order Report" 
+        parent="transaction.purchase_main" 
+        action="action_purchase_order_report_wiz"
+        sequence="7" />
+
 </odoo>

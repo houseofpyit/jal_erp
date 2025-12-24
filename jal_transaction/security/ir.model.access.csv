@@ -2,3 +2,5 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_cost_center_budget,cost_center_budget,model_cost_center_budget,,1,1,1,1
 access_safety_expance_wiz,safety_expance_wiz,model_safety_expance_wiz,,1,1,1,1
 access_sale_advance_receipt_wiz,sale_advance_receipt_wiz,model_sale_advance_receipt_wiz,,1,1,1,1
+access_purchase_order_report_wiz,purchase_order_report_wiz,model_purchase_order_report_wiz,,1,1,1,1
+access_order_view_report_wiz,order_view_report_wiz,model_order_view_report_wiz,,1,1,1,1

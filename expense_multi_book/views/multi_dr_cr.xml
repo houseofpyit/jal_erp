@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hop_multi_dr_cr_view_form" model="ir.ui.view">
+        <field name="name">hop.multi.dr.cr.view.form</field>
+        <field name="model">hop.multi.dr.cr</field>
+        <field name="arch" type="xml">
+            <form string="Multi DR/CR">
+                <div class="alert alert-danger" role="alert" style="margin-bottom:0px;" 
+                    attrs="{'invisible': [('is_mismatch_amt', '=', False)]}">
+                    <strong>Alert:</strong> CR Amount and DR Amount Do Not Match! Please review the entries.
+                </div>
+                <sheet>
+                    <h1>
+                        <h3 class="oe_read_only">Serial No.</h3>
+                        <field name="name" class="oe_read_only" force_save="True" invisible="0" widget="upper_case"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="name" force_save="True" invisible='1' widget="upper_case"/>
+                            <field name="date" />
+                            <!-- <span class="o_form_label o_td_label" name="expense_id" >
+                                <b>Expense</b>
+                            </span>
+                            <div class="o_address_format">
+                                <field name="expense_id" class="o_address_city" style="width:65%;" required="1" options="{'no_quick_create': True}" />
+                            </div> -->
+                        </group>
+                        <group>
+                            <span class="o_form_label o_td_label oe_edit_only" name="bill_no">
+                                <b>Bill No.</b>
+                            </span>
+                            <div class="o_address_format">
+                                <field name="bill_chr" widget="upper_case" class="oe_edit_only o_address_city" style="width:20%;" force_save="1"/>
+                                <field name="bill_no" class="oe_edit_only o_address_city" style="width:35%;" force_save="1"/>
+                            </div>
+                            <field name="is_mismatch_amt" readonly="1" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="multi_dr_cr_details" string="DR/CR Details">
+                            <field name="line_ids">
+                                <tree editable="bottom">
+                                    <field name="ac_id" width="60%" force_save="1" invisible="0" options="{'no_quick_create': True}"/>
+                                    <field name="ref_ac_id" width="60%" force_save="1" invisible="0" options="{'no_quick_create': True}"/>
+                                    <field name="trn_mode" width="40%"/>
+                                    <field name="date" invisible="1" force_save="1" width="40%"/>
+                                    <field name="bill_chr" invisible="1" force_save="1" width="40%" widget="upper_case"/>
+                                    <field name="bill_no" invisible="1" force_save="1" width="40%"/>
+                                    <field name="remarks" width="40%" widget="upper_case"/>
+                                    <field name="cr_amount" sum="Amount" width="40%" attrs="{'readonly':[('trn_mode','!=','CREDIT')]}"/>
+                                    <field name="dr_amount" sum="Amount" width="40%" attrs="{'readonly':[('trn_mode','!=','DEBIT')]}"/>
+                                    <field name="name" force_save="True" invisible='1' widget="upper_case"/>
+                                </tree>
+                                <form>
+                                    <group>
+                                        <field name="ac_id" force_save="1" invisible="0" options="{'no_quick_create': True}"/>
+                                        <field name="ref_ac_id" force_save="1" invisible="0" options="{'no_quick_create': True}"/>
+                                        <field name="trn_mode" />
+                                        <field name="date" invisible="1" force_save="1" />
+                                        <field name="bill_chr" invisible="1" force_save="1" widget="upper_case"/>
+                                        <field name="bill_no" invisible="1" force_save="1" />
+                                    </group>
+                                    <group>
+                                        <field name="remarks" widget="upper_case"/>
+                                        <field name="cr_amount" sum="Amount" attrs="{'readonly':[('trn_mode','!=','CREDIT')]}"/>
+                                        <field name="dr_amount" sum="Amount" attrs="{'readonly':[('trn_mode','!=','DEBIT')]}"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="hop_multi_dr_cr_view_tree" model="ir.ui.view">
+        <field name="name">hop.multi.dr.cr.view.tree</field>
+        <field name="model">hop.multi.dr.cr</field>
+        <field name="arch" type="xml">
+            <tree string="Multi DR/CR">
+                <field name="name" widget="upper_case"/>
+                <field name="date" />
+                <field name="expense_id" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="hop_multi_dr_cr_kanban" model="ir.ui.view">
+        <field name="name">hop.multi.dr.cr.kanban</field>
+        <field name="model">hop.multi.dr.cr</field>
+        <field name="arch" type="xml">
+            <kanban class="o_hop_ml_dc_kanban" sample="1"> 
+                <field name="name"/>
+                <field name="date"/>
+                <field name="expense_id"/>
+                <templates> 
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_details oe_kanban_global_click o_kanban_record_has_image_fill">                                
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title">
+                                    <field name="name"/>
+                                    <span class="float-right text-right">
+                                        <field name="date"/>
+                                    </span>
+                                </strong>
+                                <ul>
+                                    <strong>
+                                        <field name="expense_id"/>
+                                    </strong>
+                                </ul>
+                            </div>
+                        </div>
+                    </t>
+                </templates> 
+            </kanban>
+        </field>
+    </record>
+
+    <record id="hop_multi_cr_dr_filter" model="ir.ui.view">
+        <field name="name">hop.multi.dr.cr.search</field>
+        <field name="model">hop.multi.dr.cr</field>
+        <field name="arch" type="xml">
+            <search string="Search Multi DR/CR">
+                <field name="name" string="Search" filter_domain="['|','|',
+                ('name', 'ilike', self),('date', 'ilike', self),('expense_id', 'ilike', self)]"/>
+                <field name="name" widget="upper_case"/>
+                <field name="date" />
+                <field name="expense_id" />
+                <separator/>
+                    <filter string="Date" name="date" date="date"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Name" name="groupby_name" domain="[]" context="{'group_by': 'name'}"/>
+                    <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
+                    <filter string="Expense" name="group_by_expense_id" domain="[]" context="{'group_by': 'expense_id'}"/>
+                </group>
+
+            </search>
+        </field>
+    </record>
+
+    <record id="hop_multi_dr_cr_action" model="ir.actions.act_window">
+        <field name="name">Multi DR/CR</field>
+        <field name="res_model">hop.multi.dr.cr</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            Create a New Multi Journal Book</p>
+        </field>
+    </record>
+
+</odoo>

@@ -19,6 +19,7 @@
 
         'wizards/safety_expance_wiz.xml',
         'wizards/sale_advance_receipt_wizard.xml',
+        'wizards/purchase_order_report_wiz.xml',
 
         'views/inherit_sale.xml',
         'views/inherit_salebill.xml',

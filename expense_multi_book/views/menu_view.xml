@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="multi_journalbook_menu_inherit" model="ir.ui.menu">
+        <field name="name">Multi Journal Book</field>
+        <field name="parent_id" ref="hop_account.multi_journalbook_main_menu"/>
+        <field name="action" ref="hop_account.hop_multi_journal_book_action"/>
+        <field name="sequence">1</field>
+    </record>
+
+    <menuitem
+        id="hop_multi_dr_cr"
+        name="Multi DR/CR"
+        action="hop_multi_dr_cr_action"
+        parent="hop_account.multi_journalbook_main_menu"
+        sequence="2"/>
+
+</odoo>

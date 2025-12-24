@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="purchase_order_report_wiz_view" model="ir.ui.view">
+        <field name="name">purchase.order.report.wiz.form.view</field>
+        <field name="model">purchase.order.report.wiz</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <group>
+                    <group>
+                        <field name="from_date" required="0"/>
+                        <field name="partner_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                    </group>
+                    <group>
+                        <field name="to_date" required="0"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Generate" name="genrate_purchase_report" type="object" class="oe_highlight" />
+                    <button string="Cancel" class="btn btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_purchase_order_report_wiz" model="ir.actions.act_window">
+        <field name="name">Purchase Order Report</field>
+        <field name="res_model">purchase.order.report.wiz</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+
+    <record id="order_view_report_wiz_tree" model="ir.ui.view">
+        <field name="name">order.view.report.wiz.tree</field>
+        <field name="model">order.view.report.wiz</field>
+        <field name="arch" type="xml" >
+            <tree string="Full Sale Register Report" sample="1">    
+                <field name="purchase_id" widget="many2one"/>
+                <field name="date"/>
+                <field name="partner_id" widget="many2one"/>
+                <field name="product_id" widget="many2one"/>
+                <field name="ordered_qty" sum="Ordered Qty"/>
+                <field name="received_qty" sum="Received Qty"/>
+                <field name="pending_qty" sum="Pending Qty" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="order_view_report_wiz_search" model="ir.ui.view">
+        <field name="name">order.view.report.wiz.search</field>
+        <field name="model">order.view.report.wiz</field>
+        <field name="arch" type="xml">
+            <search string="Purchase Order Report">
+                <field name="purchase_id" filter_domain="['|','|',
+                ('purchase_id','ilike',self),('partner_id','ilike',self),('product_id','ilike',self)]" string="Search"/>
+                <field name="partner_id" />
+                <field name="product_id" />   
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Purchase" name="group_by_purchase_id" domain="[]" context="{'group_by': 'purchase_id'}"/>
+                    <filter string="Date" name="group_by_date" domain="[]" context="{'group_by': 'date'}"/>
+                    <filter string="Vendor" name="group_by_partner_id" domain="[]" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Product" name="group_by_product_id" domain="[]" context="{'group_by': 'product_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+    <record id="action_order_view_report_wiz" model="ir.actions.act_window">
+        <field name="name">Purchase Order Report</field>
+        <field name="res_model">order.view.report.wiz</field>
+        <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a New Record</p>
+        </field>
+    </record>
+</odoo>
