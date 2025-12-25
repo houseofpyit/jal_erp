@@ -48,7 +48,7 @@
                         <page string="Finished Goods">
                             <field name="finished_line_ids" attrs="{'readonly': [('state','=','complete')]}">
                                 <tree editable="bottom">
-                                    <field name="product_id" domain="[('is_finished_goods', '=', True)]" required="1" options="{'no_create': True}" />
+                                    <field name="product_id" domain="[('is_finished_goods', '=', True),('is_transaform_product', '=', True)]" required="1" options="{'no_create': True}" />
                                     <field name="qty" />
                                     <field name="bucket" />
                                     <field name="uom_id" readonly="1" force_save="1"/>

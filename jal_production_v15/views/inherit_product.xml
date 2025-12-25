@@ -23,6 +23,14 @@
                     <field name="is_caustic"/>
                     <label for="is_caustic"/>
                 </span>
+                <span class="d-inline-block" attrs="{'invisible': [('is_finished_goods', '!=', True)]}">
+                    <field name="is_packing_type"/>
+                    <label for="is_packing_type"/>
+                </span>
+                <span class="d-inline-block" attrs="{'invisible': [('is_finished_goods', '!=', True)]}">
+                    <field name="is_transaform_product"/>
+                    <label for="is_transaform_product"/>
+                </span>
             </div>
             <xpath expr="//page[@name='inventory']" position="after">
                 <page name="quality_parameter" string="Quality Parameter" >

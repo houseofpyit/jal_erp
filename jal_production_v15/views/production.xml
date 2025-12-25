@@ -62,9 +62,10 @@
                                 <tree editable="bottom">
                                     <field name="grade_id" options="{'no_create': True,'no_open': True}" />
                                     <field name="mesh_id" options="{'no_create': True,'no_open': True}" />
+                                    <field name="led_color_id" options="{'no_create': True,'no_open': True}" />
                                     <!-- <field name="bucket_id" options="{'no_create': True,'no_open': True}" /> -->
                                     <field name="product_doamin_ids" widget="many2many_tags" invisible="1"/>
-                                    <field name="product_id" domain="[('id', 'in', product_doamin_ids),('is_finished_goods', '=', True)]" required="1" options="{'no_create': True}" />
+                                    <field name="product_id" domain="[('id', 'in', product_doamin_ids),('is_finished_goods', '=', True),('is_transaform_product', '=', False)]" required="1" options="{'no_create': True}" />
                                     <field name="bucket_qty" sum="No of Drum"/>
                                     <field name="qty" sum="Weight"/>
                                     <field name="wastage_qty" sum="Wastage Qty"/>

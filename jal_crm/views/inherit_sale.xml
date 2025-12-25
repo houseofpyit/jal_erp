@@ -25,12 +25,12 @@
                 <button name="action_confirm" id="action_confirm" data-hotkey="v" string="Confirm PI" class="btn-primary" type="object" attrs="{'invisible': [('state', '!=', 'create_pi')]}"/>
                 <button name="create_purchase_requisite" string="Send Purchase Request" class="btn-primary" type="object" attrs="{'invisible': ['|',('state', '!=', 'sale'),('purchase_req_count', '!=', 0)]}"/>
                 
-                <button name="action_acc_aprove" string="Account Approve" type="object" class="btn-primary" attrs="{ 'invisible': [ '|', ('state', '!=', 'create_pi'), ('is_acc_approve', '!=', False)]}"/>
-                <button name="action_dis_aprove" string="Dispatch Approve" type="object" class="btn-primary" attrs="{ 'invisible': [ '|', ('is_acc_approve', '=', False), ('is_dis_approve', '!=', False)]}"/>
-                <button name="action_team_aprove" string="Sales Team Approve" type="object" class="btn-primary" attrs="{ 'invisible': [ '|', ('is_dis_approve', '=', False), ('is_team_approve', '!=', False)]}"/>
+                <button name="action_acc_aprove" string="Account Approve" type="object" class="btn-primary" attrs="{ 'invisible': [ '|',('state', '!=', 'create_pi'), ('is_acc_approve', '!=', False)]}"/>
+                <button name="action_dis_aprove" string="Dispatch Approve" type="object" class="btn-primary" attrs="{ 'invisible': [ '|',('state', '!=', 'create_pi'), ('is_dis_approve', '!=', False)]}"/>
+                <button name="action_team_aprove" string="Sales Team Approve" type="object" class="btn-primary" attrs="{ 'invisible': [ '|',('state', '!=', 'create_pi'), ('is_team_approve', '!=', False)]}"/>
                 
-                <button name="action_acc_aprove" string="Account Approve" type="object" class="btn-primary" attrs="{ 'invisible': [ '|', ('state', '!=', 'sale'), ('is_acc_approve_pi', '!=', False)]}"/>
-                <button name="action_team_aprove" string="Dispatch Approve" type="object" class="btn-primary" attrs="{ 'invisible': [ '|', ('is_acc_approve_pi', '=', False), ('is_team_approve_pi', '!=', False)]}"/>
+                <button name="action_acc_aprove_close" string="Account Approve (Close)" type="object" class="btn-primary" attrs="{ 'invisible': [ '|', ('state', '!=', 'sale'), ('is_acc_approve_pi', '!=', False)]}"/>
+                <button name="action_team_aprove_close" string="Sales Team (Close)" type="object" class="btn-primary" attrs="{ 'invisible': [ '|', ('state', '!=', 'sale'), ('is_team_approve_pi', '!=', False)]}"/>
                 <button name="action_close_order" string="Close Order" class="btn-primary" type="object" attrs="{'invisible': ['|','|',('state', '!=', 'sale'),('is_acc_approve_pi', '=', False),('is_team_approve_pi', '=', False)]}"/>
             </xpath>
             <xpath expr="//button[@name='action_confirm'][1]" position="attributes">
@@ -116,6 +116,7 @@
                     <field name="sale_approve_ids" readonly="1" force_save="1">
                         <tree editable="">
                             <field name="aprove_type"/>
+                            <field name="status_type"/>
                             <field name="user_id"/>
                             <field name="date"/>
                             <field name="comment"/>

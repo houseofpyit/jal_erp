@@ -157,7 +157,7 @@ class inheritedSaleOrder(models.Model):
          'view_mode': 'form',
          'res_model': 'sale.aprove.wiz',
          'target': 'new',
-         'context': {'default_aprove_type': 'account'},
+         'context': {'default_aprove_type': 'account','default_status_type': 'Approve'},
          }
 
    def action_dis_aprove(self):
@@ -167,7 +167,7 @@ class inheritedSaleOrder(models.Model):
          'view_mode': 'form',
          'res_model': 'sale.aprove.wiz',
          'target': 'new',
-         'context': {'default_aprove_type': 'dispatch'},
+         'context': {'default_aprove_type': 'dispatch','default_status_type': 'Approve'},
          }
 
    def action_team_aprove(self):
@@ -177,7 +177,27 @@ class inheritedSaleOrder(models.Model):
          'view_mode': 'form',
          'res_model': 'sale.aprove.wiz',
          'target': 'new',
-         'context': {'default_aprove_type': 'saleteam'},
+         'context': {'default_aprove_type': 'saleteam','default_status_type': 'Approve'},
+         }
+   
+   def action_acc_aprove_close(self):
+      return {
+         'type': 'ir.actions.act_window',
+         'name': 'Account Close Approve',
+         'view_mode': 'form',
+         'res_model': 'sale.aprove.wiz',
+         'target': 'new',
+         'context': {'default_aprove_type': 'account','default_status_type': 'Close_Order'},
+         }
+   
+   def action_team_aprove_close(self):
+      return {
+         'type': 'ir.actions.act_window',
+         'name': 'Sales Team Close Approve',
+         'view_mode': 'form',
+         'res_model': 'sale.aprove.wiz',
+         'target': 'new',
+         'context': {'default_aprove_type': 'saleteam','default_status_type': 'Close_Order'},
          }
    
    def action_close_order(self):
@@ -381,6 +401,8 @@ class SaleApproveLine(models.Model):
    mst_id = fields.Many2one('sale.order',string="Sale")
 
    aprove_type = fields.Selection([("account", "Account"), ("dispatch", "Dispatch"), ("saleteam", "Sale Team")],string="Approve Type")
+   status_type = fields.Selection([("Approve", "Approve"), ("Close_Order", "Close Order")],string="Status")
+
    user_id = fields.Many2one('res.users',string="User")
    date = fields.Datetime(string="Date")
    comment = fields.Text(string="Comment")

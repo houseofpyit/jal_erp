@@ -13,6 +13,8 @@ class inheritedProductTemplate(models.Model):
    is_quality_required = fields.Boolean('Quality Required or Not')
    is_spares = fields.Boolean('Spares')
    is_caustic = fields.Boolean('Caustic Product')
+   is_packing_type = fields.Boolean('Is Packing Type')
+   is_transaform_product = fields.Boolean('Is Transaform Product')
    bucket_qty_hand_total = fields.Float(
       string="On Hand (Bucket/Bags/Pouch)",
       digits='Product Unit of Measure',

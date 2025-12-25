@@ -465,6 +465,7 @@ class JalFinishedProductionLine(models.Model):
     extra_weight = fields.Float(string="Extra Weight",digits=(2, 3))
     grade_id = fields.Many2one('product.attribute.value',string="Grade",domain="[('attribute_id.attribute_type','=','grade')]")
     mesh_id = fields.Many2one('product.attribute.value',string="Mesh",domain="[('attribute_id.attribute_type','=','mesh')]")
+    led_color_id = fields.Many2one('product.attribute.value',string="Lid Color",domain="[('attribute_id.attribute_type','=','lid_color')]")
     bucket_id = fields.Many2one('product.attribute.value',string="Bucket",domain="[('attribute_id.attribute_type','=','bucket')]")
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
     product_doamin_ids = fields.Many2many('product.product','product_doamin_ref_id')
@@ -485,16 +486,24 @@ class JalFinishedProductionLine(models.Model):
 
                 rec.wastage_weight = rec.wastage_qty * rec.product_id.drum_cap_id.weight
                 
-    @api.onchange('grade_id', 'mesh_id', 'bucket_id')
+    @api.onchange('grade_id', 'mesh_id', 'bucket_id','led_color_id')
     def _onchange_product_attributes(self):
         if not (self.grade_id and self.mesh_id):
             self.product_id = False
             return {'domain': {'product_id': []}}
-        domain = [
-            ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.grade_id.id),
-            ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.mesh_id.id),
-            # ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.bucket_id.id),
-        ]
+        domain = []
+        if self.grade_id:
+            domain.append(('product_template_attribute_value_ids.product_attribute_value_id', '=', self.grade_id.id))
+        if self.mesh_id:
+            domain.append(('product_template_attribute_value_ids.product_attribute_value_id', '=', self.mesh_id.id))
+        if self.led_color_id:
+            domain.append(('product_template_attribute_value_ids.product_attribute_value_id', '=', self.led_color_id.id))
+        # domain = [
+        #     ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.grade_id.id),
+        #     ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.mesh_id.id),
+        #     ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.led_color_id.id),
+        #     # ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.bucket_id.id),
+        # ]
 
         products = self.env['product.product'].search(domain)
 

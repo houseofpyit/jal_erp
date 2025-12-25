@@ -8,6 +8,7 @@ class SaleAproveWiz(models.TransientModel):
 
     name = fields.Text(string="Comment")
     aprove_type = fields.Selection([("account", "Account"), ("dispatch", "Dispatch"), ("saleteam", "Saleteam")],string="Approve Type")
+    status_type = fields.Selection([("Approve", "Approve"), ("Close_Order", "Close Order")],string="Status")
 
     def action_approve_btn(self):
         active_model = self.env.context.get('active_model')
@@ -20,6 +21,7 @@ class SaleAproveWiz(models.TransientModel):
                 'date':fields.Datetime.now(),
                 'comment':self.name,
                 'aprove_type':self.aprove_type,
+                'status_type':self.status_type
                 }))
             
             sale_order.sale_approve_ids = line_list
