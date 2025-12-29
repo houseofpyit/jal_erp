@@ -180,6 +180,7 @@
         <field name="model">branding.mst</field>
         <field name="arch" type="xml" >
             <tree sample="1">
+                <field name="sequence" widget="handle"/>
                 <field name="name"/>
             </tree>
         </field>

@@ -34,6 +34,10 @@ class InheritSale(models.Model):
                     'product_id': line.product_id.id,
                     'uom_id': line.product_uom.id,
                     'qty': line.product_uom_qty,
+                    'country_id': self.country_id.id,
+                    'grade_id': line.grade_id.id,
+                    'mesh_id': line.mesh_id.id,
+                    'bucket': line.bucket,
                     'line_ids': line_list,
                     'packing_line_ids': packing_line_list,
                 })
@@ -48,9 +52,11 @@ class InheritSale(models.Model):
                 'date':date.today(),
                 'company_id': self.company_id.id,
                 'shipping_id': self.shipping_id.id,
+                'product_id': self.product_id.id,
                 'partner_id': self.partner_id.id,
                 'hbl_type': 'Yes' if self.lading_type == 'house_bl' else 'No',
-                'loading_type': inspection
+                'loading_type': inspection,
+                'total_containers': self.total_containers
             }
         logistics_rec = self.env['jal.logistics'].sudo().create(vals)
         

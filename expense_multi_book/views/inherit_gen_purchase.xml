@@ -19,7 +19,7 @@
                 <field name="is_mismatch_amt" invisible="1"/>
             </xpath>
             <xpath expr="//tree/field[@name='product_id']" position="after">
-                <field name="cost_id" options="{'no_create': True}" width="100px" optional="show"/>
+                <!-- <field name="cost_id" options="{'no_create': True}" width="100px" optional="show"/> -->
                 <field name="book_id" width="100px" optional="show" options="{'no_quick_create': True}" attrs="{'column_invisible': [('parent.single_multi_book', '!=', 'Multi_Book')]}"/>
             </xpath>
             <xpath expr="//field[@name='book_id']" position="before">

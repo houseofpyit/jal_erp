@@ -53,7 +53,8 @@
                                     <field name="booking_id" options="{'no_quick_create': True}" domain="[('acc_type','=','AGENT')]" context="{'default_acc_type': 'AGENT'}" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                     <field name="transport_id" options="{'no_quick_create': True}" domain="[('acc_type','=','TRANSPORT')]" context="{'default_acc_type': 'TRANSPORT'}" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                     <field name="cha_id" options="{'no_quick_create': True}" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
-                                    <field name="shipping_id" options="{'no_quick_create': True}" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
+                                    <!-- <field name="shipping_id" options="{'no_quick_create': True}" attrs="{'readonly': [('state','in',('close','cancel'))]}"/> -->
+                                    <field name="product_id" options="{'no_quick_create': True}" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                     <field name="hbl_type" widget="radio" options="{'horizontal': true}" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                     <field name="booking_date" readonly="1" force_save="1"/>
                                     <field name="booking_received"  attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
@@ -91,15 +92,15 @@
                                 <group string="Booking copy">
                                     <field name="attachment_booking_copy_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                     <field name="haz_type" widget="radio" options="{'horizontal': true}" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
-                                    <field name="label_remark_id" options="{'no_quick_create': True}" context="{'default_label_type': 'haz'}" domain="[('label_type', '=', 'haz')]" attrs="{'invisible': [('haz_type', '!=', 'Yes')],'readonly': [('state','in',('close','cancel'))] ,'required':[('haz_type', '!=', 'No')]}"/>
+                                    <field name="label_remark_id" options="{'no_quick_create': True}" context="{'default_label_type': 'haz'}" domain="[('label_type', '=', 'haz')]" attrs="{'invisible': [('haz_type', '!=', 'Yes')],'readonly': [('state','in',('close','cancel'))] ,'required':[('haz_type', '=', 'Yes')]}"/>
                                     <field name="dead_fish_type" widget="radio" options="{'horizontal': true}" />
-                                    <field name="label_remark1_id" options="{'no_quick_create': True}" context="{'default_label_type': 'dead_fish'}" domain="[('label_type', '=', 'dead_fish')]" attrs="{'invisible': [('dead_fish_type', '!=', 'Yes')],'readonly': [('state','in',('close','cancel'))] , 'required':[('dead_fish_type', '!=', 'No')]}"/>
+                                    <field name="label_remark1_id" options="{'no_quick_create': True}" context="{'default_label_type': 'dead_fish'}" domain="[('label_type', '=', 'dead_fish')]" attrs="{'invisible': [('dead_fish_type', '!=', 'Yes')],'readonly': [('state','in',('close','cancel'))] , 'required':[('dead_fish_type', '=', 'Yes')]}"/>
                                     <field name="un_printing_type" widget="radio" options="{'horizontal': true}" />
-                                    <field name="label_remark2_id" options="{'no_quick_create': True}" context="{'default_label_type': 'un_print'}" domain="[('label_type', '=', 'un_print')]" attrs="{'invisible': [('un_printing_type', '!=', 'Yes')],'readonly': [('state','in',('close','cancel'))] , 'required':[('un_printing_type', '!=', 'No')]}"/>
+                                    <field name="label_remark2_id" options="{'no_quick_create': True}" context="{'default_label_type': 'un_print'}" domain="[('label_type', '=', 'un_print')]" attrs="{'invisible': [('un_printing_type', '!=', 'Yes')],'readonly': [('state','in',('close','cancel'))] , 'required':[('un_printing_type', '=', 'Yes')]}"/>
                                 </group>
                                 <group>
                                     <field name="hold_type" widget="radio" options="{'horizontal': true}" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
-                                    <field name="remarks_hold" attrs="{'readonly': [('state','in',('close','cancel'))] , 'required':[('hold_type', '!=', 'No')]}"/>
+                                    <field name="remarks_hold" attrs="{'readonly': [('state','in',('close','cancel'))] , 'required':[('hold_type', '=', 'Yes')]}"/>
                                 </group>
                             </group>
 
@@ -295,13 +296,13 @@
                                     <field name="attachment_certificate_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                     <field name="attachment_iip_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                 </group>
-                                <group name="documentation_for_customer" string="Documentation for the Customer">
+                                <!-- <group name="documentation_for_customer" string="Documentation for the Customer">
                                     <field name="attachment_invoice1_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                     <field name="attachment_packing_ph1_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                     <field name="attachment_certificate1_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                     <field name="attachment_bill_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                     <field name="attachment_certificate2_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
-                                </group>
+                                </group> -->
                             </group>
                         </page>
                         <page string="Post Shipment" name="post_shipment">
@@ -512,6 +513,7 @@
                                 <field name="transport_id" options="{'no_quick_create': True}" domain="[('acc_type','=','TRANSPORT')]" context="{'default_acc_type': 'TRANSPORT'}" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
                                 <field name="cha_id" options="{'no_quick_create': True}" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
                                 <field name="shipping_id" options="{'no_quick_create': True}" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
+                                <field name="product_id" options="{'no_quick_create': True}" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
                                 <field name="hbl_type" widget="radio" options="{'horizontal': true}" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
                                 <field name="booking_date" readonly="1" force_save="1"/>
                                 <field name="booking_received"  attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
@@ -835,14 +837,14 @@
                                 <field name="attachment_iip_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                 <field name="attachment_vgm_slip_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                             </group>
-                            <group name="documentation_for_customer" string="Documentation for the Customer">
+                            <!-- <group name="documentation_for_customer" string="Documentation for the Customer">
                                 <field name="attachment_invoice1_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                 <field name="attachment_packing_ph1_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                 <field name="attachment_certificate1_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                 <field name="attachment_bill_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                 <field name="attachment_certificate2_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                 <field name="attachment_insurance_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
-                            </group>
+                            </group> -->
                         </group>
                         <group name="note_group" col="6" class="mt-2 mt-md-0">
                             <group colspan="4">

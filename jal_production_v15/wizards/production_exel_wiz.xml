@@ -58,4 +58,32 @@
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>
+
+    <record id="production2_exel_wiz_view" model="ir.ui.view">
+        <field name="name">production2.exel.wiz.form.view</field>
+        <field name="model">production2.exel.wiz</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <group>
+                    <group>
+                        <field name="from_date"/>
+                    </group>
+                    <group>
+                        <field name="to_date"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Generate" name="production_xls_report" type="object" class="oe_highlight" />
+                    <button string="Cancel" class="btn btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_production2_exel_wiz" model="ir.actions.act_window">
+        <field name="name">Daily Production Report</field>
+        <field name="res_model">production2.exel.wiz</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
 </odoo>

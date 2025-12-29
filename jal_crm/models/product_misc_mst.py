@@ -62,6 +62,7 @@ class brandingMst(models.Model):
     _order = 'id desc'
     
     name = fields.Char(string='Name',tracking=True)
+    sequence = fields.Integer(default=10)
 
 class LidColorMst(models.Model):
     _name = 'lid.color.mst'

@@ -9,6 +9,7 @@ class SaleIncotermMst(models.Model):
     _order = 'id desc'
     
     name = fields.Char(string='Name',tracking=True)
+    sequence = fields.Integer(default=10)
 
 class SaleDeliveryTermsMst(models.Model):
     _name = 'sale.terms.mst'
@@ -17,6 +18,7 @@ class SaleDeliveryTermsMst(models.Model):
     _order = 'id desc'
     
     name = fields.Char(string='Name',tracking=True)
+    sequence = fields.Integer(default=10)
 
 class SaleDestinationPortMst(models.Model):
     _name = 'sale.port.mst'
@@ -33,19 +35,21 @@ class BankMaster(models.Model):
     _description= "Bank"
     _inherit = ['mail.thread']
     _order = 'id desc'
+    _rec_name = 'display_name'
     
-    name = fields.Char(string='Name')
-    bank_ac_name = fields.Char("Bank A/C Name")
-    bank_ac_no = fields.Char("Bank A/C No")
-    bank_branch_ifsc = fields.Char("Bank Branch IFSC")
-    branch = fields.Char("Branch")
-    swift_code = fields.Char("Swift Code")
-    currency_id = fields.Many2one('res.currency', string="Currency")
+    name = fields.Char(string='Name',tracking=True)
+    display_name = fields.Char(string='Display Name',tracking=True)
+    bank_ac_name = fields.Char("Bank A/C Name",tracking=True)
+    bank_ac_no = fields.Char("Bank A/C No",tracking=True)
+    bank_branch_ifsc = fields.Char("Bank Branch IFSC",tracking=True)
+    branch = fields.Char("Branch",tracking=True)
+    swift_code = fields.Char("Swift Code",tracking=True)
+    currency_id = fields.Many2one('res.currency', string="Currency",tracking=True)
 
-    correspondent_bank = fields.Char("Correspondent Bank")
-    swift_code1 = fields.Char("Swift Code")
-    acc_no = fields.Char("Account Number")
-    currency1_id = fields.Many2one('res.currency', string="Currency")
+    correspondent_bank = fields.Char("Correspondent Bank",tracking=True)
+    swift_code1 = fields.Char("Swift Code",tracking=True)
+    acc_no = fields.Char("Account Number",tracking=True)
+    currency1_id = fields.Many2one('res.currency', string="Currency",tracking=True)
 
 class SaleTermConditions(models.Model):
     _name = "sale.term.conditions"

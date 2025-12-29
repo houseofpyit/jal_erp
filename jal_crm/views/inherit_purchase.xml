@@ -23,7 +23,7 @@
             <xpath expr="//page/group" position="before">
                 <group>
                     <group>
-                        <field name="conditions_ids" widget="many2many_tags"  domain="[('module_type', '=', 'purchase')]" options="{'no_create': True}" />
+                        <field name="conditions_ids" widget="many2many_checkboxes"  domain="[('module_type', '=', 'purchase')]" options="{'no_create': True}" />
                     </group>
                 </group>
             </xpath>

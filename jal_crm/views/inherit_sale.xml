@@ -138,6 +138,16 @@
                                     
                     </field>
                 </page>
+                <page string="Customer Document" name="approved_details">
+                    <group name="documentation_for_customer" string="Documentation for the Customer">
+                        <field name="attachment_invoice1_sale_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('sale','close_order'))]}"/>
+                        <field name="attachment_packing_ph1_sale_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('sale','close_order'))]}"/>
+                        <field name="attachment_certificate1_sale_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('sale','close_order'))]}"/>
+                        <field name="attachment_bill_sale_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('sale','close_order'))]}"/>
+                        <field name="attachment_certificate2_sale_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('sale','close_order'))]}"/>
+                        <field name="attachment_insurance_sale_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('sale','close_order'))]}"/>
+                    </group>
+                </page>
             </xpath>
             <xpath expr="//field[@name='payment_term_id']" position="after">
                 <field name="terms_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}"/>
@@ -146,11 +156,14 @@
                 <field name="palletized_type" widget="radio" options="{'horizontal': true}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}"/>
                 <field name="business_type" invisible="1" attrs="{'readonly': [('state', 'in', ('sale','close_order'))]}"/>
                 <field name="display_name_on_pi" widget="radio" options="{'horizontal': true}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}"/>
-                <field name="shipping_id" domain="[('display_name_on_pi','=', 'shipping_name')]" options="{'no_quick_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}"/>
+                <!-- <field name="shipping_id" domain="[('display_name_on_pi','=', 'shipping_name')]" options="{'no_quick_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}"/> -->
+                <field name="product_id" domain="[('is_shipping','=', True)]" options="{'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}"/>
                 <!-- <field name="product_shipping_id" domain="[('display_name_on_pi','=', 'product_name')]" options="{'no_quick_create': True}" attrs="{'invisible': ['|',('display_name_on_pi', '=', 'shipping_name'),('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}"/> -->
                 <field name="buyer_ref_details" attrs="{'readonly': [('state', 'in', ('sale','close_order'))]}"/>
                 <field name="product_expiry" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}"/>
                 <field name="company_id" options="{'no_create': True}" attrs="{'readonly': [('state', 'in', ('sale','close_order'))]}"/>
+                <field name="label_type" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}"/>
+                <field name="total_containers" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}"/>
             </xpath>
             <xpath expr="//tree/field[@name='product_template_id']" position="before">
                 <!-- <field name="shipping_id" width="150px" attrs="{'column_invisible': [('parent.business_type', '!=', 'international')]}"/> -->

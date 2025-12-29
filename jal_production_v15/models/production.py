@@ -104,6 +104,15 @@ class JalProduction(models.Model):
         self.finished_line_ids = [(5, 0, 0)] + final_lines
 
     def action_complete_btn(self):
+        for rec in self:
+            if not rec.line_ids and not rec.packing_line_ids and not rec.finished_line_ids:
+                raise ValidationError(_("Please add at least one Raw Material, Packing Material, or Finished Goods line before completing."))
+
+            if rec.packing_line_ids and not rec.finished_line_ids:
+                raise ValidationError(_("You cannot complete this process without Finished Goods lines."))
+
+            if rec.finished_line_ids and not rec.packing_line_ids:
+                raise ValidationError(_("You cannot complete this process without Packing Material lines."))
         self._create_stock_picking_receipts()
         self._create_stock_picking_out()
         self.state = 'complete'

@@ -50,6 +50,7 @@ class inheritedSaleOrder(models.Model):
    jal_currency_id = fields.Many2one('res.currency',string="Currency")
    shipping_id = fields.Many2one('product.shipping.mst',string="Shipping Name")
    product_shipping_id = fields.Many2one('product.shipping.mst',string="Product Name")
+   product_id = fields.Many2one('product.product',string="Shipping Name",tracking=True)
    product_expiry = fields.Selection([
       ('1', '1 Year'),
       ('2', '2 Years'),
@@ -66,6 +67,15 @@ class inheritedSaleOrder(models.Model):
    is_team_approve_pi = fields.Boolean(string="Is Saleteam Approve PI",tracking=True)
    sale_approve_ids = fields.One2many('sale.approve.line','mst_id',string="Sale Approve Line")
 
+   label_type = fields.Selection([('yes', 'Yes'),('no', 'No'),], string='Label directly inside container',default='no',tracking=True)
+   total_containers = fields.Char(string="Total Containers",tracking=True)
+
+   attachment_invoice1_sale_ids = fields.Many2many('ir.attachment','attachment_invoice1_sale_id',string="Commercial invoice")
+   attachment_packing_ph1_sale_ids = fields.Many2many('ir.attachment','attachment_packing_ph1_sale_id',string="Packing List")
+   attachment_certificate1_sale_ids = fields.Many2many('ir.attachment','attachment_certificate1_sale_id',string="Certificate of Origin")
+   attachment_bill_sale_ids = fields.Many2many('ir.attachment','attachment_bill_sale_id',string="Bill of Lading Draft")
+   attachment_certificate2_sale_ids = fields.Many2many('ir.attachment','attachment_certificate2_sale_id',string="Certificate of Analysis")
+   attachment_insurance_sale_ids = fields.Many2many('ir.attachment','attachment_insurance_sale_id',string="Insurance")
    # @api.onchange('team_id')
    # def _onchange_team_id(self):
    #    self.business_type = self.team_id.business_type

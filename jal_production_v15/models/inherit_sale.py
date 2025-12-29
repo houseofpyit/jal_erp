@@ -16,7 +16,7 @@ class inheritedSaleOrderLine(models.Model):
 
     grade_id = fields.Many2one('product.attribute.value',string="Grade",domain="[('attribute_id.attribute_type','=','grade')]")
     mesh_id = fields.Many2one('product.attribute.value',string="Mesh",domain="[('attribute_id.attribute_type','=','mesh')]")
-    bucket = fields.Float(string='Packing Unit',store=True)
+    bucket = fields.Float(string='Packing Unit',store=True,digits=(2, 3))
     uom_handling_type = fields.Selection(related='product_tmpl_id.uom_handling_type',string="UoM Handling Type",store=False)
 
     drum_cap_id = fields.Many2one('product.attribute.value',string="Capacity Per Drum",domain="[('packaging_type','=','drum'),('attribute_id.attribute_type','=','bucket')]")
@@ -197,13 +197,13 @@ class inheritedSaleOrderLine(models.Model):
             #     desc += "</ul>"
 
             if rec.product_tmpl_id:
-                desc += f"<li>Name : {rec.product_tmpl_id.name}</li>"
+                desc += f"<li><b>Name : </b>{rec.product_tmpl_id.name}</li>"
 
             if rec.branding_id:
-                desc += f"<li>Branding : {rec.branding_id.name}</li>"
+                desc += f"<li><b>Branding : </b>{rec.branding_id.name}</li>"
 
             if rec.lid_id:
-                desc += f"<li>Lid Color : {rec.lid_id.name}</li>"
+                desc += f"<li><b>Lid Color : </b>{rec.lid_id.name}</li>"
 
             rec.packing_name = desc or "NEW"
             rec.is_des = bool(desc)

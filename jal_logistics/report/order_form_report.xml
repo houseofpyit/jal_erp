@@ -259,16 +259,16 @@
                                                  <span><span t-esc="o.shipping_id.name"></span></span><br/>
                                              </t>
                                             <t t-if="item.product_tmpl_id.hsn_id">
-                                                <span>Hsn - <span t-esc="item.product_tmpl_id.hsn_id.name"></span></span><br/>
+                                                <span><b>Hsn - </b><span t-esc="item.product_tmpl_id.hsn_id.name"></span></span><br/>
                                             </t>
                                             <t t-if="item.grade_id">
-                                                <span>Grade - <span t-esc="item.grade_id.name"></span></span><br/>
+                                                <span><b>Grade - </b><span t-esc="item.grade_id.name"></span></span><br/>
                                             </t>
                                             <t t-if="item.mesh_id">
-                                                <span>Mesh - <span t-esc="item.mesh_id.name"></span></span><br/>
+                                                <span><b>Mesh - </b><span t-esc="item.mesh_id.name"></span></span><br/>
                                             </t>
                                             <t t-if="item.product_form_type">
-                                                <span>Form - <span t-esc="dict(item.fields_get(allfields=['product_form_type'])['product_form_type']['selection'])[item.product_form_type]"></span></span>
+                                                <span><b>Form - </b><span t-esc="dict(item.fields_get(allfields=['product_form_type'])['product_form_type']['selection'])[item.product_form_type]"></span></span>
                                             </t>
                                         </td>
                                         <td style="text-align: left; border-right: 1px solid black; padding: 0;padding-left:3px;border-bottom: 1px solid black;border-top: 1px solid black;">

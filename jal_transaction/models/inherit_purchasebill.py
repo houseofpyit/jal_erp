@@ -6,3 +6,8 @@ class inheritPurchaseBill(models.Model):
 
     attachment_ids = fields.Many2many('ir.attachment','attachment_pur_bill_id',string="Document Attachment")
     picking_id = fields.Many2one('stock.picking',string='Grn No.')
+
+class inheritPurchaseBillLine(models.Model):
+    _inherit = "hop.purchasebill.line"
+
+    pcs = fields.Float("PCS",digits=(2, 3))

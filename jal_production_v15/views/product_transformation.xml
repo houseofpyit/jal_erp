@@ -21,20 +21,30 @@
                             <field name='company_id' invisible="1"/>
                             <field name='bill_chr' invisible="1"/>
                             <field name='bill_no' invisible="1"/>
-                            <field name='product_id' required="1" options="{'no_create': True}" domain="[('is_finished_goods', '=', True)]" attrs="{'readonly': [('state','=','complete')]}"/>
+                            <!-- <field name='product_id' required="1" options="{'no_create': True}" domain="[('is_finished_goods', '=', True)]" attrs="{'readonly': [('state','=','complete')]}"/>
                             <label for="qty" string="Quantity" attrs="{'readonly': [('state','=','complete')]}"/>
                             <div class="o_row no-gutters d-flex">
                                 <field name="qty" class="oe_inline text-left" attrs="{'readonly': [('state','=','complete')]}"/>
                                 <field name="uom_id" force_save="1" readonly="1"/>
                             </div>
-                            <field name='bucket' attrs="{'readonly': [('state','=','complete')]}"/>
+                            <field name='bucket' attrs="{'readonly': [('state','=','complete')]}"/> -->
+                            <field name="date" attrs="{'readonly': [('state','=','complete')]}"/>
                         </group>
                         <group>
-                            <field name="date" attrs="{'readonly': [('state','=','complete')]}"/>
                             <field name="packing_type" attrs="{'readonly': [('state','=','complete')]}"/>
                         </group>
                     </group>
                     <notebook>
+                        <page string="Material Consumed">
+                            <field name="line_ids" attrs="{'readonly': [('state','=','complete')]}">
+                                <tree editable="bottom">
+                                    <field name="product_id" required="1" options="{'no_create': True}" domain="[('is_finished_goods', '=', True)]"/>
+                                    <field name="qty"/>
+                                    <field name="bucket" />
+                                    <field name="uom_id" readonly="1" force_save="1"/>
+                                </tree>
+                            </field>
+                        </page>
                         <page string="Packing Materials">
                             <field name="packing_line_ids" attrs="{'readonly': [('state','=','complete')]}">
                                 <tree editable="bottom">
@@ -51,11 +61,12 @@
                                     <field name="product_id" domain="[('is_finished_goods', '=', True),('is_transaform_product', '=', True)]" required="1" options="{'no_create': True}" />
                                     <field name="qty" />
                                     <field name="bucket" />
+                                    <field name="wastage_weight" />
                                     <field name="uom_id" readonly="1" force_save="1"/>
                                 </tree>
                             </field>
                         </page>
-                        <page string="MT Bucket">
+                        <page string="Empty Bucket">
                             <field name="mt_line_ids" attrs="{'readonly': [('state','=','complete')]}">
                                 <tree editable="bottom">
                                     <field name="product_id" domain="[('is_packing', '=', True)]" required="1" options="{'no_create': True}" />
@@ -82,34 +93,34 @@
             <tree>
                 <field name='name'/>
                 <field name='date'/>
-                <field name="product_id" />
+                <!-- <field name="product_id" /> -->
                 <field name="packing_type" />
                 <field name="state" widget="badge"/>
             </tree>
         </field>
     </record>
 
-    <!-- <record id="view_product_transformation_filter" model="ir.ui.view">
+    <record id="view_product_transformation_filter" model="ir.ui.view">
         <field name="name">product.transformation.filter</field>
         <field name="model">product.transformation</field>
         <field name="arch" type="xml">
             <search>
-                <field name="name" string="Search" filter_domain="['|','|','|',('name', 'ilike', self),('product_tmpl_id', 'ilike', self),('shift_id', 'ilike', self),('employee_id', 'ilike', self)]"/>
-                <field name="product_tmpl_id"/>
-                <field name="shift_id" />
-                <field name="employee_id" />
+                <field name="name" string="Search" filter_domain="['|',('name', 'ilike', self),('packing_type', 'ilike', self)]"/>
+                <field name="packing_type"/>
+                <field name="line_ids" string="Material Consumed Product" filter_domain="[('line_ids.product_id.display_name', 'ilike', self)]"/>
+                <field name="packing_line_ids" string="Packing Product" filter_domain="[('packing_line_ids.product_id.display_name', 'ilike', self)]"/>
+                <field name="finished_line_ids" string="Finished Product" filter_domain="[('finished_line_ids.product_id.display_name', 'ilike', self)]"/>
+                <field name="mt_line_ids" string="Empty Product" filter_domain="[('mt_line_ids.product_id.display_name', 'ilike', self)]"/>
                 <separator/>
                     <filter string="Date" name="date" date="date"/>
                 <separator/>
                 <group expand="0" string="Group By">
-                    <filter string="Product" name="group_by_product_tmpl_id" domain="[]" context="{'group_by': 'product_tmpl_id'}"/>
-                    <filter string="Shift" name="group_shift_id" domain="[]" context="{'group_by': 'shift_id'}"/>
-                    <filter string="Shift Incharge" name="group_employee_id" domain="[]" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Packing Type" name="group_packing_type" domain="[]" context="{'group_by': 'packing_type'}"/>
                     <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
                 </group>
             </search>
         </field>
-    </record> -->
+    </record>
 
 
     <record id="action_product_transformation" model="ir.actions.act_window">

@@ -16,10 +16,17 @@ class JalMrpProduction(models.Model):
     product_id = fields.Many2one('product.product',tracking=True)
     uom_id = fields.Many2one('uom.uom',string="Unit",tracking=True)
     qty = fields.Float(string = "Quantity",digits='BaseAmount',tracking=True)
-    booking_date = fields.Date(string="Booking Date",tracking=True)
-    
+    booking_date = fields.Date(string="Container stuffing date",tracking=True)
+    country_id = fields.Many2one('res.country',string="Country",tracking=True)
+    grade_id = fields.Many2one('product.attribute.value',string="Grade",domain="[('attribute_id.attribute_type','=','grade')]")
+    mesh_id = fields.Many2one('product.attribute.value',string="Mesh",domain="[('attribute_id.attribute_type','=','mesh')]")
+    bucket = fields.Float(string='Packing Unit',digits=(2, 3))
+    pending_qty = fields.Float(string = "Pending Quantity",digits='BaseAmount',tracking=True)
+    pending_bucket = fields.Float(string='Pending Weight',tracking=True,digits=(2, 3))
+
     line_ids = fields.One2many('jal.mrp.production.line', 'mst_id',string="Raw Material Products")
     packing_line_ids = fields.One2many('jal.mrp.production.packing.line', 'mst_id',string="Packing Products")
+    complete_line_ids = fields.One2many('jal.mrp.production.complete.line', 'mst_id',string="Complete Products")
 
     # def name_get(self):
     #     result = []
@@ -30,12 +37,21 @@ class JalMrpProduction(models.Model):
     #             name = i.name
     #         result.append((i.id, name))
     #     return result
+
+    def action_document_order_form(self):
+        return self.env.ref('jal_logistics.action_order_form_report').report_action(self.sale_id.id) if self.sale_id else False
     
     def action_running_btn(self):
         self.state = 'running'
 
     def action_done_btn(self):
         self.state = 'done'
+
+    @api.onchange('complete_line_ids')
+    def _onchange_complete_line_ids(self):
+        for rec in self:
+            rec.pending_qty = (rec.qty - sum(rec.complete_line_ids.mapped('qty')))
+            rec.pending_bucket = (rec.bucket - sum(rec.complete_line_ids.mapped('bucket')))
 
     # def action_get_quality_btn(self):
     #     quality_rec = self.env['jal.quality'].search([('production_id', 'in', self.ids)])
@@ -271,4 +287,15 @@ class JalMrpProductionPackingLine(models.Model):
     product_id = fields.Many2one('product.product')
     uom_id = fields.Many2one('uom.uom',string="Unit")
     qty = fields.Float(string = "Quantity",digits='BaseAmount')
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
+
+class JalMrpProductionCompleteLine(models.Model):
+    _name = 'jal.mrp.production.complete.line'
+    _description = "Mrp Production Complete Line"
+
+    mst_id = fields.Many2one('jal.mrp.production',string="Mst",ondelete='cascade')
+    product_id = fields.Many2one('product.product')
+    uom_id = fields.Many2one('uom.uom',string="Unit")
+    qty = fields.Float(string = "Complete Bucket Quantity",digits='BaseAmount')
+    bucket = fields.Float(string='Complete Bucket Weight',digits=(2, 3))
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)

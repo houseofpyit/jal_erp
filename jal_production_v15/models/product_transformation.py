@@ -18,12 +18,21 @@ class ProductTransformation(models.Model):
     packing_line_ids = fields.One2many('product.transformation.pack.line', 'mst_id')
     finished_line_ids = fields.One2many('product.transformation.finish.line', 'mst_id')
     mt_line_ids = fields.One2many('product.mt.bucket.line', 'mst_id')
+    line_ids = fields.One2many('product.out.bucket.line', 'mst_id')
     state = fields.Selection([('draft', 'Draft'),('complete', 'Complete')], default='draft',tracking=True)
     packing_type = fields.Selection([("bucket", "Bucket"), ("pouch", "Pouch"),("tablet", "Tablet")],string="Packing Type",tracking=True)
     product_id = fields.Many2one('product.product', string='Product',tracking=True)
     uom_id = fields.Many2one('uom.uom', string='Uom',tracking=True)
     qty = fields.Float(string='Qty',tracking=True)
-    bucket = fields.Float(string='Packing Unit',tracking=True)
+    bucket = fields.Float(string='Packing Unit',tracking=True,digits=(2, 3))
+
+    @api.onchange('product_id','qty','product_uom')
+    def _onchange_bucket_cap_id(self):
+        for rec in self:
+            if rec.product_id.drum_cap_id.weight > 0:
+                rec.bucket = (rec.qty * rec.uom_id.ratio) / rec.product_id.drum_cap_id.weight
+            else:
+                rec.bucket = 0
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -216,7 +225,7 @@ class ProductTransformation(models.Model):
                     raise ValidationError(_("Insufficient BUCKET for %s. Available %s, Required %s.") % (line.product_id.display_name, available_bucket, line.bucket))
 
 
-        _validate_lines(self, "")
+        _validate_lines(self.line_ids, "Material Consumed")
         _validate_lines(self.packing_line_ids, "Packing Materials")
 
         move_list = []
@@ -260,7 +269,7 @@ class ProductTransformation(models.Model):
 
 
         _prepare_moves(self.packing_line_ids)
-        _prepare_moves(self)
+        _prepare_moves(self.line_ids)
         
         picking = StockPicking.create({
             'location_id': main_location.id,
@@ -283,7 +292,7 @@ class ProductTransformationPackLine(models.Model):
     product_id = fields.Many2one('product.product',required=True)
     uom_id = fields.Many2one('uom.uom',string="Unit")
     qty = fields.Float(string = "Quantity",digits='BaseAmount')
-    bucket = fields.Float(string='Packing Unit')
+    bucket = fields.Float(string='Packing Unit',digits=(2, 3))
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
 
     @api.onchange('product_id')
@@ -300,7 +309,8 @@ class ProductTransformationFinishLine(models.Model):
     product_id = fields.Many2one('product.product',required=True)
     uom_id = fields.Many2one('uom.uom',string="Unit")
     qty = fields.Float(string = "Quantity",digits='BaseAmount')
-    bucket = fields.Float(string='Packing Unit')
+    bucket = fields.Float(string='Packing Unit',digits=(2, 3))
+    wastage_weight = fields.Float(string='Wastage Weight',digits=(2, 3))
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
 
     @api.onchange('product_id')
@@ -317,7 +327,7 @@ class ProductMTBucketLine(models.Model):
     product_id = fields.Many2one('product.product',required=True)
     uom_id = fields.Many2one('uom.uom',string="Unit")
     qty = fields.Float(string = "Quantity",digits='BaseAmount')
-    bucket = fields.Float(string='Packing Unit')
+    bucket = fields.Float(string='Packing Unit',digits=(2, 3))
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
 
     @api.onchange('product_id')
@@ -327,4 +337,28 @@ class ProductMTBucketLine(models.Model):
                 rec.uom_id = rec.product_id.uom_po_id.id
 
 
+class ProductoutBucketLine(models.Model):
+    _name = 'product.out.bucket.line'
+    _description = "Product MT Bucket Line"
+
+    mst_id = fields.Many2one('product.transformation',string="Mst",ondelete='cascade')
+    product_id = fields.Many2one('product.product',required=True)
+    uom_id = fields.Many2one('uom.uom',string="Unit")
+    qty = fields.Float(string = "Quantity",digits='BaseAmount')
+    bucket = fields.Float(string='Packing Unit',digits=(2, 3))
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
+
+    @api.onchange('product_id')
+    def onchange_product_id(self):
+        for rec in self:
+            if rec.product_id:
+                rec.uom_id = rec.product_id.uom_po_id.id
+
+    @api.onchange('product_id','qty','product_uom')
+    def _onchange_bucket_cap_id(self):
+        for rec in self:
+            if rec.product_id.drum_cap_id.weight > 0:
+                rec.bucket = (rec.qty * rec.uom_id.ratio) / rec.product_id.drum_cap_id.weight
+            else:
+                rec.bucket = 0
                 

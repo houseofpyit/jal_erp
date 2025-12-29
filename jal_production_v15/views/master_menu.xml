@@ -50,6 +50,13 @@
                 parent="jal_production_v15.production_exel_wiz_mst_main"
                 sequence="2"/>
 
+            <menuitem
+                id="production2_exel_wiz_mst_main"
+                name="Daily Production Report"
+                action="action_production2_exel_wiz"
+                parent="jal_production_v15.production_exel_wiz_mst_main"
+                sequence="3"/>
+
     <menuitem
         id="quality_main_menu"
         name="Quality"
@@ -97,8 +104,8 @@
         <menuitem
             id="mrp_production_main_menu"
             name="MO"
-            parent="jal_production_v15.production_main_menu"
             groups="jal_production_v15.res_group_production_user,jal_production_v15.res_group_production_admin"
+            web_icon="jal_production_v15,static/description/mo.png"
             sequence="15"/>
 
         <menuitem
@@ -380,7 +387,12 @@
         parent="stock.menu_stock_root"
         action="jal_caustics_product_template_action"/>
 
-            
+    <menuitem
+        id="jal_is_shipping_products_menu"
+        name="Shipping Name/Label Products"
+        parent="stock.menu_stock_root"
+        action="jal_is_shipping_product_template_action"/>
+   
 </odoo>
 
 

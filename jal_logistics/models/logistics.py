@@ -23,6 +23,7 @@ class JalLogistics(models.Model):
     partner_id = fields.Many2one('res.partner',string="Customer",tracking=True)
     cha_id = fields.Many2one('cha.mst',string="CHA",tracking=True)
     shipping_id = fields.Many2one('product.shipping.mst',string="Shipping Name",tracking=True)
+    product_id = fields.Many2one('product.product',string="Shipping Name",tracking=True)
     hbl_type = fields.Selection([('Yes', 'Yes'),('No', 'No')], string='HBL',tracking=True)
     booking_date = fields.Date(string="Booking Date",tracking=True)
     booking_received = fields.Date(string="Booking Received",tracking=True)
@@ -337,6 +338,24 @@ class JalLogistics(models.Model):
                     }
                 }
 
+        # if self.container_stuffing_date:
+        #     if not self.vessel_date:
+        #         self.container_stuffing_date = False
+        #         return {
+        #             'warning': {
+        #                 'title': _("Validation Error"),
+        #                 'message': _("Please select Vessel cut-off Date before entering Container stuffing date.")
+        #             }
+        #         }
+        #     if self.container_stuffing_date < self.vessel_date:
+        #         self.container_stuffing_date = False
+        #         return {
+        #             'warning': {
+        #                 'title': _("Validation Error"),
+        #                 'message': _("Container Stuffing Date cannot be earlier than Vessel cut-off Date.")
+        #             }
+        #         }
+
         if self.container_stuffing_date:
             if not self.vessel_date:
                 self.container_stuffing_date = False
@@ -346,12 +365,20 @@ class JalLogistics(models.Model):
                         'message': _("Please select Vessel cut-off Date before entering Container stuffing date.")
                     }
                 }
-            if self.container_stuffing_date < self.vessel_date:
+            if not self.booking_received:
                 self.container_stuffing_date = False
                 return {
                     'warning': {
                         'title': _("Validation Error"),
-                        'message': _("Container Stuffing Date cannot be earlier than Vessel cut-off Date.")
+                        'message': _("Please select Booking Received Date before entering Container stuffing date.")
+                    }
+                }
+            if not (self.booking_received <= self.container_stuffing_date <= self.vessel_date):
+                self.container_stuffing_date = False
+                return {
+                    'warning': {
+                        'title': _("Validation Error"),
+                        'message': _("Please select a Container Stuffing Date between the Booking Received Date and the Vessel cut-off Date.")
                     }
                 }
             
@@ -440,6 +467,7 @@ class LogisticsDispatchLine(models.Model):
     @api.onchange('line_ids','line_ids.qty')
     def _onchange_line_ids(self):
         self.total_drums = sum(self.line_ids.mapped('qty'))
+        self.label_type = self.mst_id.sale_id.label_type
         if self.mst_id.sale_id.palletized_type == "Yes":
             self.palletized_type = "yes"
     

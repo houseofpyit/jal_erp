@@ -202,7 +202,7 @@ class ConstipationMaterialPackLine(models.Model):
     product_id = fields.Many2one('product.product',required=True)
     uom_id = fields.Many2one('uom.uom',string="Unit")
     qty = fields.Float(string = "Quantity",digits='BaseAmount')
-    bucket = fields.Float(string='Packing Unit')
+    bucket = fields.Float(string='Packing Unit',digits=(2, 3))
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
 
     @api.onchange('product_id')

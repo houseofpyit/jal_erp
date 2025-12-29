@@ -95,7 +95,9 @@
         <field name='name'>jal.production.tree</field>
         <field name='model'>jal.production</field>
         <field name='arch' type='xml'>
-            <tree>
+            <tree
+                    decoration-warning="state == 'running'"
+                    decoration-success="state == 'complete'">
                 <field name='name'/>
                 <field name='date'/>
                 <field name="product_tmpl_id" />
@@ -115,6 +117,9 @@
                 <field name="product_tmpl_id"/>
                 <field name="shift_id" />
                 <field name="employee_id" />
+                <field name="line_ids" string="Raw Materials" filter_domain="[('line_ids.product_id.display_name', 'ilike', self)]"/>
+                <field name="packing_line_ids" string="Packing Materials" filter_domain="[('packing_line_ids.product_id.display_name', 'ilike', self)]"/>
+                <field name="finished_line_ids" string="Finished Goods" filter_domain="[('finished_line_ids.product_id.display_name', 'ilike', self)]"/>
                 <separator/>
                     <filter string="Date" name="date" date="date"/>
                 <separator/>
@@ -124,6 +129,10 @@
                     <filter string="Shift Incharge" name="group_employee_id" domain="[]" context="{'group_by': 'employee_id'}"/>
                     <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
                 </group>
+                <separator/>
+                <filter domain="[('state','=','draft')]" string="Draft" name="filter_draft"/>
+                <filter domain="[('state','=','running')]" string="Running" name="filter_running"/>
+                <filter domain="[('state','=','complete')]" string="Complete" name="filter_complete"/>
             </search>
         </field>
     </record>
@@ -133,7 +142,7 @@
         <field name="name">Production</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">jal.production</field>
-        <!-- <field name="context">{"search_default_filter_draft":1,"search_default_filter_request":1}</field> -->
+        <field name="context">{'search_default_filter_draft': 1,'search_default_filter_running': 1}</field>
         <field name="view_mode">tree,form</field>
     </record>
 

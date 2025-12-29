@@ -6,6 +6,7 @@ from odoo.tools.misc import xlwt
 import base64 
 import io
 from odoo.exceptions import ValidationError
+from datetime import timedelta
 
 class ProductionReportExelWiz(models.TransientModel):
     _name = 'production.exel.wiz'
@@ -181,6 +182,7 @@ class Production1ReportExelWiz(models.TransientModel):
             raise ValidationError("No Data Found.")
         
         StockMoveLine = self.env['stock.move.line'].sudo()
+        OPStock = self.env['hop.op.stock.mst'].sudo()
 
         # ==========================
         # Dynamic Product List
@@ -224,6 +226,9 @@ class Production1ReportExelWiz(models.TransientModel):
 
         date_list = sorted(list(set(production_rec.mapped('date'))))
 
+        op_name = OPStock.search([]).mapped('name')
+        op_name_receipt = [f"{n} - Receipt"  for n in op_name]
+
         for prod_date in date_list:
 
             date_recs = production_rec.filtered(lambda r: r.date == prod_date)
@@ -256,19 +261,67 @@ class Production1ReportExelWiz(models.TransientModel):
                     ('picking_id.state', '=', 'done'),
                     ('picking_id.date_done', '>=', start_dt),
                     ('picking_id.date_done', '<=', end_dt),
+                    ('picking_id.origin', 'not in', op_name_receipt),
                 ])
-                receiving = sum(incoming_moves.mapped('qty_done'))
+                receiving = sum(incoming_moves.filtered(lambda l: l.product_id.id == prod.id).mapped('qty_done'))
 
+                opincoming_moves = StockMoveLine.search([
+                    ('product_id', '=', prod.id),
+                    ('picking_id.picking_type_code', '=', 'incoming'),
+                    ('picking_id.state', '=', 'done'),
+                    ('picking_id.date_done', '>=', start_dt),
+                    ('picking_id.date_done', '<=', end_dt),
+                    ('picking_id.origin', 'in', op_name_receipt),
+                ])
+
+                opening = sum(opincoming_moves.filtered(lambda l: l.product_id.id == prod.id).mapped('qty_done'))
+
+                start_dt_data = fields.Datetime.from_string(start_dt)
+                end_dt_data   = fields.Datetime.from_string(end_dt)
+
+                last_start_dt = start_dt_data - timedelta(days=1)
+                last_end_dt = end_dt_data - timedelta(days=1) 
+
+                closing_incoming_moves = StockMoveLine.search([
+                    ('product_id', '=', prod.id),
+                    ('picking_id.picking_type_code', '=', 'incoming'),
+                    ('picking_id.state', '=', 'done'),
+                    ('picking_id.date_done', '>=', last_start_dt),
+                    ('picking_id.date_done', '<=', last_end_dt),
+                    ('picking_id.origin', 'not in', op_name_receipt),
+                ])
+                closing_receiving = sum(closing_incoming_moves.filtered(lambda l: l.product_id.id == prod.id).mapped('qty_done'))
+
+                closing_opincoming_moves = StockMoveLine.search([
+                    ('product_id', '=', prod.id),
+                    ('picking_id.picking_type_code', '=', 'incoming'),
+                    ('picking_id.state', '=', 'done'),
+                    ('picking_id.date_done', '>=', last_start_dt),
+                    ('picking_id.date_done', '<=', last_end_dt),
+                    ('picking_id.origin', 'in', op_name_receipt),
+                ])
+
+                closing_opening = sum(closing_opincoming_moves.filtered(lambda l: l.product_id.id == prod.id).mapped('qty_done'))
+
+                last_prod_date = prod_date - timedelta(days=1) 
+
+                last_date_recs = production_rec.filtered(lambda r: r.date == last_prod_date)
+
+                last_prod_lines = last_date_recs.line_ids.filtered(lambda l: l.product_id.id == prod.id)
+                
                 # =========================
                 # NORMAL PRODUCTS
                 # =========================
                 if prod != raw_products[-1]:
                     consumption = sum(prod_lines.mapped('qty'))
 
+                    closing =  ((closing_receiving + closing_opening) - sum(last_prod_lines.mapped('qty'))) if (closing_receiving + closing_opening) > 0 else 0
+                    closing_str = "{:.2f}".format(closing)
+
                     sheet.write(row, col,     opening,     data_style)
                     sheet.write(row, col + 1, receiving,   data_style)
                     sheet.write(row, col + 2, consumption, data_style)
-                    sheet.write(row, col + 3, closing,     data_style)
+                    sheet.write(row, col + 3, closing_str, data_style)
 
                 # =========================
                 # LAST PRODUCT (FINISHED GOODS)
@@ -287,16 +340,32 @@ class Production1ReportExelWiz(models.TransientModel):
                         ('product_id', '=', prod.id),
                         ('picking_id.picking_type_code', '=', 'outgoing'),
                         ('picking_id.state', '=', 'done'),
-                        ('picking_id.date_done', '=', prod_date),
                         ('picking_id.date_done', '>=', start_dt),
                         ('picking_id.date_done', '<=', end_dt),
                     ])
-                    dispatch = sum(outgoing_moves.mapped('qty_done'))
+                    dispatch = sum(outgoing_moves.filtered(lambda l: l.product_id.id == prod.id).mapped('qty_done'))
+
+                    closing_outgoing_moves = StockMoveLine.search([
+                        ('product_id', '=', prod.id),
+                        ('picking_id.picking_type_code', '=', 'outgoing'),
+                        ('picking_id.state', '=', 'done'),
+                        ('picking_id.date_done', '>=', last_start_dt),
+                        ('picking_id.date_done', '<=', last_end_dt),
+                    ])
+                    closing_dispatch = sum(closing_outgoing_moves.filtered(lambda l: l.product_id.id == prod.id).mapped('qty_done'))
+
+                    last_finished_lines = last_date_recs.finished_line_ids.filtered(
+                        lambda f: f.mst_id.product_tmpl_id.id == prod.id
+                    )
+                    last_production = sum(last_finished_lines.mapped('bucket_qty'))
+
+                    closing =  ((closing_opening + last_production) - closing_dispatch) if (closing_receiving + last_production) > 0 else 0
+                    closing_str = "{:.2f}".format(closing)
 
                     sheet.write(row, col,     opening,    data_style)
                     sheet.write(row, col + 1, production, data_style)
                     sheet.write(row, col + 2, dispatch,   data_style)
-                    sheet.write(row, col + 3, closing,    data_style)
+                    sheet.write(row, col + 3, closing_str,    data_style)
 
                 col += 4
 
@@ -313,5 +382,66 @@ class Production1ReportExelWiz(models.TransientModel):
         return {
             'type': 'ir.actions.act_url',
             'url': f"/web/content/{self._name}/{self.id}/rpt_xls_file/Shift_wise_report.xls?download=true",
+            'target': 'self',
+        }
+    
+
+class Production2ReportExelWiz(models.TransientModel):
+    _name = 'production2.exel.wiz'
+    _description= "Daily Production Report Exel"
+
+    rpt_xls_file = fields.Binary()
+    from_date = fields.Date(string="From Date",default=fields.Date.context_today)
+    to_date = fields.Date(string="To Date",default=fields.Date.context_today)
+    company_id = fields.Many2one('res.company',string="Company" , default=lambda self: self.env.company)
+
+    def production_xls_report(self):
+        workbook = xlwt.Workbook()
+        worksheet = workbook.add_sheet('Stock')
+
+        header_style = xlwt.easyxf(
+            "font: bold 1, colour black;"
+            "align: vert centre, horiz centre;"
+            "border: top thick, right thick, bottom thick, left thick;"
+        )
+        center_style = xlwt.easyxf(
+            "align: vert centre, horiz centre; border: top thin, right thin, bottom thin, left thin;"
+        )
+
+        headers = ["DATE", "PRODUCTION", "PRODUCT NAME", "NO OF DRUM", "WEIGHT"]
+        for col, header in enumerate(headers):
+            worksheet.write(0, col, header, header_style)
+            worksheet.col(col).width = 5000
+
+        row = 1
+        srl = 1
+        domain = [('company_id', '=', self.company_id.id)]
+        if self.from_date:
+            domain.append(('date', '>=', self.from_date))
+        if self.to_date:
+            domain.append(('date', '<=', self.to_date))
+        
+        production_rec = self.env['jal.production'].sudo().search(domain, order="date")
+
+        if not production_rec:
+            raise ValidationError("No Data !!!")
+
+        for rec in production_rec:
+            worksheet.write(row, 0, rec.date.strftime('%d-%m-%Y') if rec.date else '', center_style)  
+            worksheet.write(row, 1, rec.name or "", center_style)
+            worksheet.write(row, 2, rec.product_tmpl_id.display_name or "", center_style)
+            worksheet.write(row, 3, sum(rec.finished_line_ids.mapped('bucket_qty')) or 0, center_style)
+            worksheet.write(row, 4, sum(rec.finished_line_ids.mapped('qty')) or 0, center_style)
+
+            row += 1
+            srl += 1
+
+        fp = io.BytesIO()
+        workbook.save(fp)
+        self.rpt_xls_file = base64.encodebytes(fp.getvalue())
+
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f"/web/content/{self._name}/{self.id}/rpt_xls_file/daily_production_report_excel.xls?download=true",
             'target': 'self',
         }

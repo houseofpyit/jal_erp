@@ -36,6 +36,9 @@ class inheritSaleOrder(models.Model):
             self.name = str(self.order_chr)+ str(self.order_no)
         else:
             self.name = self.order_no
+
+        for pic in self.picking_ids:
+            pic.write({'origin': self.name})
         return res
 
     @api.model

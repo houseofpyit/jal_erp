@@ -26,6 +26,7 @@
         <field name="model">sale.incoterm.mst</field>
         <field name="arch" type="xml" >
             <tree sample="1">
+                <field name="sequence" widget="handle"/>
                 <field name="name"/>
             </tree>
         </field>
@@ -66,6 +67,7 @@
         <field name="model">sale.terms.mst</field>
         <field name="arch" type="xml" >
             <tree sample="1">
+                <field name="sequence" widget="handle"/>
                 <field name="name"/>
             </tree>
         </field>
@@ -134,6 +136,7 @@
                 <sheet>
                     <group>
                         <group>
+                            <field name="display_name" required="1"/>
                             <field name="name" required="1"/>
                             <field name="bank_ac_name" />
                             <field name="branch" />

@@ -257,6 +257,7 @@ class QualityGradeLine(models.Model):
     grade_id = fields.Many2one('product.attribute.value',string="Grade",domain="[('attribute_id.attribute_type','=','grade')]")
     mesh_id = fields.Many2one('product.attribute.value',string="Mesh",domain="[('attribute_id.attribute_type','=','mesh')]")
     bucket_id = fields.Many2one('product.attribute.value',string="Bucket",domain="[('attribute_id.attribute_type','=','bucket')]")
+    lid_id = fields.Many2one('product.attribute.value',string="Lid Color",domain="[('attribute_id.attribute_type','=','lid_color')]")
     no_of_drum = fields.Integer(string="No of Drum")
     weight = fields.Float(string="Weight",digits=(2, 3))
     product_id = fields.Many2one('product.product')
@@ -271,15 +272,16 @@ class QualityGradeLine(models.Model):
 
                 rec.weight = rec.no_of_drum * rec.product_id.drum_cap_id.weight
 
-    @api.onchange('grade_id', 'mesh_id', 'bucket_id')
+    @api.onchange('grade_id', 'mesh_id', 'lid_id')
     def _onchange_product_attributes(self):
         # if not (self.grade_id and self.mesh_id):
         #     self.product_id = False
         #     return {'domain': {'product_id': []}}
         domain = [
-            '|',
+            '|','|',
             ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.grade_id.id),
             ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.mesh_id.id),
+            ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.lid_id.id),
             # ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.bucket_id.id),
             ('product_tmpl_id', '=', self.product_tmpl_id.id)
         ]
