@@ -25,8 +25,22 @@
             <xpath expr="//field[@name='invoice_status']" position="attributes">
                 <attribute name="invisible">1</attribute>   
             </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="date"/>
+            </xpath>
             <xpath expr="//field[@name='state']" position="after">
                 <field name="purbill_status" optional="show" widget="badge" decoration-success="purbill_status == 'fully_bill'" decoration-info="purbill_status == 'waiting_bill'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="purchase_order_confirm_tree_view_inherit_transaction" model="ir.ui.view">
+        <field name="name">purchase.order.confirm.tree.view.inherit.transaction</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_approve']" position="replace">
+                <field name="date" widget="date" invisible="context.get('quotation_only', False)" optional="show"/>
             </xpath>
         </field>
     </record>

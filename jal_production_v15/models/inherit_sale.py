@@ -74,6 +74,25 @@ class inheritedSaleOrderLine(models.Model):
             else:
                 rec.bucket = 0
 
+    @api.onchange('product_tmpl_id')
+    def _onchange_product_tmpl_value_id(self):
+        self.grade_id = False
+        self.mesh_id = False
+        self.lid_id = False        
+        self.product_id = False        
+        grade_ids = []
+        mesh_ids = []
+        lid_ids = []
+        for att in self.product_tmpl_id.attribute_line_ids.value_ids:
+            if att.attribute_id.attribute_type == 'grade':
+                grade_ids.append(att.id)
+            if att.attribute_id.attribute_type == 'mesh':
+                mesh_ids.append(att.id)
+            if att.attribute_id.attribute_type == 'lid_color':
+                lid_ids.append(att.id)
+        
+        return {'domain': {'grade_id': [('id', 'in', grade_ids)],'mesh_id': [('id', 'in', mesh_ids)],'lid_id': [('id', 'in', lid_ids)]}}
+    
     @api.onchange('name_id')
     def _onchange_name_id(self):
         self.bucket_cap_id = False

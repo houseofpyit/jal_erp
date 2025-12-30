@@ -272,20 +272,21 @@ class QualityGradeLine(models.Model):
 
                 rec.weight = rec.no_of_drum * rec.product_id.drum_cap_id.weight
 
-    @api.onchange('grade_id', 'mesh_id', 'lid_id')
+    @api.onchange('grade_id','mesh_id','product_tmpl_id','lid_id')
     def _onchange_product_attributes(self):
-        # if not (self.grade_id and self.mesh_id):
+        # if not (self.grade_id and self.mesh_id and self.lid_id and self.product_tmpl_id):
         #     self.product_id = False
         #     return {'domain': {'product_id': []}}
         domain = [
-            '|','|',
-            ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.grade_id.id),
-            ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.mesh_id.id),
-            ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.lid_id.id),
-            # ('product_template_attribute_value_ids.product_attribute_value_id', '=', self.bucket_id.id),
             ('product_tmpl_id', '=', self.product_tmpl_id.id)
         ]
-
+        if self.grade_id:
+            domain.append(('product_template_attribute_value_ids.product_attribute_value_id', '=', self.grade_id.id))
+        if self.mesh_id:
+            domain.append(('product_template_attribute_value_ids.product_attribute_value_id', '=', self.mesh_id.id))
+        if self.lid_id:
+            domain.append(('product_template_attribute_value_ids.product_attribute_value_id', '=', self.lid_id.id))
+            
         products = self.env['product.product'].search(domain)
 
         if products:
@@ -295,3 +296,22 @@ class QualityGradeLine(models.Model):
             self.product_id = False
             all_products = self.env['product.product'].search([])
             return {'domain': {'product_id': [('id', 'in', all_products.ids)]}}
+        
+    @api.onchange('product_tmpl_id')
+    def _onchange_product_tmpl_value_id(self):
+        self.grade_id = False
+        self.mesh_id = False
+        self.lid_id = False        
+        self.product_id = False        
+        grade_ids = []
+        mesh_ids = []
+        lid_ids = []
+        for att in self.product_tmpl_id.attribute_line_ids.value_ids:
+            if att.attribute_id.attribute_type == 'grade':
+                grade_ids.append(att.id)
+            if att.attribute_id.attribute_type == 'mesh':
+                mesh_ids.append(att.id)
+            if att.attribute_id.attribute_type == 'lid_color':
+                lid_ids.append(att.id)
+        
+        return {'domain': {'grade_id': [('id', 'in', grade_ids)],'mesh_id': [('id', 'in', mesh_ids)],'lid_id': [('id', 'in', lid_ids)]}}

@@ -1,6 +1,7 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 from datetime import date,datetime
+from odoo.tools.float_utils import float_compare
 
 class inheriteStockPicking(models.Model):
     _inherit = "stock.picking"
@@ -232,6 +233,17 @@ class InheritStockMove(models.Model):
     def _onchange_move_line_nosuggest_ids(self):
         for move in self:
             move.done_bucket = sum(move.move_line_nosuggest_ids.mapped('done_bucket'))
+
+    @api.depends('move_line_ids.qty_done', 'move_line_ids.product_uom_id', 'move_line_nosuggest_ids.qty_done', 'picking_type_id.show_reserved','move_line_ids.done_bucket')
+    def _quantity_done_compute(self):
+        res = super(InheritStockMove,self)._quantity_done_compute()
+        for move in self:
+            done_bucket = 0
+            for move_line in move._get_move_lines():
+                done_bucket += move_line.product_uom_id._compute_quantity(
+                    move_line.done_bucket, move.product_uom, round=False)
+            move.done_bucket = done_bucket
+        return res
 
 class InheritStockMoveLine(models.Model):
     _inherit = "stock.move.line"
