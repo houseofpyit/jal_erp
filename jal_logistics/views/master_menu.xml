@@ -109,5 +109,22 @@
                 parent="jal_logistics.logistics_configuration_main_menu"
                 action="action_label_remark_mst"
                 sequence="10"/>
+
+
+    <menuitem
+        id="jal_logistics_pre_shipment_main_menu_sale"
+        name="Pre-Shipment"
+        parent="jal_crm.international_main_menu"
+        action="action_jal_logistics_pre_shipment"
+        sequence="4"/>
+        <!-- groups="jal_logistics.res_group_logistics_agent,jal_logistics.res_group_logistics_user,jal_logistics.res_group_logistics_admin" -->
+
+    <menuitem
+        id="jal_logistics_dispatch_document_main_menu_sale"
+        name="Dispatch/Document"
+        parent="jal_crm.international_main_menu"
+        action="action_jal_logistics_dispatch_document"
+        sequence="4"/>
+        <!-- groups="jal_logistics.res_group_logistics_user,jal_logistics.res_group_logistics_admin" -->
            
 </odoo>
