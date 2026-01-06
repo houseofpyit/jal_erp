@@ -115,4 +115,36 @@
         </field>
     </record>
 
+    <record id="view_quotation_tree_international_create_pi_inherit_jal" model="ir.ui.view">
+        <field name="name">sale.order.tree.view.create.inherit.jal</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="jal_crm.view_quotation_tree_international_create_pi"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tot_pcs']" position="after">
+                <field name="total_mt_amt" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_quotation_tree_international_confirm_pi_inherit_jal" model="ir.ui.view">
+        <field name="name">sale.order.tree.view.confirm.inherit.jal</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="jal_crm.view_quotation_tree_international_confirm_pi"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tot_pcs']" position="after">
+                <field name="total_mt_amt" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_quotation_tree_international_close_order_inherit_jal" model="ir.ui.view">
+        <field name="name">sale.order.tree.view.close.order.inherit.jal</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="jal_crm.view_quotation_tree_international_close_order"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tot_pcs']" position="after">
+                <field name="total_mt_amt" />
+            </xpath>
+        </field>
+    </record>
 </odoo>                            

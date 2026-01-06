@@ -409,6 +409,7 @@
                 <field name='name'/>
                 <field name="date" />
                 <field name='sale_id' />
+                <field name='partner_id' />
                 <field name='booking_id' />
                 <field name='transport_id' />
                 <field name='loading_planner_id' />
@@ -585,9 +586,10 @@
                 <field name="date" optional="hide"/>
                 <field name='sale_id' />
                 <field name='partner_id' />
-                <field name='port_id' string="Destination port"/>
+                <field name='port_id'/>
                 <field name='total_containers' />
                 <field name='planning_index' />
+                <field name='loading_planner_id' />
                 <field name='booking_date' />
                 <field name='booking_received' />
                 <field name='loading_type' />
@@ -867,11 +869,13 @@
             <tree create="0">
                 <field name='name'/>
                 <field name='sale_id' />
-                <field name='port_id' string="Destination port"/>
+                <field name='port_id'/>
                 <field name='total_containers' />
                 <field name='loading_type' />
                 <field name='container_stuffing_date' />
                 <field name='vessel_date' />
+                <field name='shipping_line_id' />
+                <field name='batch_number' />
                 <field name="date" optional="hide"/>
                 <field name='epcg_liscence_number' optional="hide"/>
                 <field name='invoice_number' optional="hide"/>
@@ -1020,12 +1024,14 @@
                 <field name="date" optional="hide"/>
                 <field name='sale_id' />
                 <field name='partner_id' />
-                <field name='port_id' string="Destination port"/>
+                <field name='port_id' />
                 <field name='total_containers' />
                 <field name='bl_status_type' />
                 <field name='etd' />
                 <field name='eta' />
                 <field name='transit_days' />
+                <field name='shipping_route' />
+                <field name='balance_type' />
                 <field name='detention_type' />
                 <field name='late_bl_type' />
                 <field name='bl_correction_type' />
@@ -1033,8 +1039,6 @@
                 <field name='bill_date' optional="hide"/>
                 <field name='freight_inv_number' optional="hide"/>
                 <field name='transport_inv_number' optional="hide"/>
-                <field name='shipping_route' optional="hide"/>
-                <field name='balance_type' optional="hide"/>
                 <field name='bi_date2' optional="hide"/>
                 <field name="state" widget="badge" optional="hide"/>
                 <field name="delivery_count" invisible="1"/>
@@ -1054,6 +1058,36 @@
         <field name="view_mode">tree,form,kanban</field>
     </record>
 
+    <record model='ir.ui.view' id='jal_logistics_tree_close'>
+        <field name='name'>jal.logistics.tree.close</field>
+        <field name='model'>jal.logistics</field>
+        <field name='arch' type='xml'>
+            <tree create="0">
+                <field name='name'/>
+                <field name="date" />
+                <field name='sale_id' />
+                <field name='partner_id' />
+                <field name='booking_id' />
+                <field name='transport_id' optional="hide"/>
+                <field name='loading_planner_id' optional="hide"/>
+                <field name='epcg_liscence_number' optional="hide"/>
+                <field name='invoice_number' />
+                <field name='freight_inv_number' />
+                <field name='transport_inv_number' />
+                <field name='detention_type' />
+                <field name='detention_amount' />
+                <field name='late_bl_type' />
+                <field name='late_bl_charges' />
+                <field name='bl_correction_type' />
+                <field name='bl_correction_charges' />
+                <field name='bill_number' optional="hide"/>
+                <field name='bill_date' optional="hide"/>
+                <field name='shipping_route' optional="hide"/>
+                <field name="state" widget="badge" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
     <record id="action_jal_logistics_close" model="ir.actions.act_window">
         <field name="name">Close</field>
         <field name="type">ir.actions.act_window</field>
@@ -1061,7 +1095,7 @@
         <field name="domain">[('state','=','close')]</field>
         <field name="view_ids"
             eval="[(5, 0, 0),
-                    (0, 0, {'view_mode': 'tree', 'view_id': ref('jal_logistics_tree')}),
+                    (0, 0, {'view_mode': 'tree', 'view_id': ref('jal_logistics_tree_close')}),
                     (0, 0, {'view_mode': 'form', 'view_id': ref('jal_logistics_form')})]"/>
         <field name="view_mode">tree,form,kanban</field>
     </record>

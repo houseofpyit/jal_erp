@@ -10,3 +10,4 @@ from . import inherit_purchase
 from . import inherit_op_stock
 from . import inherit_hop_receipt
 from . import inherit_purchase_return
+from . import inherit_cashbank_contra

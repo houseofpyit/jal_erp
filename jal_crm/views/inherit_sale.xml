@@ -101,6 +101,7 @@
                 <attribute name="attrs">{'readonly': [('state', 'in', ('sale','close_order'))]}</attribute>
             </xpath>
             <xpath expr="//field[@name='payment_term_id']" position="before">
+                <field name="close_date" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': [('state', 'in', ('sale','close_order'))],'invisible': [('close_date', '=', False)]}"/>
                 <field name="incoterm_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}"/>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
@@ -259,7 +260,7 @@
                 <field name="country_id" />
                 <field name="port_id" />
                 <field name="lading_type" />
-                <field name="tot_pcs" string="Total Quantity (MT)" />
+                <field name="tot_pcs" string="Total Quantity" />
                 <field name="team_id" optional="hide"/>
                 <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show" readonly="1"/>
@@ -274,11 +275,76 @@
         </field>
     </record>
 
+    <record id="view_quotation_tree_international_create_pi" model="ir.ui.view">
+        <field name="name">sale.order.tree.international.create.pi</field>
+        <field name="model">sale.order</field>
+        <field name="arch" type="xml">
+            <tree string="Quotation" class="o_sale_order" sample="1" decoration-info="state in ['draft', 'sent']" decoration-muted="state == 'cancel'" banner_route='/sales/sale_quotation_onboarding_panel'>
+                <field name="name" string="Number" readonly="1" decoration-bf="1"/>
+                <field name="create_date" string="Creation Date" widget="date" optional="show"/>
+                <field name="commitment_date" widget="date" optional="hide"/>
+                <field name="expected_date" widget="date" optional="hide"/>
+                <field name="partner_id" readonly="1"/>
+                <field name="country_id" />
+                <field name="port_id" />
+                <field name="lading_type" />
+                <field name="product_id" />
+                <field name="tot_pcs" string="Total Quantity" />
+                <field name="team_id" optional="hide"/>
+                <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show" readonly="1"/>
+                <field name="amount_untaxed" sum="Total Tax Excluded" widget="monetary" optional="hide"/>
+                <field name="amount_tax" sum="Tax Total" widget="monetary" optional="hide"/>
+                <field name="amount_total" sum="Total Tax Included" widget="monetary" decoration-bf="1" optional="show"/>
+                <field name="state" decoration-success="state == 'sale' or state == 'done'" decoration-info="state == 'draft' or state == 'sent'" widget="badge" optional="show"/>
+                <field name="invoice_status" optional="hide"/>
+                <field name="message_needaction" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_quotation_tree_international_confirm_pi" model="ir.ui.view">
+        <field name="name">sale.order.tree.international.confirm.pi</field>
+        <field name="model">sale.order</field>
+        <field name="arch" type="xml">
+            <tree string="Quotation" class="o_sale_order" sample="1" decoration-info="state in ['draft', 'sent']" decoration-muted="state == 'cancel'" banner_route='/sales/sale_quotation_onboarding_panel'>
+                <field name="name" string="Number" readonly="1" decoration-bf="1"/>
+                <field name="create_date" string="Creation Date" widget="date" optional="show"/>
+                <field name="commitment_date" widget="date" optional="hide"/>
+                <field name="expected_date" widget="date" optional="hide"/>
+                <field name="partner_id" readonly="1"/>
+                <field name="country_id" />
+                <field name="port_id" />
+                <field name="lading_type" />
+                <field name="product_id" />
+                <field name="bl_uploaded_type" />
+                <field name="doc_uploaded_type" />
+                <field name="tot_pcs" string="Total Quantity" />
+                <field name="team_id" optional="hide"/>
+                <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="amount_untaxed" sum="Total Tax Excluded" widget="monetary" optional="hide"/>
+                <field name="amount_tax" sum="Tax Total" widget="monetary" optional="hide"/>
+                <field name="amount_total" sum="Total Tax Included" widget="monetary" decoration-bf="1" optional="show"/>
+                <field name="state" decoration-success="state == 'sale' or state == 'done'" decoration-info="state == 'draft' or state == 'sent'" widget="badge" optional="show"/>
+                <field name="invoice_status" optional="hide"/>
+                <field name="message_needaction" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="company_id" readonly="1"/>
+                <field name="inspection" readonly="1"/>
+            </tree>
+        </field>
+    </record>
+
     <record id="action_quotations_with_onboarding_international" model="ir.actions.act_window">
         <field name="name">Quotations</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">sale.order</field>
-        <field name="view_id" ref="jal_crm.view_quotation_tree_international"/>
+        <!-- <field name="view_id" ref="jal_crm.view_quotation_tree_international"/> -->
+        <field name="view_ids"
+            eval="[(5, 0, 0),
+                    (0, 0, {'view_mode': 'tree', 'view_id': ref('jal_crm.view_quotation_tree_international')})
+                    ]"/>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
         <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
         <field name="context">{'default_business_type':'international'}</field>
@@ -296,7 +362,11 @@
         <field name="name">Create PI</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">sale.order</field>
-        <field name="view_id" ref="jal_crm.view_quotation_tree_international"/>
+        <!-- <field name="view_id" ref="jal_crm.view_quotation_tree_international_create_pi"/> -->
+        <field name="view_ids"
+            eval="[(5, 0, 0),
+                    (0, 0, {'view_mode': 'tree', 'view_id': ref('jal_crm.view_quotation_tree_international_create_pi')})
+                    ]"/>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
         <field name="context">{'default_business_type':'international'}</field>
         <field name="domain">[('state','=','create_pi')]</field>
@@ -313,7 +383,11 @@
         <field name="name">Confirm PI</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">sale.order</field>
-        <field name="view_id" ref="jal_crm.view_quotation_tree_international"/>
+        <!-- <field name="view_id" ref="jal_crm.view_quotation_tree_international"/> -->
+        <field name="view_ids"
+            eval="[(5, 0, 0),
+                    (0, 0, {'view_mode': 'tree', 'view_id': ref('jal_crm.view_quotation_tree_international_confirm_pi')})
+                    ]"/>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
         <field name="context">{'default_business_type':'international'}</field>
         <field name="domain">[('state','=','sale')]</field>
@@ -326,11 +400,38 @@
         </field>
     </record>
 
+    <record id="view_quotation_tree_international_close_order" model="ir.ui.view">
+        <field name="name">sale.order.tree.international.close.order</field>
+        <field name="model">sale.order</field>
+        <field name="arch" type="xml">
+            <tree string="Quotation" class="o_sale_order" sample="1" decoration-info="state in ['draft', 'sent']" decoration-muted="state == 'cancel'" banner_route='/sales/sale_quotation_onboarding_panel'>
+                <field name="name" string="Number" readonly="1" decoration-bf="1"/>
+                <field name="create_date" string="Creation Date" widget="date" optional="show"/>
+                <field name="close_date" widget="date" optional="show"/>
+                <field name="tot_pcs" string="Total Quantity" />
+                <field name="team_id" optional="hide"/>
+                <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="amount_untaxed" sum="Total Tax Excluded" widget="monetary" optional="hide"/>
+                <field name="amount_tax" sum="Tax Total" widget="monetary" optional="hide"/>
+                <field name="amount_total" sum="Total Tax Included" widget="monetary" decoration-bf="1" optional="show"/>
+                <field name="state" decoration-success="state == 'sale' or state == 'done'" decoration-info="state == 'draft' or state == 'sent'" widget="badge" optional="hide"/>
+                <field name="invoice_status" optional="hide"/>
+                <field name="message_needaction" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="company_id" readonly="1"/>
+            </tree>
+        </field>
+    </record>
+
      <record id="action_close_order_with_international" model="ir.actions.act_window">
         <field name="name">Close Order</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">sale.order</field>
-        <field name="view_id" ref="jal_crm.view_quotation_tree_international"/>
+        <!-- <field name="view_id" ref="jal_crm.view_quotation_tree_international"/> -->
+        <field name="view_ids"
+            eval="[(5, 0, 0),
+                    (0, 0, {'view_mode': 'tree', 'view_id': ref('jal_crm.view_quotation_tree_international_close_order')})
+                    ]"/>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
         <field name="context">{'default_business_type':'international'}</field>
         <field name="domain">[('state','=','close_order')]</field>
@@ -347,7 +448,11 @@
         <field name="name">Quotations</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">sale.order</field>
-        <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <!-- <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/> -->
+        <field name="view_ids"
+            eval="[(5, 0, 0),
+                    (0, 0, {'view_mode': 'tree', 'view_id': ref('sale.view_quotation_tree_with_onboarding')})
+                    ]"/>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
         <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
         <field name="context">{'default_business_type':'domestic'}</field>
@@ -365,7 +470,11 @@
         <field name="name">Quotations</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">sale.order</field>
-        <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <!-- <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/> -->
+        <field name="view_ids"
+            eval="[(5, 0, 0),
+                    (0, 0, {'view_mode': 'tree', 'view_id': ref('sale.view_quotation_tree_with_onboarding')})
+                    ]"/>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
         <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
         <field name="context">{'default_business_type':'trading'}</field>

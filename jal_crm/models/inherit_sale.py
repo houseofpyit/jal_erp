@@ -2,6 +2,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 from num2words import num2words
 from lxml import etree
+from datetime import date,datetime
 
 class inheritedSaleOrder(models.Model):
    _inherit = "sale.order"
@@ -76,6 +77,11 @@ class inheritedSaleOrder(models.Model):
    attachment_bill_sale_ids = fields.Many2many('ir.attachment','attachment_bill_sale_id',string="Bill of Lading Draft")
    attachment_certificate2_sale_ids = fields.Many2many('ir.attachment','attachment_certificate2_sale_id',string="Certificate of Analysis")
    attachment_insurance_sale_ids = fields.Many2many('ir.attachment','attachment_insurance_sale_id',string="Insurance")
+
+   bl_uploaded_type = fields.Selection([('Yes', 'Yes'),('No', 'No'),], string='Bl Draft Uploaded',default='No',tracking=True)
+   doc_uploaded_type = fields.Selection([('Yes', 'Yes'),('No', 'No'),], string='Shipping Douments uploaded',default='No',tracking=True)
+   close_date = fields.Date(string='Order Close date',tracking=True)
+   
    # @api.onchange('team_id')
    # def _onchange_team_id(self):
    #    self.business_type = self.team_id.business_type
@@ -119,6 +125,9 @@ class inheritedSaleOrder(models.Model):
       for line in self:
          line.lead_count = len(self.env['crm.lead'].search([('id', '=', line.opportunity_id.id)]))
          line.purchase_req_count = len(self.env['jal.purchase.requisite'].search([('sale_id', '=', line.id)]))
+
+         line.bl_uploaded_type = 'Yes' if line.attachment_bill_sale_ids else 'No'
+         line.doc_uploaded_type = 'Yes' if line.attachment_invoice1_sale_ids else 'No'
       return res
    
    def create_purchase_requisite(self):
@@ -211,6 +220,7 @@ class inheritedSaleOrder(models.Model):
          }
    
    def action_close_order(self):
+      self.close_date = date.today()
       self.state = 'close_order'
 
    def action_quotation_confirm(self):
