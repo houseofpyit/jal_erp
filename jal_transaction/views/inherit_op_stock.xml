@@ -10,8 +10,19 @@
                 <button string="Complete" name="action_complete_btn" type="object" class="btn-primary" attrs="{'invisible': [('state' ,'=', 'complete')]}" />
                 <field name="state" widget="statusbar"/>
             </xpath>
+            <xpath expr="//field[@name='is_transfer']" position="after">
+                <field name="replace_stock" attrs="{'readonly': [('state' ,'=', 'complete')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='op_date']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state' ,'=', 'complete')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='line_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state' ,'=', 'complete')]}</attribute>
+            </xpath>
             <xpath expr="//tree/field[@name='pcs']" position="after">
                 <field name="bucket" width="150px" />
+                <field name="stock_qty" width="150px" readonly="1" force_save="1"/>
+                <field name="stock_bucket" width="150px" readonly="1" force_save="1"/>
             </xpath>
             <xpath expr="//tree/field[@name='pcs']" position="attributes">
                 <attribute name="string">Quantity</attribute>
