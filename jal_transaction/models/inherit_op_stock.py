@@ -116,9 +116,10 @@ class inheritedOpStockMst(models.Model):
 class inheritedOpStockMstLine(models.Model):
    _inherit = "hop.op.stock.line"
 
-   bucket = fields.Float('Packing Unit')
-   stock_qty = fields.Float('Stock Quantity')
-   stock_bucket = fields.Float('Stock Packing Unit')
+   pcs = fields.Float('PCS',tracking=True,digits=(2, 3))
+   bucket = fields.Float('Packing Unit',digits=(2, 3))
+   stock_qty = fields.Float('Stock Quantity',digits=(2, 3))
+   stock_bucket = fields.Float('Stock Packing Unit',digits=(2, 3))
 
    @api.onchange('product_id')
    def _onchange_product_id_stock(self):
