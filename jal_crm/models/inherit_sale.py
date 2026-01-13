@@ -245,6 +245,29 @@ class inheritedSaleOrder(models.Model):
       res = super(inheritedSaleOrder, self).write(vals)
 
       return res
+   
+   @api.onchange('partner_id')
+   def _onchange_partner_id_business_type(self):
+      if self.partner_id and self.partner_id.business_type:
+        # Clear invalid value
+         if self.buyer_notify_id and self.buyer_notify_id.business_type != self.partner_id.business_type:
+               self.buyer_notify_id = False
+
+         return {
+            'domain': {
+                'buyer_notify_id': [
+                    ('business_type', '=', self.partner_id.business_type)
+                ]
+            }
+        }
+      else:
+         self.buyer_notify_id = False
+         return {
+            'domain': {
+                'buyer_notify_id': []
+            }
+        }
+
 
 class inheritedSaleOrderLine(models.Model):
    _inherit = "sale.order.line"
@@ -282,10 +305,57 @@ class inheritedSaleOrderLine(models.Model):
    def _onchange_product_tmpl_id(self):
       self.product_uom = self.product_tmpl_id.uom_id.id
       self.price_unit = self.product_tmpl_id.list_price
+   
+   # @api.onchange('product_tmpl_id')
+   # def _onchange_product_tmpl_id_set_product(self):
+   #    for line in self:
+   #       if line.product_tmpl_id:
+   #             variant = line.product_tmpl_id.product_variant_id
+   #             if not variant:
+   #                raise UserError(_("No variant found for selected Packing Type"))
+
+   #             line.product_id = variant.id          
+   #             line.product_uom = variant.uom_id.id  
+   #             line.price_unit = variant.list_price
+
 
    def get_sale_order_line_multiline_description_sale(self, product):
       res = super(inheritedSaleOrderLine, self).get_sale_order_line_multiline_description_sale(product)
       return ''
+   
+   # @api.model_create_multi
+   # def create(self, vals_list):
+   #    for vals in vals_list:
+   #       if not vals.get('display_type'):
+   #              # If product_id missing but product_tmpl_id exists
+   #             if not vals.get('product_id') and vals.get('product_tmpl_id'):
+   #                tmpl = self.env['product.template'].browse(vals['product_tmpl_id'])
+   #                variant = tmpl.product_variant_id
+   #                if not variant:
+   #                   raise UserError(_("No variant found for selected Packing Type"))
+
+   #                vals['product_id'] = variant.id
+   #                vals['product_uom'] = variant.uom_id.id
+   #                vals.setdefault('price_unit', variant.list_price)
+
+   #    return super().create(vals_list)
+   
+   # def write(self, vals):
+   #  if not vals.get('display_type'):
+   #      if not vals.get('product_id') and vals.get('product_tmpl_id'):
+   #          tmpl = self.env['product.template'].browse(vals['product_tmpl_id'])
+   #          variant = tmpl.product_variant_id
+   #          if not variant:
+   #              raise UserError(_("No variant found for selected Packing Type"))
+
+   #          vals['product_id'] = variant.id
+   #          vals['product_uom'] = variant.uom_id.id
+   #          vals.setdefault('price_unit', variant.list_price)
+
+   #  return super().write(vals)
+
+   
+   
 
    #  @api.onchange('product_id')
    #  def _onchange_product_id(self):

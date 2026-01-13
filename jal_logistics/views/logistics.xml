@@ -413,6 +413,7 @@
                 <field name='booking_id' />
                 <field name='transport_id' />
                 <field name='loading_planner_id' />
+                <field name='total_containers' />
                 <field name='epcg_liscence_number' />
                 <field name='invoice_number' />
                 <field name='bill_number' />
@@ -513,7 +514,7 @@
                                 <field name="booking_id" options="{'no_quick_create': True}" domain="[('acc_type','=','AGENT')]" context="{'default_acc_type': 'AGENT'}" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
                                 <field name="transport_id" options="{'no_quick_create': True}" domain="[('acc_type','=','TRANSPORT')]" context="{'default_acc_type': 'TRANSPORT'}" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
                                 <field name="cha_id" options="{'no_quick_create': True}" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
-                                <field name="shipping_id" options="{'no_quick_create': True}" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
+                                <!-- <field name="shipping_id" options="{'no_quick_create': True}" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/> -->
                                 <field name="product_id" options="{'no_quick_create': True}" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
                                 <field name="hbl_type" widget="radio" options="{'horizontal': true}" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
                                 <field name="booking_date" readonly="1" force_save="1"/>
@@ -526,6 +527,7 @@
                                 <field name="vessel_date"  attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
                                 <field name="container_stuffing_date"  attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
                                 <field name="port_id" options="{'no_quick_create': True}" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
+                                <field name="port_id_discharge" options="{'no_quick_create': True}" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
                                 <field name="destination_free_days" attrs="{'readonly': ['|',('state','in',('close','cancel')),('booking_date', '=', False)]}"/>
                             </group>
                             
@@ -586,7 +588,8 @@
                 <field name="date" optional="hide"/>
                 <field name='sale_id' />
                 <field name='partner_id' />
-                <field name='port_id'/>
+                <!-- <field name='port_id'/> -->
+                <field name='port_id_discharge'/>
                 <field name='total_containers' />
                 <field name='planning_index' />
                 <field name='loading_planner_id' />

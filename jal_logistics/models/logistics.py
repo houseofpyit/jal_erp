@@ -38,6 +38,7 @@ class JalLogistics(models.Model):
     vessel_date = fields.Date(string="Vessel cut-off date",tracking=True)
     container_stuffing_date = fields.Date(string="Container stuffing date",tracking=True)
     port_id = fields.Many2one('sale.port.mst',string="Port of Loading",tracking=True)
+    port_id_discharge = fields.Many2one('sale.port.mst',string="Port of Discharge",related='sale_id.port_id',tracking=True)
     destination_free_days = fields.Float(string='Destination Free Days')
     loading_type = fields.Selection([('Yes', 'Yes'),('No', 'No')], string='Loading Inspection',tracking=True)
     inspection_id = fields.Many2one('inspection.mst',string="Inspection Company",tracking=True)

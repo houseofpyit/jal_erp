@@ -80,7 +80,7 @@
                                                 <span>Bank :</span>
                                             </td>
                                             <td width="73%">
-                                                <span t-esc="o.bank_id.name"/>
+                                                <span t-esc="o.bank_id.bank_ac_name"/>
                                             </td>
                                         </tr>
                                         <tr>
@@ -88,12 +88,12 @@
                                                 <span>A/C No. :</span>
                                             </td>
                                             <td width="73%">
-                                                <span t-esc="o.bank_id.bank_ac_name"/>
+                                                <span t-esc="o.bank_id.bank_ac_no"/>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td width="27%">
-                                                <span>RTGS/MICR Code :</span>
+                                                <span>IFSC Code :</span>
                                             </td>
                                             <td width="73%">
                                                 <span  t-esc="o.bank_id.bank_branch_ifsc" />
@@ -356,6 +356,14 @@
                                                 <span  t-esc="o.company_id.country_id.name" />
                                             </td>
                                         </tr>
+                                        <tr>
+                                            <td width="40%">
+                                                <span>Total Containers :</span>
+                                            </td>
+                                            <td width="60%">
+                                                <span  t-esc="o.total_containers" />
+                                            </td>
+                                        </tr>
                                     </table>
                                 </td>
                             </tr>
@@ -428,7 +436,7 @@
                                                  <span><span t-esc="item.product_shipping_id.name"></span></span><br/>
                                              </t>
                                              <t t-else="o.display_name_on_pi == 'shipping_name'">
-                                                 <span><span t-esc="o.shipping_id.name"></span></span><br/>
+                                                 <span><span t-esc="o.product_id.name"></span></span><br/>
                                              </t>
                                             <t t-if="item.product_tmpl_id.hsn_id">
                                                 <span><b>Hsn - </b><span t-esc="item.product_tmpl_id.hsn_id.name"></span></span><br/>
@@ -618,12 +626,34 @@
                                     <b><span>TERMS &amp; CONDITIONS</span></b><br/>
                                     <span style="font-size:8px;" t-esc="o.note" />
                                 </td>
-                                <td style="text-align:right;">    
+                                <!-- <td style="text-align:right;">    
                                     <b><span>APPROVED BY</span></b><br/>
-                                    <t t-if="o.company_id.logo">
-                                        <img class="img img-responsive" t-att-src="image_data_uri(o.company_id.logo)" alt="Logo" style="width:130px; height:100px;" />
+                                    <t t-if="o.company_id.approved_sign">
+                                        <img class="img img-responsive" t-att-src="image_data_uri(o.company_id.approved_sign)" alt="Logo" style="width:130px; height:100px;" />
                                     </t>
+                                </td> -->
+                                <td style="text-align:right;">
+                                    <b><span>APPROVED BY</span></b><br/>
+
+                                    <!-- Create PI stage → Company Logo -->
+                                    <t t-if="o.state == 'create_pi'">
+                                        <t t-if="o.company_id.logo">
+                                            <img class="img img-responsive" t-att-src="image_data_uri(o.company_id.logo)" alt="Company Logo" style="width:130px; height:100px;"/>
+                                        </t>
+                                    </t>
+
+                                    <!-- Confirmed / Sale stage → Approved Sign -->
+                                    <t t-elif="o.state == 'sale'">
+                                        <t t-if="o.company_id.approved_sign">
+                                            <img t-att-src="image_data_uri(o.company_id.approved_sign)" style="width:130px; height:100px;"/>
+                                        </t>
+                                        <t t-else="">
+                                            <img t-att-src="image_data_uri(o.company_id.logo)" style="width:130px; height:100px;"/>
+                                        </t>
+                                    </t>
+
                                 </td>
+
                             </tr>
                         </table>
                     </div>

@@ -10,6 +10,13 @@
                 <page string="Header Image" name="company_header">
                     <field name="header_image" widget="image"/>
                 </page>
+                <page string="Approved Sign" name="approved_sign">
+                    <group>
+                        <field name="approved_sign" widget="image"
+                               class="oe_avatar"
+                               options="{'preview_image': 'approved_sign'}"/>
+                    </group>
+                </page>
             </xpath>
         </field>
     </record>

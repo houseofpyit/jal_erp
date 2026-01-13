@@ -29,6 +29,20 @@
             action="crm_lead_action_pipeline_international"
             parent="jal_crm.international_main_menu"
             sequence="5"/>
+        
+        <menuitem
+            id="dispatch_international_main"
+            name="Dispatch/Document"
+            parent="jal_crm.international_main_menu"
+            action="jal_crm.action_jal_crm_dispatch_document"
+            sequence="4"/>
+
+        <menuitem
+            id="post_shipment_international_main"
+            name="Post Shipment"
+            parent="jal_crm.international_main_menu"
+            action="jal_crm.action_jal_crm_post_shipment"
+            sequence="5"/>
 
         <menuitem
             id="sale_international_main"
