@@ -123,8 +123,15 @@
         id="jal_logistics_dispatch_document_main_menu_sale"
         name="Dispatch/Document"
         parent="jal_crm.international_main_menu"
-        action="action_jal_logistics_dispatch_document"
+        action="action_jal_crm_logistics_dispatch_document"
         sequence="4"/>
         <!-- groups="jal_logistics.res_group_logistics_user,jal_logistics.res_group_logistics_admin" -->
+
+    <menuitem
+        id="post_shipment_international_main"
+        name="Post Shipment"
+        parent="jal_crm.international_main_menu"
+        action="action_jal_logistics_post_shipment"
+        sequence="4"/>
            
 </odoo>

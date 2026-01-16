@@ -872,7 +872,8 @@
             <tree create="0">
                 <field name='name'/>
                 <field name='sale_id' />
-                <field name='port_id'/>
+                <!-- <field name='port_id'/> -->
+                <field name='port_id_discharge'/>
                 <field name='total_containers' />
                 <field name='loading_type' />
                 <field name='container_stuffing_date' />
@@ -892,6 +893,18 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">jal.logistics</field>
         <field name="domain">[('state','=','dispatch_document')]</field>
+        <field name="view_ids"
+            eval="[(5, 0, 0),
+                    (0, 0, {'view_mode': 'tree', 'view_id': ref('jal_logistics_dispatch_document_tree')}),
+                    (0, 0, {'view_mode': 'form', 'view_id': ref('jal_logistics_dispatch_document_form')})]"/>
+        <field name="view_mode">tree,form,kanban</field>
+    </record>
+
+    <record id="action_jal_crm_logistics_dispatch_document" model="ir.actions.act_window">
+        <field name="name">Dispatch/Document</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">jal.logistics</field>
+        <!-- <field name="domain">[('state','=','dispatch_document')]</field> -->
         <field name="view_ids"
             eval="[(5, 0, 0),
                     (0, 0, {'view_mode': 'tree', 'view_id': ref('jal_logistics_dispatch_document_tree')}),
@@ -1027,7 +1040,8 @@
                 <field name="date" optional="hide"/>
                 <field name='sale_id' />
                 <field name='partner_id' />
-                <field name='port_id' />
+                <!-- <field name='port_id' /> -->
+                <field name='port_id_discharge' />
                 <field name='total_containers' />
                 <field name='bl_status_type' />
                 <field name='etd' />

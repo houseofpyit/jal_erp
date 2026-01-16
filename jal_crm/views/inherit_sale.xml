@@ -181,7 +181,7 @@
             <xpath expr="//field[@name='order_line']/form/group/group/field[@name='product_id']" position="after">
                 <!-- <field name="shipping_id" width="150px" domain="[('display_name_on_pi','=', 'shipping_name')]" options="{'no_quick_create': True}" attrs="{'invisible': [('parent.business_type', '!=', 'international')]}"/> -->
                 <field name="product_shipping_id" width="150px" domain="[('display_name_on_pi','=', 'product_name')]" options="{'no_quick_create': True}" attrs="{'invisible': [('parent.business_type', '!=', 'international')]}"/>
-                <field name="product_tmpl_id" string="Packing Type" options="{'no_create': True}" attrs="{'required': [('display_type', '=', False)]}" readonly="0" context="{'partner_id': parent.partner_id, 'quantity': product_uom_qty, 'pricelist': parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id, 'default_list_price': price_unit, 'default_description_sale': name}" domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" widget="product_configurator"/>
+                <field name="product_tmpl_id" string="Packing Type" options="{'no_create': True}" attrs="{'required': [('display_type', '=', False)]}" readonly="0" context="{'partner_id': parent.partner_id, 'quantity': product_uom_qty, 'pricelist': parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id, 'default_list_price': price_unit, 'default_description_sale': name}" domain="[('sale_ok', '=', True)]" widget="product_configurator"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/form/group/group/field[@name='analytic_tag_ids']" position="after">
                 <field name="packing_type" invisible="1" attrs="{'invisible': [('parent.business_type', '!=', 'international')],'required': [('parent.business_type', '=', 'international'),('display_type', '=', False)]}"/>
@@ -226,7 +226,7 @@
                 <!-- <attribute name="width">150px</attribute>
                 <attribute name="invisible">0</attribute>
                 <attribute name="force_save">1</attribute> -->
-                <field name="product_tmpl_id" width="150px" string="Packing Type" options="{'no_create': True}" readonly="0" context="{'partner_id': parent.partner_id, 'quantity': product_uom_qty, 'pricelist': parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id, 'default_list_price': price_unit, 'default_description_sale': name}" domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" />
+                <field name="product_tmpl_id" width="150px" string="Packing Type" options="{'no_create': True}" readonly="0" context="{'partner_id': parent.partner_id, 'quantity': product_uom_qty, 'pricelist': parent.pricelist_id, 'uom':product_uom, 'default_list_price': price_unit, 'default_description_sale': name}" domain="[('sale_ok', '=', True)]" />
             </xpath>
             <xpath expr="//control/create[@name='add_note_control']" position="replace"/>
         </field>
@@ -448,21 +448,21 @@
         </field>
     </record>
 
-    <record id="action_jal_crm_dispatch_document" model="ir.actions.act_window">
+    <!-- <record id="action_jal_crm_dispatch_document" model="ir.actions.act_window">
         <field name="name">Dispatch/Document</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">sale.order</field>
         <field name="domain">[]</field>
-        <field name="view_mode">tree</field>
-    </record>
-
+        <field name="view_mode">tree,form,kanban</field>
+    </record> -->
+<!-- 
     <record id="action_jal_crm_post_shipment" model="ir.actions.act_window">
         <field name="name">Post Shipment</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">sale.order</field>
         <field name="domain">[('state','=','post_shipment')]</field>
         <field name="view_mode">tree</field>
-    </record>
+    </record> -->
 
     <record id="action_quotations_with_onboarding_domestic" model="ir.actions.act_window">
         <field name="name">Quotations</field>

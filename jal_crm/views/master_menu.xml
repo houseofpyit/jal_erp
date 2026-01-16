@@ -30,19 +30,19 @@
             parent="jal_crm.international_main_menu"
             sequence="5"/>
         
-        <menuitem
+        <!-- <menuitem
             id="dispatch_international_main"
             name="Dispatch/Document"
             parent="jal_crm.international_main_menu"
             action="jal_crm.action_jal_crm_dispatch_document"
-            sequence="4"/>
+            sequence="4"/> -->
 
-        <menuitem
+        <!-- <menuitem
             id="post_shipment_international_main"
             name="Post Shipment"
             parent="jal_crm.international_main_menu"
             action="jal_crm.action_jal_crm_post_shipment"
-            sequence="5"/>
+            sequence="5"/> -->
 
         <menuitem
             id="sale_international_main"

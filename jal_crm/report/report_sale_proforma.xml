@@ -316,7 +316,9 @@
                                                 <span>Payment Terms :</span>
                                             </td>
                                             <td width="80%">
-                                                <span  t-esc="o.payment_term_id.note" />
+                                                <t t-if="o.payment_term_id.name">
+                                                    <span t-esc="o.company_id._convert_html_to_text(o.payment_term_id.note)" style="padding-right:3px;"/>
+                                                </t>
                                             </td>
                                         </tr>
                                     </table>
@@ -498,7 +500,7 @@
                                     <t t-esc="tot_pcs" />
                                 </td> -->
                                 <td style="border:1px solid black;border-left:none;border-right:none;text-align:right;border-right: 1px solid black;">
-                                    <t t-esc="'{:,.2f}'.format(float(tot_amt))" /> <span t-esc="o.currency_id.name"/>
+                                    <!-- <t t-esc="'{:,.2f}'.format(float(tot_amt))" /> <span t-esc="o.currency_id.name"/> -->
                                 </td>
                                 <td style="border:1px solid black;border-left:none;border-right:none;text-align:right;">
                                     <t t-esc="'{:,.2f}'.format(float(tot_final_amt))" /> <span t-esc="o.currency_id.name"/>
