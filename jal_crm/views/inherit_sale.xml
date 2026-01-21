@@ -108,7 +108,7 @@
                 <field name="incoterm_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}" required="1"/>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="buyer_notify_id"  options="{'no_quick_create': True}" attrs="{'readonly': [('state', 'in', ('sale','close_order'))]}" required="1"/>
+                <field name="buyer_notify_id"  options="{'no_quick_create': True}" attrs="{'readonly': [('state', 'in', ('sale','close_order'))]}"/>
             </xpath>
             <xpath expr="//page[@name='order_lines']" position="after">
                 <page string="Approved Details" name="approved_details">
