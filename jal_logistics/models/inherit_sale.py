@@ -11,52 +11,59 @@ class InheritSale(models.Model):
 
     def action_create_pi(self):
         res = super(InheritSale, self).action_create_pi()
-        for line in self.order_line:
-            line_list = []
-            packing_line_list = []
-            for raw_line in line.product_id.rawmaterial_line_ids:
-                line_list.append((0,0,{
-                    'product_id': raw_line.product_id.id,
-                    'uom_id': raw_line.uom_id.id,
-                    'qty': line.product_uom_qty * raw_line.qty,
-                    }))
-            for pac_line in line.product_id.packing_line_ids:
-                packing_line_list.append((0,0,{
-                    'product_id': pac_line.product_id.id,
-                    'uom_id': pac_line.uom_id.id,
-                    'qty': line.product_uom_qty * pac_line.qty,
-                    }))
+        rec_list = self.env['jal.mrp.production'].sudo().search([('sale_id', '=', self.id),('state','=','cancel')],limit=1)
+        if not rec_list:
+            for line in self.order_line:
+                line_list = []
+                packing_line_list = []
+                for raw_line in line.product_id.rawmaterial_line_ids:
+                    line_list.append((0,0,{
+                        'product_id': raw_line.product_id.id,
+                        'uom_id': raw_line.uom_id.id,
+                        'qty': line.product_uom_qty * raw_line.qty,
+                        }))
+                for pac_line in line.product_id.packing_line_ids:
+                    packing_line_list.append((0,0,{
+                        'product_id': pac_line.product_id.id,
+                        'uom_id': pac_line.uom_id.id,
+                        'qty': line.product_uom_qty * pac_line.qty,
+                        }))
 
-            self.env['jal.mrp.production'].sudo().create({
-                'sale_id': self.id,
-                'date': date.today(),
-                'company_id': self.company_id.id,
-                'product_id': line.product_id.id,
-                'uom_id': line.product_uom.id,
-                'qty': line.product_uom_qty,
-                'country_id': self.country_id.id,
-                'grade_id': line.grade_id.id,
-                'mesh_id': line.mesh_id.id,
-                'bucket': line.bucket,
-                'line_ids': line_list,
-                'packing_line_ids': packing_line_list,
-            })
-
+                self.env['jal.mrp.production'].sudo().create({
+                    'sale_id': self.id,
+                    'date': date.today(),
+                    'company_id': self.company_id.id,
+                    'product_id': line.product_id.id,
+                    'uom_id': line.product_uom.id,
+                    'qty': line.product_uom_qty,
+                    'country_id': self.country_id.id,
+                    'grade_id': line.grade_id.id,
+                    'mesh_id': line.mesh_id.id,
+                    'bucket': line.bucket,
+                    'line_ids': line_list,
+                    'packing_line_ids': packing_line_list,
+                })
+        else:
+            rec_list.write({'state': 'draft'})
         return res
 
     def action_confirm_pi(self):
         for order in self:
-            self.env['jal.logistics'].sudo().create({
-                'sale_id': order.id,
-                'date': date.today(),
-                'company_id': order.company_id.id,
-                'shipping_id': order.shipping_id.id,
-                'product_id': order.product_id.id,
-                'partner_id': order.partner_id.id,
-                'hbl_type': 'Yes' if order.lading_type == 'house_bl' else 'No',
-                'loading_type': 'Yes' if order.inspection == 'yes' else 'No',
-                'total_containers': order.total_containers,
-            })
+            rec_list = self.env['jal.logistics'].sudo().search([('sale_id', '=', self.id),('state','=','cancel')],limit=1)
+            if not rec_list:
+                self.env['jal.logistics'].sudo().create({
+                    'sale_id': order.id,
+                    'date': date.today(),
+                    'company_id': order.company_id.id,
+                    'shipping_id': order.shipping_id.id,
+                    'product_id': order.product_id.id,
+                    'partner_id': order.partner_id.id,
+                    'hbl_type': 'Yes' if order.lading_type == 'house_bl' else 'No',
+                    'loading_type': 'Yes' if order.inspection == 'yes' else 'No',
+                    'total_containers': order.total_containers,
+                })
+            else:
+                rec_list.write({'state': 'pre_shipment'})
             order.state = 'sale'
 
     def _compute_mo_count(self):

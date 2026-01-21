@@ -19,4 +19,26 @@
         <field name="domain_force">['|',('team_id', '=', user.crm_team_id.id),('team_id', '=', False)]</field>
     </record>
 
+    <record id="partner_team_rule" model="ir.rule">
+        <field name="active" eval="False"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'product'), ('name', '=', 'product_comp_rule')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+    <record id="product.product_comp_rule" model="ir.rule">
+        <field name="active" eval="False"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'product'), ('name', '=', 'product_comp_rule')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
 </odoo>

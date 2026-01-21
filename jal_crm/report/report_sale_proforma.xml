@@ -636,23 +636,10 @@
                                 </td> -->
                                 <td style="text-align:right;">
                                     <b><span>APPROVED BY</span></b><br/>
-
-                                    <!-- Create PI stage → Company Logo -->
-                                    <t t-if="o.state == 'create_pi'">
-                                        <t t-if="o.company_id.logo">
-                                            <img class="img img-responsive" t-att-src="image_data_uri(o.company_id.logo)" alt="Company Logo" style="width:130px; height:100px;"/>
-                                        </t>
-                                    </t>
-
-                                    <!-- Confirmed / Sale stage → Approved Sign -->
-                                    <t t-elif="o.state == 'sale'">
                                         <t t-if="o.company_id.approved_sign">
+                                            
                                             <img t-att-src="image_data_uri(o.company_id.approved_sign)" style="width:130px; height:100px;"/>
                                         </t>
-                                        <t t-else="">
-                                            <img t-att-src="image_data_uri(o.company_id.logo)" style="width:130px; height:100px;"/>
-                                        </t>
-                                    </t>
 
                                 </td>
 

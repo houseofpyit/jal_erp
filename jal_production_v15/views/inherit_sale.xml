@@ -30,7 +30,7 @@
                 <field name="grade_id" width="150px" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('parent.business_type', '!=', 'international')]}"/>
                 <field name="mesh_id" width="150px" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('parent.business_type', '!=', 'international')]}"/>
                 <field name="lid_id" options="{'no_open': True, 'no_create': True}" context="{'show_attribute': False}"/>
-                <field name="product_id" options="{'no_create': True}" force_save="1" string="Final Product" domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}" attrs="{'readonly': ['|',('product_updatable', '=', False),('product_id', '!=', False)],'invisible': [('parent.business_type', '!=', 'international')]}" widget="many2one_barcode"/>
+                <field name="product_id" options="{'no_create': True}" force_save="1" string="Final Product" domain="[('sale_ok', '=', True)]" context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}" attrs="{'readonly': ['|',('product_updatable', '=', False),('product_id', '!=', False)],'invisible': [('parent.business_type', '!=', 'international')]}" widget="many2one_barcode"/>
                 <field name="branding_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('parent.business_type', '!=', 'international')]}"/>
                 <field name="product_form_type" attrs="{'invisible': [('parent.business_type', '!=', 'international')]}" />
             </xpath>
@@ -47,7 +47,7 @@
                 <field name="box_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('packing_type', '!=', 'pouch')]}" context="{'show_attribute': False}"/> -->
             </xpath>
             <xpath expr=" //field[@name='order_line']/form/group/group//field[@name='product_tmpl_id']" position="attributes">
-                <attribute name="domain">[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id),('is_finished_goods', '=', True),'|',('is_packing_type', '=', True),('is_transaform_product', '=', True)]</attribute>
+                <attribute name="domain">[('sale_ok', '=', True), '|',('is_finished_goods', '=', True),'|',('is_packing_type', '=', True),('is_transaform_product', '=', True)]</attribute>
             </xpath>
 
         </field>

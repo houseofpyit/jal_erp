@@ -53,7 +53,7 @@
             </xpath>
             <xpath expr="//field[@name='sale_order_template_id']" position="after">
                 <field name="currency_id" options="{'no_create': True}" readonly="0" invisible="1" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}"/>
-                <field name="jal_currency_id" options="{'no_create': True}" readonly="0" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}"/>
+                <field name="jal_currency_id" options="{'no_create': True}" readonly="0" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}" required="1"/>
                 <field name="bank_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': ['|',('business_type', '!=', 'international'),('state', '==', 'draft')],'readonly': [('state', 'in', ('sale','close_order'))]}"/>
                 <field name="po_no" attrs="{'invisible': ['|',('business_type', '!=', 'international'),('state', '==', 'draft')],'readonly': [('state', 'in', ('sale','close_order'))]}"/>
                 <field name="po_date" attrs="{'invisible': ['|',('business_type', '!=', 'international'),('state', '==', 'draft')],'readonly': [('state', 'in', ('sale','close_order'))]}"/>
@@ -94,6 +94,9 @@
             <xpath expr="//field[@name='payment_term_id']" position="attributes">
                 <attribute name="attrs">{'readonly': [('state', 'in', ('sale','close_order'))]}</attribute>
             </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
             <xpath expr="//field[@name='date']" position="attributes">
                 <attribute name="attrs">{'readonly': [('state', 'in', ('sale','close_order'))]}</attribute>
             </xpath>
@@ -102,10 +105,10 @@
             </xpath>
             <xpath expr="//field[@name='payment_term_id']" position="before">
                 <field name="close_date" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': [('state', 'in', ('sale','close_order'))],'invisible': [('close_date', '=', False)]}"/>
-                <field name="incoterm_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}"/>
+                <field name="incoterm_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}" required="1"/>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="buyer_notify_id"  options="{'no_quick_create': True}" attrs="{'readonly': [('state', 'in', ('sale','close_order'))]}"/>
+                <field name="buyer_notify_id"  options="{'no_quick_create': True}" attrs="{'readonly': [('state', 'in', ('sale','close_order'))]}" required="1"/>
             </xpath>
             <xpath expr="//page[@name='order_lines']" position="after">
                 <page string="Approved Details" name="approved_details">
@@ -150,21 +153,21 @@
                     </group>
                 </page>
             </xpath>
-            <xpath expr="//field[@name='payment_term_id']" position="after">
-                <field name="terms_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}"/>
-                <field name="country_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}"/>
-                <field name="port_id" domain="[('country_id', '=', country_id)]" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}"/>
-                <field name="palletized_type" widget="radio" options="{'horizontal': true}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}"/>
+            <xpath expr="//field[@name='payment_term_id']" position="after" >
+                <field name="terms_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}" required="1"/>
+                <field name="country_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}" required="1"/>
+                <field name="port_id" domain="[('country_id', '=', country_id)]" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}" required="1"/>
+                <field name="palletized_type" widget="radio" options="{'horizontal': true}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}" required="1"/>
                 <field name="business_type" invisible="1" attrs="{'readonly': [('state', 'in', ('sale','close_order'))]}"/>
                 <field name="display_name_on_pi" widget="radio" options="{'horizontal': true}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}"/>
                 <!-- <field name="shipping_id" domain="[('display_name_on_pi','=', 'shipping_name')]" options="{'no_quick_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}"/> -->
-                <field name="product_id" domain="[('is_shipping','=', True)]" options="{'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}"/>
+                <field name="product_id" domain="[('is_shipping','=', True)]" options="{'no_create': True}" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}" required="1"/>
                 <!-- <field name="product_shipping_id" domain="[('display_name_on_pi','=', 'product_name')]" options="{'no_quick_create': True}" attrs="{'invisible': ['|',('display_name_on_pi', '=', 'shipping_name'),('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}"/> -->
                 <field name="buyer_ref_details" attrs="{'readonly': [('state', 'in', ('sale','close_order'))]}"/>
-                <field name="product_expiry" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}"/>
-                <field name="company_id" options="{'no_create': True}" attrs="{'readonly': [('state', 'in', ('sale','close_order'))]}"/>
-                <field name="label_type" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}"/>
-                <field name="total_containers" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}"/>
+                <field name="product_expiry" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}" required="1"/>
+                <field name="company_id" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
+                <field name="label_type" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}" required="1"/>
+                <field name="total_containers" attrs="{'invisible': [('business_type', '!=', 'international')],'readonly': [('state', 'in', ('sale','close_order'))]}" required="1"/>
             </xpath>
             <xpath expr="//tree/field[@name='product_template_id']" position="before">
                 <!-- <field name="shipping_id" width="150px" attrs="{'column_invisible': [('parent.business_type', '!=', 'international')]}"/> -->
@@ -181,7 +184,7 @@
             <xpath expr="//field[@name='order_line']/form/group/group/field[@name='product_id']" position="after">
                 <!-- <field name="shipping_id" width="150px" domain="[('display_name_on_pi','=', 'shipping_name')]" options="{'no_quick_create': True}" attrs="{'invisible': [('parent.business_type', '!=', 'international')]}"/> -->
                 <field name="product_shipping_id" width="150px" domain="[('display_name_on_pi','=', 'product_name')]" options="{'no_quick_create': True}" attrs="{'invisible': [('parent.business_type', '!=', 'international')]}"/>
-                <field name="product_tmpl_id" string="Packing Type" options="{'no_create': True}" attrs="{'required': [('display_type', '=', False)]}" readonly="0" context="{'partner_id': parent.partner_id, 'quantity': product_uom_qty, 'pricelist': parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id, 'default_list_price': price_unit, 'default_description_sale': name}" domain="[('sale_ok', '=', True)]" widget="product_configurator"/>
+                <field name="product_tmpl_id" string="Packing Type" options="{'no_create': True}" attrs="{'required': [('display_type', '=', False)]}" readonly="0" context="{'partner_id': parent.partner_id, 'quantity': product_uom_qty, 'pricelist': parent.pricelist_id, 'uom':product_uom, 'company_id': False, 'default_list_price': price_unit, 'default_description_sale': name}" domain="[('sale_ok', '=', True)]" widget="product_configurator"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/form/group/group/field[@name='analytic_tag_ids']" position="after">
                 <field name="packing_type" invisible="1" attrs="{'invisible': [('parent.business_type', '!=', 'international')],'required': [('parent.business_type', '=', 'international'),('display_type', '=', False)]}"/>
@@ -211,6 +214,7 @@
             </xpath>
             <xpath expr="//tree/field[@name='name']" position="after">
                 <field name="packing_name" width="150px" attrs="{'column_invisible': [('parent.business_type', '!=', 'international')]}"/>
+                <field name="company_id" />
             </xpath>
             <xpath expr="//field[@name='order_line']/form/label[@for='name']" position="attributes">
                 <attribute name="string">Loading Description</attribute>
@@ -221,6 +225,7 @@
             </xpath>
             <xpath expr="//tree/field[@name='product_id']" position="attributes">
                 <attribute name="string">Final Product</attribute>
+                <attribute name="domain">[]</attribute>
             </xpath>
             <xpath expr="//tree/field[@name='product_template_id']" position="replace">
                 <!-- <attribute name="width">150px</attribute>
@@ -371,7 +376,7 @@
                     (0, 0, {'view_mode': 'tree', 'view_id': ref('jal_crm.view_quotation_tree_international_create_pi')})
                     ]"/>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
-        <field name="context">{'default_business_type':'international'}</field>
+        <field name="context">{'default_business_type':'international','create': False}</field>
         <field name="domain">[('state','=','create_pi')]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -392,7 +397,7 @@
                     (0, 0, {'view_mode': 'tree', 'view_id': ref('jal_crm.view_quotation_tree_international_confirm_pi')})
                     ]"/>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
-        <field name="context">{'default_business_type':'international'}</field>
+        <field name="context">{'default_business_type':'international','create': False}</field>
         <field name="domain">[('state','=','sale')]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -437,7 +442,7 @@
                     (0, 0, {'view_mode': 'tree', 'view_id': ref('jal_crm.view_quotation_tree_international_close_order')})
                     ]"/>
         <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
-        <field name="context">{'default_business_type':'international'}</field>
+        <field name="context">{'default_business_type':'international','create': False,'edit':False}</field>
         <field name="domain">[('state','=','close_order')]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
