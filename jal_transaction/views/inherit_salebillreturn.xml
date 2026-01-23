@@ -11,5 +11,36 @@
             </xpath>
         </field>
     </record>
+    <record id="view_salebillreturn_confirm_btn" model="ir.ui.view">
+        <field name="name">sale.bill.return.confirm.button</field>
+        <field name="model">hop.salebillreturn</field>
+        <field name="inherit_id" ref="transaction.salebillreturn_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet" position="before">
+                <header>
+                    <field name="stage" widget="statusbar"
+                           statusbar_visible="draft,done"/>
+
+                    <button
+                            name="action_confirm"
+                            string="Confirm"
+                            type="object"
+                            class="btn-primary"
+                            attrs="{'invisible': [('picking_id', '!=', False)]}"/>
+                </header>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button
+                        name="action_view_picking"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-truck"
+                        attrs="{'invisible': [('picking_id', '=', False)]}">
+                    <field name="picking_id" widget="statinfo" string="Receipt"/>
+                </button>
+            </xpath>
+
+        </field>
+    </record>
 
 </odoo>
