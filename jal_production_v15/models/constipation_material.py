@@ -5,7 +5,7 @@ from ...transaction import common_file
 
 class ConstipationMaterial(models.Model):
     _name = 'constipation.material'
-    _description = 'Constipation Material'
+    _description = 'Consumption Material'
     _inherit = ['mail.thread']
     _order = "id desc"
 
@@ -14,6 +14,7 @@ class ConstipationMaterial(models.Model):
     bill_no =  fields.Integer(required=True,copy=False,tracking=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
     date = fields.Date(copy=False,string="Date",default=fields.Date.context_today)
+    from_location_id = fields.Many2one('stock.location',string="From Location",tracking=True)
     line_ids = fields.One2many('constipation.material.line', 'mst_id')
     state = fields.Selection([('draft', 'Draft'),('complete', 'Complete')], default='draft',tracking=True)
     employee_id = fields.Many2one('hr.employee', string='Employee',tracking=True)
@@ -102,9 +103,9 @@ class ConstipationMaterial(models.Model):
         StockPickingType = self.env['stock.picking.type'].sudo()
         StockPicking = self.env['stock.picking'].sudo()
 
-        main_location = StockLocation.search([('main_store_location', '=', True)], limit=1)
-        if not main_location:
-            raise ValidationError(_("Main Store Location not found!"))
+        # main_location = StockLocation.search([('main_store_location', '=', True)], limit=1)
+        # if not main_location:
+        #     raise ValidationError(_("Main Store Location not found!"))
 
         des_location = StockLocation.search([('consumption_location', '=', True)], limit=1)
         if not des_location:
@@ -124,7 +125,7 @@ class ConstipationMaterial(models.Model):
                 if line.qty <= 0:
                     raise ValidationError(_("%s quantity must be > 0 for product %s.") % (line_type, line.product_id.display_name))
 
-                domain = [('product_id', '=', line.product_id.id),('location_id', '=', main_location.id)]
+                domain = [('product_id', '=', line.product_id.id),('location_id', '=', self.from_location_id.id)]
 
                 stock_quants = StockQuant.search(domain)
 
@@ -147,7 +148,7 @@ class ConstipationMaterial(models.Model):
                 required_qty = line.qty
                 required_bucket = line.bucket
 
-                quants = StockQuant.search([('product_id', '=', line.product_id.id),('location_id', '=', main_location.id),('quantity', '>', 0)])
+                quants = StockQuant.search([('product_id', '=', line.product_id.id),('location_id', '=', self.from_location_id.id),('quantity', '>', 0)])
 
                 remaining_qty = required_qty
                 remaining_bucket = required_bucket
@@ -166,7 +167,7 @@ class ConstipationMaterial(models.Model):
                         'demand_bucket': take_bucket,
                         'done_bucket': take_bucket,
                         'product_uom_id': line.uom_id.id,
-                        'location_id': main_location.id,
+                        'location_id': self.from_location_id.id,
                         'location_dest_id': des_location.id,
                     }
 
@@ -182,7 +183,7 @@ class ConstipationMaterial(models.Model):
         _prepare_moves(self.line_ids)
         
         picking = StockPicking.create({
-            'location_id': main_location.id,
+            'location_id': self.from_location_id.id,
             'location_dest_id': des_location.id,
             'picking_type_id': picking_type.id,
             'constipation_material_id': self.id,

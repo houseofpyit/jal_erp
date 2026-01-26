@@ -22,6 +22,7 @@
                             <field name='bill_chr' invisible="1"/>
                             <field name='bill_no' invisible="1"/>
                             <field name='employee_id' required="1" options="{'no_create': True}" attrs="{'readonly': [('state','=','complete')]}"/>
+                            <field name="from_location_id" required="1" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('state','=','complete')]}" domain="[('usage','in',('internal','transit')), '|', ('company_id','=',company_id), ('company_id','=',False)]"/>
                         </group>
                         <group>
                             <field name="date" attrs="{'readonly': [('state','=','complete')]}"/>
@@ -58,6 +59,7 @@
                 <field name='date'/>
                 <field name="employee_id" />
                 <field name="department_id" />
+                <field name="from_location_id" />
                 <field name="state" widget="badge"/>
             </tree>
         </field>
@@ -78,6 +80,7 @@
                 <group expand="0" string="Group By">
                     <filter string="Employee" name="group_by_employee_id" domain="[]" context="{'group_by': 'employee_id'}"/>
                     <filter string="Department" name="group_department_id" domain="[]" context="{'group_by': 'department_id'}"/>
+                    <filter string="From Location" name="group_from_location_id" domain="[]" context="{'group_by': 'from_location_id'}"/>
                     <filter string="State" name="group_state" domain="[]" context="{'group_by': 'state'}"/>
                     <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
                 </group>
@@ -87,7 +90,7 @@
 
 
     <record id="action_constipation_material" model="ir.actions.act_window">
-        <field name="name">Material Constipation</field>
+        <field name="name">Material Consumption</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">constipation.material</field>
         <field name="context">{'default_bill_chr':'MC'}</field> 

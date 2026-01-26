@@ -352,7 +352,7 @@
 
     <menuitem
         id="constipation_material_menu"
-        name="Material Constipation"
+        name="Material Consumption"
         parent="main_menu_material_requisite"
         action="action_constipation_material"
         sequence="3"/>

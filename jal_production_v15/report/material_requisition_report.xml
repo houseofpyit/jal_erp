@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="material_requisition_report">
+            <t t-call="web.basic_layout">
+                <div class="page">
+                    <style>
+                        td{
+                            font-size:14px;
+                            padding-left:10px;
+                            padding-right:5px;
+                        }
+                        <!-- span{
+                            padding:5px;
+                        } -->
+                        td, th, table {
+                            border-collapse: collapse !important;
+                        }
+                    </style>
+                
+                    <t t-foreach="docs" t-as="o">
+                        <table style="width:100%;border: 2px solid black;" >
+                            <tr>
+                                <td width="100%" style="" colspan="2">
+                                    <h2><b><center><u><span t-esc="o.company_id.name"/></u></center></b></h2>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="100%" style="font-size:18px;" colspan="2">
+                                    <center><b><span>MATERIAL ISSUE SLIP</span></b></center>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="50%" style="border-top: 2px solid black;">
+                                    <span>Department: </span>
+                                </td>
+                                <td width="50%" style="border-top: 2px solid black;text-align:right;">
+                                    <span>Date: </span>
+                                    <t t-if="o.date">
+                                        <span t-esc="o.date.strftime('%d/%m/%Y')"/>
+                                    </t>
+                                </td>
+                            </tr>
+                            
+                        </table>
+
+                        <table width="100%" style="border: 1px solid black;border-top:none;">
+                            <tr>
+                                <th width="6%" style="border-bottom: 2px solid black;border-right: 2px solid black;border-left: 2px solid black;font-size:14px;text-align:center;">SR NO.</th>
+                                <th width="14%" style="border-bottom: 2px solid black;border-right: 2px solid black;font-size:14px;text-align:center;">MATERIAL CODE</th>
+                                <th width="48%" style="border-bottom: 2px solid black;border-right: 2px solid black;font-size:14px;text-align:center;">MATERIAL DESCRIPTION</th>
+                                <th width="7%" style="border-bottom: 2px solid black;border-right: 2px solid black;font-size:14px;text-align:center;">UOM</th>
+                                <th width="10%" style="border-bottom: 2px solid black;border-right: 2px solid black;font-size:14px;text-align:center;">QTY</th>
+                                <th width="15%" style="border-bottom: 2px solid black;border-right: 2px solid black;font-size:14px;text-align:center;">REMARK</th>
+                            </tr>
+                            <t t-set="srl" t-value="0" />
+                            
+                            <t t-foreach="o.line_ids" t-as="item">
+                                <t t-set="srl" t-value="srl + 1" />
+                                <tr>
+                                    <td style="text-align: center;border-right: 1px solid black;border-bottom: 1px solid black;border-left: 2px solid black;">
+                                        <span t-esc="srl" />
+                                    </td>
+                                    <td style="text-align: left;border-right: 1px solid black;border-bottom: 1px solid black;">
+                                    </td>
+                                    <td style="text-align: left;border-right: 1px solid black;border-bottom: 1px solid black;">
+                                        <span t-esc="item.product_id.display_name" />
+                                    </td>
+                                    <td style="text-align: center;border-right: 1px solid black;border-bottom: 1px solid black;">
+                                        <span t-esc="item.uom_id.name" />
+                                    </td>
+                                    <td style="text-align: center;border-right: 1px solid black;border-bottom: 1px solid black;">
+                                        <span t-esc="item.demand_qty"/>
+                                    </td>
+                                    <td style="text-align: right;border-bottom: 1px solid black;border-right: 2px solid black;">
+                                    </td>
+                                </tr>
+                            </t>
+
+                            <t t-foreach="range(15-srl)" t-as="l">
+                                <tr>
+                                    <td style="border-right: 1px solid black;border-bottom: 1px solid black;border-left: 2px solid black;">
+                                        <br></br>
+                                    </td>
+                                    <td style="border-right: 1px solid black;border-bottom: 1px solid black;">
+                                        <br></br>
+                                    </td>
+                                    <td style="border-right: 1px solid black;border-bottom: 1px solid black;">
+                                        <br></br>
+                                    </td>
+                                    <td style="border-right: 1px solid black;border-bottom: 1px solid black;">
+                                        <br></br>
+                                    </td>
+                                    <td style="border-right: 1px solid black;border-bottom: 1px solid black;">
+                                        <br></br>
+                                    </td>
+                                    <td style="border-right: 1px solid black;border-bottom: 1px solid black;border-right: 2px solid black;">
+                                        <br></br>
+                                    </td>
+                                </tr>
+                            </t>
+                        </table>
+
+                        <table width="100%" style="border: 2px solid black;border-top:none;">
+                            <tr>
+                                <td width="50%" style="padding:25px;">
+                                    <center><b><span>Approved By</span></b></center>
+                                </td>
+                                <td width="50%" style="padding:25px;">
+                                    <center><b><span>Issued By</span></b></center>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="50%" style="padding-top:20px;">
+                                    <center><span>(Name &amp; Signature)</span></center>
+                                </td>
+                                <td width="50%" style="padding-top:20px;">
+                                    <center><span>(Name &amp; Signature)</span></center>
+                                </td>
+                            </tr>
+                        </table>
+                        
+                    </t>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>

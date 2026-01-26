@@ -19,6 +19,7 @@
         'wizards/production_exel_wiz.xml',
 
         'report/quality_barcode_report.xml',
+        'report/material_requisition_report.xml',
         'report/paper_formate.xml',
 
         'views/production.xml',

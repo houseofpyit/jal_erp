@@ -26,4 +26,17 @@
         <field name="binding_model_id" ref="jal_production_v15.model_jal_quality"/>
         <field name="binding_type">report</field>
     </record>   
+
+    <record id="action_material_requisition_report" model="ir.actions.report">
+        <field name="name">Slip</field>
+        <field name="model">jal.material.requisition</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">jal_production_v15.material_requisition_report</field>
+        <field name="report_file">jal_production_v15.material_requisition_report</field>
+        <field name="paperformat_id" ref="jal_crm.paper_format_sale_order_from" />
+        <field name="print_report_name">' %s' % (object.name)</field>
+        <field name="binding_model_id" ref="jal_production_v15.model_jal_material_requisition"/>
+        <field name="binding_type">report</field>
+    </record>
+
 </odoo>
