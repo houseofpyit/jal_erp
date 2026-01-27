@@ -248,58 +248,58 @@ class JalLogistics(models.Model):
         res['gross_wt_uom_id'] = mt
         return res
     
-    @api.onchange('epcg_liscence_used')
-    def _onchange_epcg_liscence_used(self):
-        if self.epcg_liscence_used == 'yes':
-            self.duty_drawback_claimed = 'no'
-        else:
-            self.duty_drawback_claimed = ''
+    # @api.onchange('epcg_liscence_used')
+    # def _onchange_epcg_liscence_used(self):
+    #     if self.epcg_liscence_used == 'yes':
+    #         self.duty_drawback_claimed = 'no'
+    #     else:
+    #         self.duty_drawback_claimed = ''
 
     @api.onchange('epcg_liscence_number')
     def _onchange_epcg_liscence_number(self):
         self.epcg_liscence_date = self.epcg_liscence_number.date
 
 
-    @api.onchange('advanced_liscence_used')
-    def _onchange_advanced_liscence_used(self):
-        if self.advanced_liscence_used == 'yes':
-            self.lut_shipment = 'no'
-        else:
-            self.lut_shipment = ''
+    # @api.onchange('advanced_liscence_used')
+    # def _onchange_advanced_liscence_used(self):
+    #     if self.advanced_liscence_used == 'yes':
+    #         self.lut_shipment = 'no'
+    #     else:
+    #         self.lut_shipment = ''
 
     @api.onchange('advanced_liscence_number')
     def _onchange_advanced_liscence_number(self):
         self.advanced_liscence_date = self.advanced_liscence_number.date
 
-    @api.onchange('lut_shipment')
-    def _onchange_lut_shipment(self):
-        if self.lut_shipment == 'yes':
-            if self.advanced_liscence_used == 'yes':
-                self.lut_shipment = 'no'
-                return {
-                    'warning': {
-                        'title': "Validation",
-                        'message': "You cannot set Lut Shipment to 'Yes' because Advance Liscence Used is already 'Yes'.",                    }
-                }
+    # @api.onchange('lut_shipment')
+    # def _onchange_lut_shipment(self):
+    #     if self.lut_shipment == 'yes':
+    #         if self.advanced_liscence_used == 'yes':
+    #             self.lut_shipment = 'no'
+    #             return {
+    #                 'warning': {
+    #                     'title': "Validation",
+    #                     'message': "You cannot set Lut Shipment to 'Yes' because Advance Liscence Used is already 'Yes'.",                    }
+    #             }
 
-            self.gst_claimed = 'no'
-        else:
-            self.gst_claimed = ''
+    #         self.gst_claimed = 'no'
+    #     else:
+    #         self.gst_claimed = ''
 
-    @api.onchange('gst_claimed')
-    def _onchange_gst_claimed(self):
-        if self.gst_claimed == 'yes':
-            self.lut_shipment = 'no'
+    # @api.onchange('gst_claimed')
+    # def _onchange_gst_claimed(self):
+    #     if self.gst_claimed == 'yes':
+    #         self.lut_shipment = 'no'
     
-    @api.onchange('duty_drawback_claimed')
-    def _onchange_duty_drawback_claimed(self):
-        if self.duty_drawback_claimed == 'yes' and self.epcg_liscence_used == 'yes':
-            self.duty_drawback_claimed = 'no'
-            return {
-                'warning': {
-                    'title': "Validation",
-                    'message': "You cannot set Duty Drawback Claimed to 'Yes' because EPCG Licence Used is already 'Yes'.",                    }
-            }
+    # @api.onchange('duty_drawback_claimed')
+    # def _onchange_duty_drawback_claimed(self):
+    #     if self.duty_drawback_claimed == 'yes' and self.epcg_liscence_used == 'yes':
+    #         self.duty_drawback_claimed = 'no'
+    #         return {
+    #             'warning': {
+    #                 'title': "Validation",
+    #                 'message': "You cannot set Duty Drawback Claimed to 'Yes' because EPCG Licence Used is already 'Yes'.",                    }
+    #         }
         
     @api.onchange('booking_received', 'vessel_date', 'container_stuffing_date')
     def _onchange_booking_received(self):
