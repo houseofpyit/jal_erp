@@ -433,6 +433,7 @@ class LogisticsDispatchLine(models.Model):
     mst_id = fields.Many2one('jal.logistics',string="Mst",ondelete='cascade')
 
     container_no = fields.Char(string="Container No")
+    attachment_container_ids = fields.Many2many('ir.attachment','container_attach_id',string="Container Photo")
     seal_no = fields.Char(string="Seal No")
     itek_seal_no = fields.Char(string="Itek Seal No")
     container_size = fields.Char(string="Container Size and type (Dry/Reefer)")

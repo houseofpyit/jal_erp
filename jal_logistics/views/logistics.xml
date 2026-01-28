@@ -113,13 +113,14 @@
                                     <field name="attachment_packing_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                 </group>
                                 <group>
-                                    <field name="attachment_container_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
+                                    <field name="attachment_container_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}" invisible="1"/>
                                     <field name="attachment_lr_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                 </group>
                             </group>
                             <field name="dispatch_line_ids" attrs="{'readonly': [('state','in',('close','cancel'))]}" >
                                 <tree editable="" >
                                     <field name = "container_no" width="100px"/>
+                                     <field name="attachment_container_ids" widget="many2many_binary" />
                                     <field name = "seal_no" width="100px"/>
                                     <field name = "itek_seal_no" width="150px"/>
                                     <field name = "container_size" width="200px"/>
@@ -145,6 +146,7 @@
                                                 <field name = "container_size" />
                                                 <field name = "total_drums" />
                                                 <field name = "lr_no" />
+                                                 <field name="attachment_container_ids" widget="many2many_binary" />
                                             </group>
                                             <group>
                                                 <field name = "truck_no" />
@@ -657,7 +659,7 @@
                                 <field name="attachment_packing_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                             </group>
                             <group>
-                                <field name="attachment_container_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
+                                <field name="attachment_container_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}" invisible="1"/>
                                 <field name="attachment_lr_ids" widget="many2many_binary" attrs="{'readonly': [('state','in',('close','cancel'))]}"/>
                                 <field name = "product_expiry"/>
                                 <field name = "batch_number"/>
@@ -666,6 +668,7 @@
                         <field name="dispatch_line_ids" attrs="{'readonly': [('state','in',('close','cancel'))]}">
                             <tree editable="" >
                                 <field name = "container_no" width="100px"/>
+                                <field name="attachment_container_ids" widget="many2many_binary" />
                                 <field name = "seal_no" width="100px"/>
                                 <field name = "itek_seal_no" width="150px"/>
                                 <field name = "container_size" width="200px"/>
@@ -691,6 +694,7 @@
                                             <field name = "container_size" />
                                             <field name = "total_drums" />
                                             <field name = "lr_no" />
+                                            <field name="attachment_container_ids" widget="many2many_binary" />
                                         </group>
                                         <group>
                                             <field name = "truck_no" />
