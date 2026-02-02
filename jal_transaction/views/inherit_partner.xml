@@ -42,7 +42,7 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//page[@name='rates']" position="attributes">
-                <attribute name="invisible">1</attribute>
+                <attribute name="invisible">0</attribute>
             </xpath>
             <xpath expr="//field[@name='tcs_applicable']" position="attributes">
                 <attribute name="invisible">1</attribute>

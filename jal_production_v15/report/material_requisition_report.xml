@@ -20,38 +20,42 @@
                 
                     <t t-foreach="docs" t-as="o">
                         <table style="width:100%;border: 2px solid black;" >
-                            <tr>
-                                <td width="100%" style="" colspan="2">
+                            <tr width="100%">
+                                <td width="100%" style="" colspan="3">
                                     <h2><b><center><u><span t-esc="o.company_id.name"/></u></center></b></h2>
                                 </td>
                             </tr>
                             <tr>
-                                <td width="100%" style="font-size:18px;" colspan="2">
+                                <td width="100%" style="font-size:18px;" colspan="3">
                                     <center><b><span>MATERIAL ISSUE SLIP</span></b></center>
                                 </td>
                             </tr>
-                            <tr>
-                                <td width="50%" style="border-top: 2px solid black;">
-                                    <span>Department: </span>
+                            <tr width="100%">
+                                <td width="33.33%" style="border-top: 2px solid black;text-align:left;">
+                                    <b><span>Slip No.: </span></b>
+                                    <span t-esc="o.name"/>
                                 </td>
-                                <td width="50%" style="border-top: 2px solid black;text-align:right;">
-                                    <span>Date: </span>
+                                <td width="33.33%" style="border-top: 2px solid black;text-align:center;">
+                                    <b><span>Department: </span></b>
+                                    <span t-esc="o.to_location_id.complete_name"/>
+                                </td>
+                                <td width="33.33%" style="border-top: 2px solid black;text-align:right;">
+                                    <b><span>Date: </span></b>
                                     <t t-if="o.date">
                                         <span t-esc="o.date.strftime('%d/%m/%Y')"/>
                                     </t>
                                 </td>
                             </tr>
-                            
                         </table>
 
                         <table width="100%" style="border: 1px solid black;border-top:none;">
                             <tr>
                                 <th width="6%" style="border-bottom: 2px solid black;border-right: 2px solid black;border-left: 2px solid black;font-size:14px;text-align:center;">SR NO.</th>
                                 <th width="14%" style="border-bottom: 2px solid black;border-right: 2px solid black;font-size:14px;text-align:center;">MATERIAL CODE</th>
-                                <th width="48%" style="border-bottom: 2px solid black;border-right: 2px solid black;font-size:14px;text-align:center;">MATERIAL DESCRIPTION</th>
+                                <th width="38%" style="border-bottom: 2px solid black;border-right: 2px solid black;font-size:14px;text-align:center;">MATERIAL DESCRIPTION</th>
                                 <th width="7%" style="border-bottom: 2px solid black;border-right: 2px solid black;font-size:14px;text-align:center;">UOM</th>
                                 <th width="10%" style="border-bottom: 2px solid black;border-right: 2px solid black;font-size:14px;text-align:center;">QTY</th>
-                                <th width="15%" style="border-bottom: 2px solid black;border-right: 2px solid black;font-size:14px;text-align:center;">REMARK</th>
+                                <th width="25%" style="border-bottom: 2px solid black;border-right: 2px solid black;font-size:14px;text-align:center;">REMARK</th>
                             </tr>
                             <t t-set="srl" t-value="0" />
                             
@@ -73,6 +77,7 @@
                                         <span t-esc="item.demand_qty"/>
                                     </td>
                                     <td style="text-align: right;border-bottom: 1px solid black;border-right: 2px solid black;">
+                                        <span t-esc="item.remarks"/>
                                     </td>
                                 </tr>
                             </t>
@@ -103,18 +108,24 @@
 
                         <table width="100%" style="border: 2px solid black;border-top:none;">
                             <tr>
-                                <td width="50%" style="padding:25px;">
+                                <td width="33.33%" style="padding:25px;">
                                     <center><b><span>Approved By</span></b></center>
                                 </td>
-                                <td width="50%" style="padding:25px;">
+                                <td width="33.33%" style="padding:25px;">
                                     <center><b><span>Issued By</span></b></center>
+                                </td>
+                                <td width="33.33%" style="padding:25px;">
+                                    <center><b><span>Received By</span></b></center>
                                 </td>
                             </tr>
                             <tr>
-                                <td width="50%" style="padding-top:20px;">
+                                <td width="33.33%" style="padding-top:20px;">
                                     <center><span>(Name &amp; Signature)</span></center>
                                 </td>
-                                <td width="50%" style="padding-top:20px;">
+                                <td width="33.33%" style="padding-top:20px;">
+                                    <center><span>(Name &amp; Signature)</span></center>
+                                </td>
+                                <td width="33.33%" style="padding-top:20px;">
                                     <center><span>(Name &amp; Signature)</span></center>
                                 </td>
                             </tr>
