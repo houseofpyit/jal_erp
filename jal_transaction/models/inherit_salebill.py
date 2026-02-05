@@ -36,6 +36,7 @@ class inherithopsalebillline(models.Model):
       return super().create(vals)
    
    def write(self, vals):
-      if vals.get('pcs', 0) <= 0:
-         raise ValidationError("Quantity cannot be zero or negative. Please correct the product details.")
+      if 'pcs' in vals:
+         if vals.get('pcs', 0) <= 0:
+            raise ValidationError("Quantity cannot be zero or negative. Please correct the product details.")
       return super().write(vals)
