@@ -41,7 +41,7 @@
                                     <field name="product_id" options="{'no_create': True}" required="1" attrs="{'readonly': [('parent.state','=','confirm')]}"/>
                                     <field name="description" attrs="{'readonly': [('parent.state','=','confirm')]}"/>
                                     <field name="qty" attrs="{'readonly': [('parent.state','=','confirm')]}" sum="Qty"/>
-                                    <field name="uom_id" readonly="1" options="{'no_create': True}" attrs="{'readonly': [('parent.state','=','confirm')]}"/>
+                                    <field name="uom_id" options="{'no_create': True}" />
                                 </tree>
                             </field>
                         </page>

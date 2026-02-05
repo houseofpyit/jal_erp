@@ -63,32 +63,32 @@ class JalPurchaseRequisite(models.Model):
             }
 
     def create_purchase_po(self):
-         if not self.line_ids:
+        if not self.line_ids:
             raise ValidationError("Add product details before sending.")
-         for line in self.line_ids:
+        for line in self.line_ids:
             if not line.product_id:
                 raise ValidationError("Some product lines are missing a product. Please complete the details.")
-            if not line.qty or line.qty <= 0:
+            if line.qty <= 0:
                 raise ValidationError("Quantity cannot be zero. Please correct the product details.")
             
-         line_list = []
-         for line in self.line_ids:
+        line_list = []
+        for line in self.line_ids:
             line_list.append((0,0,{
                'product_id': line.product_id.id,
                'product_qty':line.qty,
-               'product_uom':line.uom_id.id,
+               'product_uom':line.product_id.uom_id.id,
                'date_planned': fields.Datetime.now(),
                'price_unit': line.product_id.standard_price,
                'name': (f"{line.product_id.description_purchase}" if line.product_id.description_purchase else f"{line.product_id.display_name}"),
             }))
-         return {
+        return {
             'type': 'ir.actions.act_window',
             'name': 'Purchase Order',
             'view_mode': 'form',
             'res_model': 'purchase.order', 
             'context': {'default_pur_req_id': self.id,'default_order_line':line_list},
             'target': 'current', 
-         }
+        }
 
     @api.model
     def create(self, vals):
@@ -104,14 +104,13 @@ class JalPurchaseRequisiteLine(models.Model):
 
     mst_id = fields.Many2one('jal.purchase.requisite',string="Purchase Req",ondelete='cascade')
     product_id = fields.Many2one('product.product',required=True,domain=[('is_finished_goods','=',False)])
-    uom_id = fields.Many2one('uom.uom',string="Unit")
+    uom_id = fields.Many2one('uom.uom',string="Unit", store=True, readonly=True, related='product_id.uom_po_id')
     qty = fields.Float(string = "Quantity",digits='BaseAmount')
     description = fields.Char(string="Description")
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
-        if self.product_id:
-            self.uom_id = self.product_id.uom_po_id.id
-
-                
+        for rec in self:
+            if rec.product_id:
+                rec.uom_id = rec.product_id.uom_po_id.id

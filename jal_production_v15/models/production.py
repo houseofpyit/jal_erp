@@ -47,17 +47,18 @@ class JalProduction(models.Model):
         for raw_line in self.product_tmpl_id.rawmaterial_line_ids:
             line_list.append((0,0,{
                 'product_id': raw_line.product_id.id,
+                'qty': raw_line.qty,
                 'uom_id': raw_line.uom_id.id,
                 }))
         for pac_line in self.product_tmpl_id.packing_line_ids:
             packing_line_list.append((0,0,{
                 'product_id': pac_line.product_id.id,
+                'qty': pac_line.qty,
                 'uom_id': pac_line.uom_id.id,
                 }))
             
-        self.line_ids = line_list
-        self.packing_line_ids = packing_line_list
-
+        self.line_ids = [(5, 0, 0)] + line_list
+        self.packing_line_ids = [(5, 0, 0)] + packing_line_list
 
     def action_running_btn(self):
         self.state = 'running'
@@ -102,8 +103,10 @@ class JalProduction(models.Model):
         final_lines = [(0, 0, vals) for vals in merged.values()]
 
         self.finished_line_ids = [(5, 0, 0)] + final_lines
-
+        
     def action_complete_btn(self):
+        if not self.env['jal.quality'].search([('production_id', '=', self.id)]):
+            raise ValidationError(_("Please complete Quality Check before completing Production."))
         for rec in self:
             if not rec.line_ids and not rec.packing_line_ids and not rec.finished_line_ids:
                 raise ValidationError(_("Please add at least one Raw Material, Packing Material, or Finished Goods line before completing."))

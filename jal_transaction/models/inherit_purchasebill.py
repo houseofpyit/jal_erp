@@ -11,3 +11,14 @@ class inheritPurchaseBillLine(models.Model):
     _inherit = "hop.purchasebill.line"
 
     pcs = fields.Float("PCS",digits=(2, 3))
+    
+    @api.model
+    def create(self, vals):
+        if vals.get('pcs', 0) <= 0:
+            raise ValidationError("Quantity cannot be zero. Please correct the product details.")
+        return super().create(vals)
+    
+    def write(self, vals):
+        if vals.get('pcs', 0) <= 0:
+            raise ValidationError("Quantity cannot be zero or negative. Please correct the product details.")
+        return super().write(vals)
