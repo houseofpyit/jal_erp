@@ -8,7 +8,7 @@
     'maintainer': "",
     'website': "",
     'category': 'Tools',
-    'depends': ['base','stock','jal_crm','hr'],
+    'depends': ['base','stock','jal_crm','hr','master'],
     'data': [
         'data/sequence.xml',
         'data/attribute_value.xml',

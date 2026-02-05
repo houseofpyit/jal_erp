@@ -35,6 +35,7 @@
                                     <field name="demand_qty" width="150px"/>
                                     <field name="available_qty" groups="jal_production_v15.res_group_material_requisition_admin" width="150px" force_save="1" readonly="1" />
                                     <field name="uom_id" readonly="1" force_save="1" width="150px"/>
+                                    <field name="remarks" width="150px"/>
                                 </tree>
                             </field>
                         </page>

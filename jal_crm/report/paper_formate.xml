@@ -66,6 +66,16 @@
         <field name="binding_model_id" ref="model_sale_order"/>
         <field name="binding_model_id" ref=""/>
         <field name="binding_type">report</field>
-    </record>
-   
+    </record>  
+
+    <record id="action_purchase_requisition" model="ir.actions.report">
+        <field name="name">Purchase Requisition</field>
+        <field name="model">jal.purchase.requisite</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">jal_crm.report_purchase_requisition</field>
+        <field name="report_file">jal_crm.report_purchase_requisition</field>
+        <field name="paperformat_id" ref="jal_crm.paper_format_sale_order_from" />
+        <field name="binding_model_id" ref="jal_crm.model_jal_purchase_requisite"/>
+        <field name="binding_type">report</field>
+    </record>   
 </odoo>

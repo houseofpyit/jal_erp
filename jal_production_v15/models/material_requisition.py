@@ -127,6 +127,7 @@ class JalProductionLine(models.Model):
     uom_id = fields.Many2one('uom.uom',string="Unit")
     demand_qty = fields.Float(string = "Demand Quantity")
     available_qty = fields.Float(string = "Available Quantity")
+    remarks = fields.Char(string="Remarks")
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
 
     @api.onchange('product_id')
