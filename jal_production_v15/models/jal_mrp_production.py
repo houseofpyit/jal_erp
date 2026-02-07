@@ -39,7 +39,8 @@ class JalMrpProduction(models.Model):
     #     return result
 
     def action_document_order_form(self):
-        return self.env.ref('jal_logistics.action_order_form_report').report_action(self.sale_id.id) if self.sale_id else False
+        logic_id = self.env['jal.logistics'].sudo().search([('sale_id','=',self.sale_id.id)],limit=1)
+        return self.env.ref('jal_logistics.action_order_form_report').report_action(logic_id.id) if self.sale_id else False
     
     def action_running_btn(self):
         self.state = 'running'
