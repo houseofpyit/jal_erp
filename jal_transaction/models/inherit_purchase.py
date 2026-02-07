@@ -32,7 +32,10 @@ class inheritedPurchaseOrder(models.Model):
             for line in rec.order_line:
                 billed_qty = sum(PurchaseBillLine.search([('order_id', '=', rec.id),('product_id', '=', line.product_id.id)]).mapped('pcs'))
 
-                ordered_qty = sum(rec.order_line.filtered(lambda l: l.product_id == line.product_id).mapped('product_qty'))
+                if line.product_id.is_caustic:
+                    ordered_qty = sum(rec.picking_ids.move_ids_without_package.filtered(lambda ml: ml.product_id == line.product_id).mapped('actual_qty'))
+                else:
+                    ordered_qty = sum(rec.order_line.filtered(lambda l: l.product_id == line.product_id).mapped('product_qty'))
 
                 if billed_qty != ordered_qty:
                     fully_billed = False

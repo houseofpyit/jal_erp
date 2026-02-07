@@ -25,3 +25,18 @@ class inheritHopSalebill(models.Model):
       self.is_export_bill = False
       if self.business_type == 'international':
          self.is_export_bill = True
+         
+class inherithopsalebillline(models.Model):
+   _inherit = "hop.salebill.line"
+
+   @api.model
+   def create(self, vals):
+      if vals.get('pcs', 0) <= 0:
+         raise ValidationError("Quantity cannot be zero. Please correct the product details.")
+      return super().create(vals)
+   
+   def write(self, vals):
+      if 'pcs' in vals:
+         if vals.get('pcs', 0) <= 0:
+            raise ValidationError("Quantity cannot be zero or negative. Please correct the product details.")
+      return super().write(vals)
